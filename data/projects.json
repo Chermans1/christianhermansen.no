@@ -1,0 +1,76 @@
+[
+  {
+    "slug": "fanatastisk-app",
+    "title": "Fanatastisk-appen",
+    "type": "iOS-app",
+    "status": "Innsendt til App Store",
+    "year": "2026",
+    "featured": true,
+    "description": "Festivalappen til Fanatastisk, musikkfestivalen i Fana jeg er med og driver. Program, artistsider, interaktivt kart, favoritter med varsel før konsertstart. Bygget i SwiftUI mot samme Sanity-innhold som nettsiden.",
+    "tech": ["Swift", "SwiftUI", "Sanity"],
+    "links": {
+      "website": "https://fanatastisk.no"
+    },
+    "image": null,
+    "monogram": "F"
+  },
+  {
+    "slug": "signal-noise",
+    "title": "Signal | Noise",
+    "type": "Fokusapp",
+    "status": "Live som PWA, iOS-app under utvikling",
+    "year": "2024–2026",
+    "featured": true,
+    "description": "Et verktøy for å skille det som betyr noe fra alt som støyer, bygget for hoder som mitt. Signal, Noise, Parked. Fokustimer med Pomodoro-sykluser. Alt lagres lokalt, ingen konto, ingen sporing. Nå på vei til App Store som native Swift-app.",
+    "tech": ["HTML/CSS", "JavaScript", "PWA", "Swift", "SwiftData"],
+    "links": {
+      "live": "https://signal-noise-ten.vercel.app",
+      "github": "https://github.com/Chermans1/Signal-noise"
+    },
+    "image": "/assets/img/signal-noise.avif",
+    "monogram": "S"
+  },
+  {
+    "slug": "fanatastisk-no",
+    "title": "fanatastisk.no",
+    "type": "Nettside",
+    "status": "Live",
+    "year": "2025–2026",
+    "featured": true,
+    "description": "Festivalens nettside. Program per dag, artistsider, FAQ, billettkjøp via Ticketmaster. Innholdet redigeres i Sanity Studio av flere i festivalen, ikke bare meg. Det stiller andre krav enn en side man bare koder for seg selv.",
+    "tech": ["Next.js", "Sanity", "Vercel"],
+    "links": {
+      "live": "https://fanatastisk.no"
+    },
+    "image": null,
+    "monogram": "F"
+  },
+  {
+    "slug": "retro-tv",
+    "title": "Radionette Retro-TV",
+    "type": "Byggeprosjekt",
+    "status": "Ferdig",
+    "year": "2024",
+    "featured": true,
+    "description": "En Raspberry Pi i et gammelt Radionette-kabinett, med eget grensesnitt for lyd og lys. Ingen praktisk grunn til at den finnes. Den ble bygget fordi kabinettet fortjente et nytt liv, og fordi jeg ville se om jeg fikk det til.",
+    "tech": ["Raspberry Pi", "Python"],
+    "links": {},
+    "image": "/assets/img/retro-tv.avif",
+    "monogram": "R"
+  },
+  {
+    "slug": "denne-siden",
+    "title": "Denne siden",
+    "type": "Nettside",
+    "status": "Under bygging",
+    "year": "2026",
+    "featured": false,
+    "description": "christianhermansen.no er selv et prosjekt: håndskrevet HTML, CSS og vanilla JS, uten rammeverk. Den bygges videre i takt med fullstack-utdanningen min, og git-historikken viser hele veien. React og backend kommer når jeg kan det godt nok til å gjøre det selv.",
+    "tech": ["HTML", "CSS", "JavaScript"],
+    "links": {
+      "github": "https://github.com/Chermans1"
+    },
+    "image": null,
+    "monogram": "C"
+  }
+]

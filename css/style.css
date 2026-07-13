@@ -1,0 +1,501 @@
+/* ==========================================================================
+   christianhermansen.no — håndskrevet CSS, ingen rammeverk
+   Mørkt, rolig, varmt. Synlig omtanke i hver beslutning.
+   NB: Christian er rød-grønn fargeblind. Paletten er varm rav mot kull og
+   blågrått. Aldri rød mot grønn som eneste forskjell.
+   ========================================================================== */
+
+:root {
+  /* Farger */
+  --kull: #16130f;          /* bakgrunn, varm nesten-svart */
+  --kull-hev: #1f1b15;      /* hevede flater (kort) */
+  --kull-kant: #2e2820;     /* kantlinjer */
+  --papir: #ece4d6;         /* brødtekst, varm off-white */
+  --papir-dus: #a89d8c;     /* sekundærtekst */
+  --rav: #e0973d;           /* aksent, varm rav */
+  --rav-lys: #f2b968;       /* aksent hover */
+  --blaagraa: #7d95a8;      /* rolig kontrast, lenker i løpende tekst */
+
+  /* Typografi */
+  --skrift-display: "Fraunces", Georgia, serif;
+  --skrift-broed: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* Rytme */
+  --maks-bredde: 68rem;
+  --maks-prosa: 42rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--kull);
+  color: var(--papir);
+  font-family: var(--skrift-broed);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Kornete tekstur over hele siden. Subtil, men den er der med vilje. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Varm glød øverst, som en lampe over arbeidsbenken */
+.gloed {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 34rem;
+  pointer-events: none;
+  background: radial-gradient(ellipse 70% 55% at 50% -10%, rgba(224, 151, 61, 0.13), transparent 70%);
+}
+
+::selection {
+  background: var(--rav);
+  color: var(--kull);
+}
+
+/* --------------------------------------------------------------------------
+   Typografi
+   -------------------------------------------------------------------------- */
+
+h1, h2, h3 {
+  font-family: var(--skrift-display);
+  font-weight: 550;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.6em;
+}
+
+h1 { font-size: clamp(2.4rem, 6vw, 4rem); }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.3rem); }
+h3 { font-size: 1.25rem; }
+
+p {
+  margin: 0 0 1.2em;
+  max-width: var(--maks-prosa);
+}
+
+.dus {
+  color: var(--papir-dus);
+}
+
+a {
+  color: var(--blaagraa);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--blaagraa) 40%, transparent);
+  text-underline-offset: 3px;
+  transition: color 0.2s, text-decoration-color 0.2s;
+}
+
+a:hover {
+  color: var(--rav-lys);
+  text-decoration-color: var(--rav-lys);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--rav);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Layout
+   -------------------------------------------------------------------------- */
+
+.ramme {
+  max-width: var(--maks-bredde);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+main {
+  position: relative;
+}
+
+section {
+  padding: 4.5rem 0;
+}
+
+/* --------------------------------------------------------------------------
+   Topp og navigasjon
+   -------------------------------------------------------------------------- */
+
+header.topp {
+  position: relative;
+  z-index: 10;
+}
+
+.nav {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 0;
+}
+
+.nav-navn {
+  font-family: var(--skrift-display);
+  font-size: 1.15rem;
+  color: var(--papir);
+  text-decoration: none;
+}
+
+.nav-navn:hover {
+  color: var(--rav-lys);
+}
+
+.nav ul {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav ul a {
+  color: var(--papir-dus);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.nav ul a:hover,
+.nav ul a[aria-current="page"] {
+  color: var(--rav-lys);
+}
+
+.nav ul a[aria-current="page"] {
+  border-bottom: 2px solid var(--rav);
+  padding-bottom: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Hero
+   -------------------------------------------------------------------------- */
+
+.hero {
+  padding: 5rem 0 4rem;
+}
+
+.hero h1 .strek {
+  color: var(--rav);
+}
+
+.hero .ingress {
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  color: var(--papir-dus);
+}
+
+/* --------------------------------------------------------------------------
+   Prosjektkort
+   -------------------------------------------------------------------------- */
+
+.prosjekt-rutenett {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.kort {
+  display: flex;
+  flex-direction: column;
+  background: var(--kull-hev);
+  border: 1px solid var(--kull-kant);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.25s, transform 0.25s;
+}
+
+.kort:hover {
+  border-color: color-mix(in srgb, var(--rav) 55%, var(--kull-kant));
+  transform: translateY(-3px);
+}
+
+.kort-bilde {
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(140deg, #241e16, #1a1712);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.kort-bilde img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Monogram når prosjektet ikke har bilde ennå. Ærligere enn stockfoto. */
+.kort-monogram {
+  font-family: var(--skrift-display);
+  font-size: 4.5rem;
+  color: color-mix(in srgb, var(--rav) 65%, var(--kull-hev));
+}
+
+.kort-innhold {
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  flex: 1;
+}
+
+.kort-topp {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.kort h3 {
+  margin: 0;
+}
+
+.kort-aar {
+  color: var(--papir-dus);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.status {
+  align-self: flex-start;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--rav);
+  border: 1px solid color-mix(in srgb, var(--rav) 45%, transparent);
+  border-radius: 99px;
+  padding: 0.15rem 0.65rem;
+}
+
+.kort p {
+  margin: 0;
+  color: var(--papir-dus);
+  font-size: 0.95rem;
+  flex: 1;
+}
+
+.kort-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kort-tech li {
+  font-size: 0.78rem;
+  color: var(--papir-dus);
+  background: var(--kull);
+  border: 1px solid var(--kull-kant);
+  border-radius: 5px;
+  padding: 0.12rem 0.5rem;
+}
+
+.kort-lenker {
+  display: flex;
+  gap: 1rem;
+  padding-top: 0.3rem;
+}
+
+.kort-lenker a {
+  font-size: 0.9rem;
+}
+
+/* --------------------------------------------------------------------------
+   Om-utdrag og kontakt
+   -------------------------------------------------------------------------- */
+
+.skille {
+  border: 0;
+  border-top: 1px solid var(--kull-kant);
+  max-width: var(--maks-bredde);
+  margin: 0 auto;
+}
+
+.kontakt {
+  padding-bottom: 6rem;
+}
+
+.epost {
+  font-family: var(--skrift-display);
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  color: var(--rav);
+  text-decoration-color: color-mix(in srgb, var(--rav) 40%, transparent);
+}
+
+.epost:hover {
+  color: var(--rav-lys);
+}
+
+/* --------------------------------------------------------------------------
+   Om-siden
+   -------------------------------------------------------------------------- */
+
+.prosa h2 {
+  margin-top: 2.5em;
+}
+
+.verktoy-liste {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  max-width: var(--maks-prosa);
+}
+
+.verktoy-liste li {
+  font-size: 0.9rem;
+  color: var(--papir-dus);
+  background: var(--kull-hev);
+  border: 1px solid var(--kull-kant);
+  border-radius: 6px;
+  padding: 0.25rem 0.7rem;
+}
+
+/* Portrett på om-siden. Litt skjevt med vilje, som et bilde på en verkstedvegg. */
+.portrett {
+  margin: 3rem 0;
+  max-width: 22rem;
+}
+
+.portrett img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  border: 1px solid var(--kull-kant);
+  transform: rotate(-1.2deg);
+  transition: transform 0.3s ease;
+}
+
+.portrett img:hover {
+  transform: rotate(0deg) scale(1.01);
+}
+
+.portrett figcaption {
+  margin-top: 0.9rem;
+  font-size: 0.9rem;
+  color: var(--papir-dus);
+  font-style: italic;
+}
+
+/* --------------------------------------------------------------------------
+   Personvern og annen prosa
+   -------------------------------------------------------------------------- */
+
+.prosa ul {
+  max-width: var(--maks-prosa);
+  padding-left: 1.2rem;
+}
+
+.prosa li {
+  margin-bottom: 0.4rem;
+}
+
+.oppdatert {
+  font-size: 0.85rem;
+  color: var(--papir-dus);
+}
+
+/* --------------------------------------------------------------------------
+   404
+   -------------------------------------------------------------------------- */
+
+.parkert {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.parkert .tall {
+  font-family: var(--skrift-display);
+  font-size: clamp(5rem, 18vw, 10rem);
+  color: var(--rav);
+  line-height: 1;
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+
+footer {
+  border-top: 1px solid var(--kull-kant);
+  padding: 2.5rem 0 3rem;
+  color: var(--papir-dus);
+  font-size: 0.9rem;
+}
+
+.footer-indre {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.footer-indre ul {
+  display: flex;
+  gap: 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Bevegelse. Respekter at ikke alle vil ha den.
+   -------------------------------------------------------------------------- */
+
+.inn {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.inn.synlig {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .inn { opacity: 1; transform: none; transition: none; }
+  .kort:hover { transform: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Små skjermer
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 34rem) {
+  .nav {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  section { padding: 3rem 0; }
+  .hero { padding: 3rem 0 2.5rem; }
+}
