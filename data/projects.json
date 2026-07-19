@@ -7,12 +7,17 @@
     "year": "2026",
     "featured": true,
     "description": "Festivalappen til Fanatastisk, musikkfestivalen i Fana jeg er med og driver. Program, artistsider, interaktivt kart, favoritter med varsel før konsertstart. Bygget i SwiftUI mot samme Sanity-innhold som nettsiden.",
-    "tech": ["Swift", "SwiftUI", "Sanity"],
+    "tech": [
+      "Swift",
+      "SwiftUI",
+      "Sanity"
+    ],
     "links": {
       "website": "https://fanatastisk.no"
     },
     "image": null,
-    "monogram": "F"
+    "monogram": "F",
+    "utfordringer": "Appen deler alt innhold med nettsiden gjennom Sanity. Utfordringen var å bygge en native opplevelse med kart, favoritter og varsler oppå et innholdssystem som redigeres av flere, uten at appen knekker når innholdet endrer seg."
   },
   {
     "slug": "signal-noise",
@@ -22,13 +27,20 @@
     "year": "2024–2026",
     "featured": true,
     "description": "Et verktøy for å skille det som betyr noe fra alt som støyer, bygget for hoder som mitt. Signal, Noise, Parked. Fokustimer med Pomodoro-sykluser. Alt lagres lokalt, ingen konto, ingen sporing. Nå på vei til App Store som native Swift-app.",
-    "tech": ["HTML/CSS", "JavaScript", "PWA", "Swift", "SwiftData"],
+    "tech": [
+      "HTML/CSS",
+      "JavaScript",
+      "PWA",
+      "Swift",
+      "SwiftData"
+    ],
     "links": {
       "live": "https://signal-noise-ten.vercel.app",
       "github": "https://github.com/Chermans1/Signal-noise"
     },
     "image": "/assets/img/signal-noise.avif",
-    "monogram": "S"
+    "monogram": "S",
+    "utfordringer": "Første versjon var en PWA. Å portere den til native Swift uten å miste det som gjør den enkel, alt lokalt, ingen konto, og samtidig lære SwiftData underveis, var selve poenget med prosjektet."
   },
   {
     "slug": "fanatastisk-no",
@@ -38,12 +50,27 @@
     "year": "2025–2026",
     "featured": true,
     "description": "Festivalens nettside. Program per dag, artistsider, FAQ, billettkjøp via Ticketmaster. Innholdet redigeres i Sanity Studio av flere i festivalen, ikke bare meg. Det stiller andre krav enn en side man bare koder for seg selv.",
-    "tech": ["Next.js", "Sanity", "Vercel"],
+    "tech": [
+      "Next.js",
+      "Sanity",
+      "Vercel"
+    ],
     "links": {
       "live": "https://fanatastisk.no"
     },
     "image": null,
-    "monogram": "F"
+    "monogram": "F",
+    "preview": {
+      "scene": "/assets/img/fanatastisk-scene.webp",
+      "side": "/assets/img/fanatastisk-side.webp",
+      "skjerm": {
+        "x": 26.98,
+        "y": 17.19,
+        "w": 45.77,
+        "h": 45.9
+      }
+    },
+    "utfordringer": "Innholdet redigeres av flere i festivalen, ikke bare meg. Det krever en Sanity-struktur som tåler folk, og billettkjøp via Ticketmaster som bare skal virke, også kvelden før festivalen."
   },
   {
     "slug": "retro-tv",
@@ -53,10 +80,155 @@
     "year": "2024",
     "featured": true,
     "description": "En Raspberry Pi i et gammelt Radionette-kabinett, med eget grensesnitt for lyd og lys. Ingen praktisk grunn til at den finnes. Den ble bygget fordi kabinettet fortjente et nytt liv, og fordi jeg ville se om jeg fikk det til.",
-    "tech": ["Raspberry Pi", "Python"],
+    "tech": [
+      "Raspberry Pi",
+      "Python"
+    ],
     "links": {},
     "image": "/assets/img/retro-tv.avif",
-    "monogram": "R"
+    "monogram": "R",
+    "utfordringer": "Å få moderne elektronikk til å leve i et kabinett fra en annen tid, uten å ødelegge det kabinettet er. Mest snekring, litt lodding, og en del prøving og feiling med lyd og lys."
+  },
+  {
+    "slug": "skaperlaben",
+    "title": "Skaperlaben",
+    "type": "Verksted",
+    "status": "I drift",
+    "year": "2018–",
+    "featured": true,
+    "description": "Verkstedet mitt, og restene av et makerspace som ikke ble noe. Jeg prøvde å starte Skaperlaben i 2018. Prosjektet stoppet, men navnet, logoen og CNC-fresen ble med videre. I dag lager jeg skilt, gaver, epoxyringer og reproduksjoner av gamle utskjæringer her, og det var her Radionette-TV-en ble til.",
+    "tech": [
+      "CNC-fres",
+      "Treverk",
+      "Epoxy",
+      "Vektordesign"
+    ],
+    "links": {},
+    "image": "/assets/img/skaperlaben-skilt.webp",
+    "monogram": "S",
+    "utfordringer": "Et makerspace trenger folk, lokale og tid. Jeg hadde mest av det siste. Å legge ned forsøket og la verkstedet leve videre som mitt eget var riktig, selv om det ikke var planen. Lysskiltet til Nordic Fire & Safety laget jeg som gave til jobbintervjuet der. Jeg fikk jobben.",
+    "galleri": [
+      {
+        "src": "/assets/img/skaperlaben-nordic.webp",
+        "alt": "Håndbygget lysskilt for Nordic Fire & Safety på arbeidsbenken",
+        "tekst": "Lysskiltet som ble med på jobbintervju."
+      },
+      {
+        "src": "/assets/img/skaperlaben-ring.webp",
+        "alt": "Ring i tre og epoxy med landskap støpt i harpiksen",
+        "tekst": "Ring i tre og epoxy."
+      },
+      {
+        "src": "/assets/img/skaperlaben-anno1915.webp",
+        "alt": "Gammelt malt skilt fra 1915 ved siden av nyfrest kopi i furu",
+        "tekst": "Reproduksjon av skilt fra 1915 - original og kopi."
+      },
+      {
+        "src": "/assets/img/skaperlaben-utskjaering.webp",
+        "alt": "Utskåret snirkelornament i furu under arbeid, med huljern og klubbe",
+        "tekst": "Reproduksjon av gamle utskjæringer til et eldre bygg."
+      },
+      {
+        "src": "/assets/img/skaperlaben-rompabar.webp",
+        "alt": "CNC-frest barskilt i svartmalt tre med teksten Rompa Bar og et ølseidel-motiv",
+        "tekst": "Rompa Bar - skilt til en kompis sin kjellerbar."
+      },
+      {
+        "src": "/assets/img/skaperlaben-spikkenisse.webp",
+        "alt": "Håndspikket trenisse med spiss lue, holdt i hånden",
+        "tekst": "Spikkenisse - kniv, emne og litt tid."
+      }
+    ]
+  },
+  {
+    "slug": "arkadekabinett",
+    "title": "Arkadekabinett",
+    "type": "Byggeprosjekt",
+    "status": "Ferdig",
+    "year": "",
+    "featured": false,
+    "description": "Veggmontert arkadekabinett i bartop-format, bygget fra bunnen: mal i plate, kabinett, marquee med innebygde høyttalere, joystick og knapper. Retrospill hører hjemme i et kabinett, ikke i en nettleserfane.",
+    "tech": [
+      "Treverk",
+      "Elektronikk",
+      "Retrogaming"
+    ],
+    "links": {},
+    "image": "/assets/img/arkadekabinett-04.webp",
+    "monogram": "A",
+    "utfordringer": "Å gå fra pappmal til noe som faktisk henger på veggen og tåler å bli spilt på. Skjermvinkel og kontrollhøyde måtte sitte før limet tørket.",
+    "galleri": [
+      {
+        "src": "/assets/img/arkadekabinett-01.webp",
+        "alt": "Sidemal til arkadekabinett holdes opp i verkstedet",
+        "tekst": "Malen som startet det hele."
+      },
+      {
+        "src": "/assets/img/arkadekabinett-02.webp",
+        "alt": "Skroget til arkadekabinettet under bygging",
+        "tekst": "Skroget tar form."
+      },
+      {
+        "src": "/assets/img/arkadekabinett-03.webp",
+        "alt": "Arkadekabinett med skjerm, joystick og knapper montert",
+        "tekst": "Skjerm og kontroller på plass."
+      },
+      {
+        "src": "/assets/img/arkadekabinett-04.webp",
+        "alt": "Arkadekabinett montert på veggen, før maling",
+        "tekst": "På veggen, klar for maling."
+      }
+    ]
+  },
+  {
+    "slug": "design",
+    "title": "Design og identitet",
+    "type": "Design",
+    "status": "Pågående",
+    "year": "2018–",
+    "featured": false,
+    "description": "Logoer og visuell identitet, mest for egne prosjekter og noen ganger for folk jeg bryr meg om. Fra studioet mitt byGlimt og pro bono-programmet SpaceMonkey til bandlogo og verkstedsmerker. Jeg tegner i Illustrator, tester i Figma, og er ferdig når merket tåler både favicon-størrelse og skiltvegg.",
+    "tech": [
+      "Illustrator",
+      "Figma",
+      "Vektordesign"
+    ],
+    "links": {},
+    "image": "/assets/img/design-ch-logo.webp",
+    "monogram": "D",
+    "utfordringer": "Å designe for seg selv er det vanskeligste oppdraget: kunden ombestemmer seg hele tiden. Min egen logo gikk gjennom mange runder før kjernen fikk eie merket og fargene ble noen jeg selv kan se forskjell på.",
+    "galleri": [
+      {
+        "src": "/assets/img/design-ch-logo.webp",
+        "alt": "CH-logoen i stablet versjon på krem og petrol bakgrunn",
+        "tekst": "Min egen identitet - petrol kjerne på lyst, krem på mørkt."
+      },
+      {
+        "src": "/assets/img/design-byglimt.webp",
+        "alt": "byGlimt-logoen: et fyrtårn med lysstråler og ordmerket byGLIMT",
+        "tekst": "byGlimt - studioet mitt. Fyrtårnet handler om å hjelpe folk å bli sett."
+      },
+      {
+        "src": "/assets/img/design-spacemonkey.webp",
+        "alt": "SpaceMonkey-logoen: ape-astronaut i hjelm over graffiti-ordmerke",
+        "tekst": "SpaceMonkey - byGlimts pro bono-program. Gratis hjelp til de som bidrar. Måten jeg vil gi tilbake på."
+      },
+      {
+        "src": "/assets/img/design-gonefishing.webp",
+        "alt": "The Gone Fishing Band-logo: gitarkropp, pianotangenter og fisk i ett merke",
+        "tekst": "The Gone Fishing Band - bandlogo til stefaren min. Brukes på klær, biler og promotering."
+      },
+      {
+        "src": "/assets/img/design-skaperlaben.webp",
+        "alt": "Skaperlaben-logoen i fire varianter, farge og svart-hvitt",
+        "tekst": "Skaperlaben (2018) - merket til makerspace-forsøket som ble verkstedet mitt."
+      },
+      {
+        "src": "/assets/img/design-armpatch.webp",
+        "alt": "Rundt armmerke med SL-monogram og stjerner",
+        "tekst": "Armmerket til Skaperlaben - laget for t-skjorter, gensere og jakker."
+      }
+    ]
   },
   {
     "slug": "denne-siden",
@@ -66,11 +238,16 @@
     "year": "2026",
     "featured": false,
     "description": "christianhermansen.no er selv et prosjekt: håndskrevet HTML, CSS og vanilla JS, uten rammeverk. Den bygges videre i takt med fullstack-utdanningen min, og git-historikken viser hele veien. React og backend kommer når jeg kan det godt nok til å gjøre det selv.",
-    "tech": ["HTML", "CSS", "JavaScript"],
+    "tech": [
+      "HTML",
+      "CSS",
+      "JavaScript"
+    ],
     "links": {
       "github": "https://github.com/Chermans1"
     },
     "image": null,
-    "monogram": "C"
+    "monogram": "C",
+    "utfordringer": "Å holde alt håndskrevet uten rammeverk, og likevel få retro-båndet til å flyte gjennom sidene uten å treffe innholdet. Geometrien i båndet er ren CSS og SVG, regnet ut for hånd."
   }
 ]

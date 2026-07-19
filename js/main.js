@@ -3,13 +3,28 @@
 // database senere uten å skrive om siden.
 
 // ---------------------------------------------------------------------------
-// Prosjektkort
+// ProjectMockupCard: forhåndsvisning med miljøbilde og rullende skjerm
+// Gjenbrukes av både prosjektkortene og case-siden.
 // ---------------------------------------------------------------------------
 
-function lagKort(prosjekt) {
-  const kort = document.createElement("article");
-  kort.className = "kort inn";
+function byggForhaandsvisning(prosjekt) {
+  if (prosjekt.preview) {
+    const p = prosjekt.preview;
+    return `
+      <div class="live-scene" style="--sx:${p.skjerm.x}%; --sy:${p.skjerm.y}%; --sw:${p.skjerm.w}%; --sh:${p.skjerm.h}%">
+        <img class="live-bakgrunn" src="${p.scene}" alt="" loading="lazy">
+        <div class="live-skjerm">
+          <img class="live-side" src="${p.side}" alt="Rullende forhåndsvisning av ${prosjekt.title}" loading="lazy">
+        </div>
+      </div>`;
+  }
+  if (prosjekt.image) {
+    return `<img src="${prosjekt.image}" alt="Skjermbilde fra ${prosjekt.title}" loading="lazy">`;
+  }
+  return `<span class="kort-monogram" aria-hidden="true">${prosjekt.monogram}</span>`;
+}
 
+function byggLenker(prosjekt) {
   const lenker = [];
   if (prosjekt.links.live) {
     lenker.push(`<a href="${prosjekt.links.live}" target="_blank" rel="noopener">Se live</a>`);
@@ -23,16 +38,25 @@ function lagKort(prosjekt) {
   if (prosjekt.links.website) {
     lenker.push(`<a href="${prosjekt.links.website}" target="_blank" rel="noopener">Nettside</a>`);
   }
+  return lenker;
+}
 
-  const bilde = prosjekt.image
-    ? `<img src="${prosjekt.image}" alt="Skjermbilde fra ${prosjekt.title}" loading="lazy">`
-    : `<span class="kort-monogram" aria-hidden="true">${prosjekt.monogram}</span>`;
+// ---------------------------------------------------------------------------
+// Prosjektkort
+// ---------------------------------------------------------------------------
+
+function lagKort(prosjekt) {
+  const kort = document.createElement("article");
+  kort.className = "kort inn";
+
+  const caseUrl = `/prosjekt.html?slug=${prosjekt.slug}`;
+  const lenker = byggLenker(prosjekt);
 
   kort.innerHTML = `
-    <div class="kort-bilde">${bilde}</div>
+    <div class="kort-bilde${prosjekt.preview ? " kort-live" : ""}">${byggForhaandsvisning(prosjekt)}</div>
     <div class="kort-innhold">
       <div class="kort-topp">
-        <h3>${prosjekt.title}</h3>
+        <h3><a href="${caseUrl}">${prosjekt.title}</a></h3>
         <span class="kort-aar">${prosjekt.year}</span>
       </div>
       <span class="status">${prosjekt.status}</span>
@@ -43,6 +67,13 @@ function lagKort(prosjekt) {
       ${lenker.length ? `<div class="kort-lenker">${lenker.join("")}</div>` : ""}
     </div>
   `;
+
+  // Hele kortet er klikkbart, men indre lenker (Se live, GitHub) vinner.
+  kort.addEventListener("click", (e) => {
+    if (e.target.closest("a")) return;
+    window.location.href = caseUrl;
+  });
+
   return kort;
 }
 
@@ -61,10 +92,89 @@ async function lastProsjekter() {
       beholder.appendChild(lagKort(prosjekt));
     }
     observerInn();
+    observerLiveKort();
   } catch {
     beholder.innerHTML =
       '<p class="dus">Fikk ikke lastet prosjektene. Prøv å laste siden på nytt.</p>';
   }
+}
+
+// ---------------------------------------------------------------------------
+// Case-side: /prosjekt.html?slug=... rendres fra samme JSON
+// ---------------------------------------------------------------------------
+
+async function lastCase() {
+  const beholder = document.querySelector("[data-case]");
+  if (!beholder) return;
+
+  const slug = new URLSearchParams(window.location.search).get("slug");
+
+  try {
+    const svar = await fetch("/data/projects.json");
+    const prosjekter = await svar.json();
+    const prosjekt = prosjekter.find((p) => p.slug === slug);
+
+    if (!prosjekt) {
+      beholder.innerHTML = `
+        <h1 class="inn">Fant ikke prosjektet.</h1>
+        <p class="inn dus">Det du leter etter ligger kanskje på <a href="/prosjekter.html">prosjektsiden</a>.</p>`;
+      return;
+    }
+
+    document.title = `${prosjekt.title} - Christian Hermansen`;
+
+    const lenker = byggLenker(prosjekt);
+    const harBilde = prosjekt.preview || prosjekt.image;
+
+    beholder.innerHTML = `
+      <p class="kicker inn">${prosjekt.type}</p>
+      <h1 class="inn">${prosjekt.title}</h1>
+      <p class="case-meta inn"><span class="status">${prosjekt.status}</span><span class="kort-aar">${prosjekt.year}</span></p>
+      ${harBilde ? `<div class="kort kort-case inn"><div class="kort-bilde${prosjekt.preview ? " kort-live" : ""}">${byggForhaandsvisning(prosjekt)}</div></div>` : ""}
+      <p class="ingress inn">${prosjekt.description}</p>
+      ${prosjekt.utfordringer ? `<h2 class="inn">Utfordringer</h2><p class="inn">${prosjekt.utfordringer}</p>` : ""}
+      ${prosjekt.galleri && prosjekt.galleri.length ? `
+        <h2 class="inn">Fra verkstedet</h2>
+        <div class="case-galleri inn">
+          ${prosjekt.galleri.map((b) => `<figure><img src="${b.src}" alt="${b.alt}" loading="lazy">${b.tekst ? `<figcaption>${b.tekst}</figcaption>` : ""}</figure>`).join("")}
+        </div>` : ""}
+      <h2 class="inn">Teknologi</h2>
+      <ul class="verktoy-liste inn">${prosjekt.tech.map((t) => `<li>${t}</li>`).join("")}</ul>
+      ${lenker.length ? `<div class="kort-lenker case-lenker inn">${lenker.join("")}</div>` : ""}
+      <p class="inn" style="margin-top: 2.5rem;"><a href="/prosjekter.html">← Alle prosjekter</a></p>
+    `;
+    observerInn();
+    observerLiveKort();
+  } catch {
+    beholder.innerHTML =
+      '<p class="dus">Fikk ikke lastet prosjektet. Prøv å laste siden på nytt.</p>';
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Mobil: hover finnes ikke, så rullingen trigges når kortet er godt synlig.
+// CSS-en (@media hover:none) bruker .i-syne-klassen. Reduced motion
+// håndteres i CSS, som for hover.
+// ---------------------------------------------------------------------------
+
+function observerLiveKort() {
+  if (window.matchMedia("(hover: hover)").matches) return;
+  if (!("IntersectionObserver" in window)) return;
+
+  const kort = document.querySelectorAll(".kort-live");
+  if (!kort.length) return;
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const mål = entry.target.closest(".kort");
+        if (!mål) continue;
+        mål.classList.toggle("i-syne", entry.intersectionRatio >= 0.6);
+      }
+    },
+    { threshold: [0, 0.6] }
+  );
+  kort.forEach((el) => io.observe(el));
 }
 
 // ---------------------------------------------------------------------------
@@ -104,4 +214,5 @@ document.addEventListener("DOMContentLoaded", () => {
   settAar();
   observerInn();
   lastProsjekter();
+  lastCase();
 });

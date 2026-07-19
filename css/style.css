@@ -181,7 +181,7 @@ header.topp::after {
 
 .baand-hero {
   position: absolute;
-  top: 0;
+  top: -24px; /* overlapper headerens tråd - tetter skjøten */
   bottom: 0;
   left: calc(95% - 2.5vw);
   width: 5vw;
@@ -203,8 +203,9 @@ header.topp::after {
 .sone::before {
   content: "";
   position: absolute;
-  top: 0;
-  bottom: 0;
+  /* Overlapper naboene 24px så skjøtene aldri viser avrundingsglipper */
+  top: -24px;
+  bottom: -24px;
   width: 5vw;
   z-index: -1;
   pointer-events: none;
@@ -253,6 +254,12 @@ body:not(.forside) main::before {
     transparent 61.1% 77.8%,
     var(--rust) 77.8% 100%
   );
+}
+
+/* Undersidenes tråd overlapper header og footer - tetter skjøtene */
+body:not(.forside) main::before {
+  top: -24px;
+  bottom: -24px;
 }
 
 footer::before {
@@ -435,7 +442,18 @@ footer::before {
   border: 1px solid var(--kant);
   border-radius: 10px;
   overflow: hidden;
+  cursor: pointer;
   transition: border-color 0.25s, transform 0.25s;
+}
+
+/* Tittelen er den semantiske lenken til caset - hele kortet klikker via JS */
+.kort h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.kort h3 a:hover {
+  color: var(--rust);
 }
 
 .kort:hover {
@@ -457,6 +475,85 @@ footer::before {
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+/* Live-forhåndsvisning: mockup-scene med ekte side som ruller i skjermen.
+   Scenen er 3:2 og sentreres bak kortets 16:9-vindu, så skjerm-
+   koordinatene (i prosent av scenen) treffer uansett kortbredde. */
+.kort-live {
+  position: relative;
+}
+
+.live-scene {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  aspect-ratio: 1536 / 1024;
+  transform: translateY(-50%);
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.live-bakgrunn {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.live-skjerm {
+  position: absolute;
+  left: var(--sx);
+  top: var(--sy);
+  width: var(--sw);
+  height: var(--sh);
+  overflow: hidden;
+  background: #eee8dc;
+  container-type: size;
+}
+
+/* Høyere spesifisitet enn .kort-bilde img, som ellers ville tvunget
+   height:100% + object-fit:cover og gjort rulleavstanden null */
+.kort-live img.live-side {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  object-fit: unset;
+  transform: translateY(0);
+  will-change: transform;
+  transition: transform 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.kort:hover .live-scene {
+  transform: translateY(-50%) scale(1.015);
+}
+
+.kort:hover .live-side {
+  /* Fallback for nettlesere uten container query-enheter */
+  transform: translateY(-80%);
+  transform: translateY(calc(-100% + 100cqh));
+  transition: transform 14s cubic-bezier(0.18, 0.62, 0.28, 1);
+}
+
+/* Mobil/touch: hover finnes ikke - rullingen trigges av .i-syne
+   (satt av IntersectionObserver når kortet er godt synlig) */
+@media (hover: none) {
+  .kort.i-syne .live-scene {
+    transform: translateY(-50%) scale(1.015);
+  }
+  .kort.i-syne .live-side {
+    transform: translateY(-80%);
+    transform: translateY(calc(-100% + 100cqh));
+    transition: transform 14s cubic-bezier(0.18, 0.62, 0.28, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kort:hover .live-scene,
+  .kort.i-syne .live-scene { transform: translateY(-50%); }
+  .kort:hover .live-side,
+  .kort.i-syne .live-side { transform: none; transition: none; }
 }
 
 /* Monogram når prosjektet ikke har bilde ennå. Ærligere enn stockfoto. */
@@ -618,6 +715,96 @@ footer::before {
   font-size: 0.9rem;
   color: var(--blekk-dus);
   font-style: italic;
+}
+
+/* --------------------------------------------------------------------------
+   Kort om meg på forsiden - tekst venstre, verkstedsillustrasjon høyre
+   -------------------------------------------------------------------------- */
+
+.om-splitt {
+  display: grid;
+  grid-template-columns: minmax(0, 42rem) 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.om-illustrasjon {
+  margin: 0;
+}
+
+/* Gjennomsiktig utklipp - står rett på papiret, uten ramme */
+.om-illustrasjon img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 56rem) {
+  .om-splitt {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Case-siden (/prosjekt.html?slug=...)
+   -------------------------------------------------------------------------- */
+
+.case-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+/* Stor utgave av forhåndsvisningskortet - ingen klikk, bare skjermen som ruller */
+.kort-case {
+  cursor: default;
+  max-width: 52rem;
+  margin: 2rem 0 2.5rem;
+}
+
+.kort-case:hover {
+  transform: none;
+}
+
+.kort-case .kort-bilde {
+  aspect-ratio: 1536 / 1024;
+}
+
+/* Bildegalleri på case-sider */
+.case-galleri {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.case-galleri figure {
+  margin: 0;
+}
+
+/* Ensartede kvadratiske fliser - rolig rutenett uansett bildeformat */
+.case-galleri img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--kant);
+}
+
+.case-galleri figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--blekk-dus);
+}
+
+.case-lenker {
+  margin-top: 1rem;
+}
+
+.case-lenker a {
+  font-size: 1rem;
 }
 
 /* --------------------------------------------------------------------------
