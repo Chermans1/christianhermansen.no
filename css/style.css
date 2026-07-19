@@ -1,27 +1,38 @@
 /* ==========================================================================
-   christianhermansen.no — håndskrevet CSS, ingen rammeverk
-   Mørkt, rolig, varmt. Synlig omtanke i hver beslutning.
-   NB: Christian er rød-grønn fargeblind. Paletten er varm rav mot kull og
-   blågrått. Aldri rød mot grønn som eneste forskjell.
+   christianhermansen.no - håndskrevet CSS, ingen rammeverk
+   Lys retro-papir: varm krem, rust, petrol og gull. Synlig omtanke.
+   NB: Christian er rød-grønn fargeblind. Fargene skilles på lyshet
+   (rust mørk, gull lys, petrol mørkest). Aldri rød mot grønn alene.
    ========================================================================== */
 
 :root {
-  /* Farger */
-  --kull: #16130f;          /* bakgrunn, varm nesten-svart */
-  --kull-hev: #1f1b15;      /* hevede flater (kort) */
-  --kull-kant: #2e2820;     /* kantlinjer */
-  --papir: #ece4d6;         /* brødtekst, varm off-white */
-  --papir-dus: #a89d8c;     /* sekundærtekst */
-  --rav: #e0973d;           /* aksent, varm rav */
-  --rav-lys: #f2b968;       /* aksent hover */
-  --blaagraa: #7d95a8;      /* rolig kontrast, lenker i løpende tekst */
+  /* Farger - retro-papir */
+  --papir: #f1e7d3;         /* bakgrunn, varm krem */
+  --papir-hev: #e9dcc4;     /* hevede flater (kort) */
+  --kant: #d3c2a0;          /* kantlinjer */
+  --blekk: #263d42;         /* brødtekst, petrol-blekk */
+  --blekk-dus: #6f6553;     /* sekundærtekst, varm gråbrun */
+  --rust: #a8432a;          /* aksent, brent rust */
+  --rust-lys: #c05233;      /* aksent hover */
+  --gull: #d9923c;          /* logo-gull / sennep */
+  --gull-dyp: #b0731f;      /* gull med nok kontrast på krem */
+  --petrol: #24494e;        /* dyp petrol, overskrifter */
+  --petrol-dyp: #1d3c41;    /* footer og mørke soner */
 
   /* Typografi */
   --skrift-display: "Fraunces", Georgia, serif;
   --skrift-broed: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
+  /* Signatur: trippelstripen fra retro-universet */
+  --stripe: linear-gradient(
+    to bottom,
+    var(--rust) 0 33.3%,
+    var(--gull) 33.3% 66.6%,
+    var(--petrol) 66.6% 100%
+  );
+
   /* Rytme */
-  --maks-bredde: 68rem;
+  --maks-bredde: 75rem;
   --maks-prosa: 42rem;
 }
 
@@ -37,15 +48,15 @@ html {
 
 body {
   margin: 0;
-  background: var(--kull);
-  color: var(--papir);
+  background: var(--papir);
+  color: var(--blekk);
   font-family: var(--skrift-broed);
   font-size: 1.0625rem;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Kornete tekstur over hele siden. Subtil, men den er der med vilje. */
+/* Kornete tekstur, som fiber i gammelt papir. Subtil, men med vilje. */
 body::before {
   content: "";
   position: fixed;
@@ -56,18 +67,18 @@ body::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Varm glød øverst, som en lampe over arbeidsbenken */
+/* Varm sol-glød øverst, som ettermiddagslys på papir */
 .gloed {
   position: absolute;
   inset: 0 0 auto 0;
   height: 34rem;
   pointer-events: none;
-  background: radial-gradient(ellipse 70% 55% at 50% -10%, rgba(224, 151, 61, 0.13), transparent 70%);
+  background: radial-gradient(ellipse 70% 55% at 50% -10%, rgba(217, 146, 60, 0.16), transparent 70%);
 }
 
 ::selection {
-  background: var(--rav);
-  color: var(--kull);
+  background: var(--rust);
+  color: var(--papir);
 }
 
 /* --------------------------------------------------------------------------
@@ -80,6 +91,7 @@ h1, h2, h3 {
   line-height: 1.15;
   letter-spacing: -0.01em;
   margin: 0 0 0.6em;
+  color: var(--petrol);
 }
 
 h1 { font-size: clamp(2.4rem, 6vw, 4rem); }
@@ -92,25 +104,35 @@ p {
 }
 
 .dus {
-  color: var(--papir-dus);
+  color: var(--blekk-dus);
+}
+
+/* Script-kicker over overskrifter, som "Butikk" / "Kafé" i retro-plakatene */
+.kicker {
+  font-family: var(--skrift-display);
+  font-style: italic;
+  font-weight: 450;
+  font-size: 1.25rem;
+  color: var(--gull-dyp);
+  margin: 0 0 0.2em;
 }
 
 a {
-  color: var(--blaagraa);
+  color: var(--rust);
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--blaagraa) 40%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--rust) 40%, transparent);
   text-underline-offset: 3px;
   transition: color 0.2s, text-decoration-color 0.2s;
 }
 
 a:hover {
-  color: var(--rav-lys);
-  text-decoration-color: var(--rav-lys);
+  color: var(--petrol);
+  text-decoration-color: var(--petrol);
 }
 
 a:focus-visible,
 button:focus-visible {
-  outline: 2px solid var(--rav);
+  outline: 2px solid var(--rust);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -142,23 +164,215 @@ header.topp {
   z-index: 10;
 }
 
+/* Flat signaturstripe - vises kun på små skjermer, der tråden er skjult */
+header.topp::after {
+  content: "";
+  display: none;
+  height: 10px;
+  background: var(--stripe);
+}
+
+/* Retro-båndet - selve den røde tråden gjennom forsiden.
+   Bygget i segmenter forankret i seksjonene, så det aldri treffer tekst:
+   - .baand-hero: vertikal del OVER hero-bildet, høyre side (95 %)
+   - .sone-hoyre/-venstre: vertikale deler som strekker seg med seksjonshøyden
+   - .baand-sving: SVG-svinger som ligger I dokumentflyten mellom seksjoner
+   Alt er posisjonert i prosent/vw, så segmentene flukter i alle bredder. */
+
+.baand-hero {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(95% - 2.5vw);
+  width: 5vw;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    var(--petrol) 0 22.2%,
+    transparent 22.2% 38.9%,
+    var(--gull) 38.9% 61.1%,
+    transparent 61.1% 77.8%,
+    var(--rust) 77.8% 100%
+  );
+}
+
+.sone {
+  position: relative;
+}
+
+.sone::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 5vw;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    var(--petrol) 0 22.2%,
+    transparent 22.2% 38.9%,
+    var(--gull) 38.9% 61.1%,
+    transparent 61.1% 77.8%,
+    var(--rust) 77.8% 100%
+  );
+}
+
+.sone-hoyre::before {
+  left: calc(95% - 2.5vw);
+}
+
+.sone-venstre::before {
+  left: calc(5% - 2.5vw);
+}
+
+.baand-sving svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Tråden starter i toppen av vinduet og ender i footeren - på ALLE sider.
+   Header-delen gjelder overalt; på undersidene fortsetter den ubrutt
+   nedover høyresiden av main. Forsiden har segmentsystemet i stedet. */
+header.topp::before,
+body:not(.forside) main::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(95% - 2.5vw);
+  width: 5vw;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    var(--petrol) 0 22.2%,
+    transparent 22.2% 38.9%,
+    var(--gull) 38.9% 61.1%,
+    transparent 61.1% 77.8%,
+    var(--rust) 77.8% 100%
+  );
+}
+
+footer::before {
+  display: none;
+}
+
+@media (max-width: 89rem) {
+  .baand-hero,
+  .sone::before,
+  .baand-sving,
+  header.topp::before,
+  body:not(.forside) main::before {
+    display: none;
+  }
+  /* Flate striper tar over som signatur på mindre skjermer */
+  header.topp::after {
+    display: block;
+  }
+  footer::before {
+    display: block;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Hero med illustrasjon - full bleed, teksten ligger i kremhimmelen
+   -------------------------------------------------------------------------- */
+
+.hero-bilde {
+  position: relative;
+  padding: 0; /* overstyrer generell section-padding - bildet skal ligge kant i kant med header */
+}
+
+.hero-bilde img {
+  display: block;
+  width: 100%;
+  height: min(66.667vw, 1024px);
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-tekst {
+  position: absolute;
+  inset: 0;
+  padding-top: clamp(1.5rem, 3.5vw, 4rem);
+}
+
+.hero-tekst .ramme {
+  position: relative;
+}
+
+/* Svak gjennomskinnelig boks bak hero-teksten - frostet glass i himmeltonen.
+   Illustrasjonen skimtes gjennom, men teksten er alltid lesbar. */
+.hero-panel {
+  max-width: 42rem;
+  background: rgba(241, 231, 211, 0.72);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 14px;
+  padding: 1.5rem 1.75rem;
+}
+
+.hero-panel p:last-child {
+  margin-bottom: 0;
+}
+
+.hero-tekst h1 {
+  font-size: clamp(1.9rem, 3.4vw, 3.6rem);
+  max-width: 38rem;
+}
+
+.hero-tekst .ingress {
+  max-width: 33rem;
+  font-size: clamp(0.95rem, 1.3vw, 1.25rem);
+}
+
+/* Under 89rem (1424px): teksten stables over bildet - samme brytepunkt som båndet,
+   så hele "kompaktmodusen" slår inn samlet. */
+@media (max-width: 89rem) {
+  .hero-bilde {
+    display: flex;
+    flex-direction: column;
+  }
+  .hero-tekst {
+    position: static;
+    order: -1;
+    padding: 2.5rem 0 1.5rem;
+  }
+  .hero-tekst h1 { max-width: none; }
+  /* Stablet modus: teksten står på vanlig sidebakgrunn - ingen boks nødvendig */
+  .hero-panel {
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    padding: 0;
+    border-radius: 0;
+  }
+}
+
 .nav {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1.5rem 0;
+  padding: 1rem 0;
 }
 
 .nav-navn {
-  font-family: var(--skrift-display);
-  font-size: 1.15rem;
-  color: var(--papir);
+  display: inline-flex;
+  align-items: center;
   text-decoration: none;
 }
 
 .nav-navn:hover {
-  color: var(--rav-lys);
+  opacity: 0.85;
+}
+
+.nav-logo {
+  display: block;
+  height: clamp(34px, 2.8vw, 42px);
+  width: auto;
 }
 
 .nav ul {
@@ -170,18 +384,18 @@ header.topp {
 }
 
 .nav ul a {
-  color: var(--papir-dus);
+  color: var(--blekk-dus);
   text-decoration: none;
   font-size: 0.95rem;
 }
 
 .nav ul a:hover,
 .nav ul a[aria-current="page"] {
-  color: var(--rav-lys);
+  color: var(--rust);
 }
 
 .nav ul a[aria-current="page"] {
-  border-bottom: 2px solid var(--rav);
+  border-bottom: 2px solid var(--rust);
   padding-bottom: 2px;
 }
 
@@ -194,12 +408,13 @@ header.topp {
 }
 
 .hero h1 .strek {
-  color: var(--rav);
+  color: var(--rust);
+  font-style: italic;
 }
 
 .hero .ingress {
   font-size: clamp(1.1rem, 2vw, 1.3rem);
-  color: var(--papir-dus);
+  color: var(--blekk-dus);
 }
 
 /* --------------------------------------------------------------------------
@@ -216,21 +431,21 @@ header.topp {
 .kort {
   display: flex;
   flex-direction: column;
-  background: var(--kull-hev);
-  border: 1px solid var(--kull-kant);
+  background: var(--papir-hev);
+  border: 1px solid var(--kant);
   border-radius: 10px;
   overflow: hidden;
   transition: border-color 0.25s, transform 0.25s;
 }
 
 .kort:hover {
-  border-color: color-mix(in srgb, var(--rav) 55%, var(--kull-kant));
+  border-color: color-mix(in srgb, var(--rust) 55%, var(--kant));
   transform: translateY(-3px);
 }
 
 .kort-bilde {
   aspect-ratio: 16 / 9;
-  background: linear-gradient(140deg, #241e16, #1a1712);
+  background: linear-gradient(140deg, #e2d4b8, #d9c9a9);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -248,7 +463,7 @@ header.topp {
 .kort-monogram {
   font-family: var(--skrift-display);
   font-size: 4.5rem;
-  color: color-mix(in srgb, var(--rav) 65%, var(--kull-hev));
+  color: color-mix(in srgb, var(--gull-dyp) 75%, var(--papir-hev));
 }
 
 .kort-innhold {
@@ -271,7 +486,7 @@ header.topp {
 }
 
 .kort-aar {
-  color: var(--papir-dus);
+  color: var(--blekk-dus);
   font-size: 0.85rem;
   white-space: nowrap;
 }
@@ -281,15 +496,15 @@ header.topp {
   font-size: 0.78rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--rav);
-  border: 1px solid color-mix(in srgb, var(--rav) 45%, transparent);
+  color: var(--rust);
+  border: 1px solid color-mix(in srgb, var(--rust) 45%, transparent);
   border-radius: 99px;
   padding: 0.15rem 0.65rem;
 }
 
 .kort p {
   margin: 0;
-  color: var(--papir-dus);
+  color: var(--blekk-dus);
   font-size: 0.95rem;
   flex: 1;
 }
@@ -305,9 +520,9 @@ header.topp {
 
 .kort-tech li {
   font-size: 0.78rem;
-  color: var(--papir-dus);
-  background: var(--kull);
-  border: 1px solid var(--kull-kant);
+  color: var(--blekk-dus);
+  background: var(--papir);
+  border: 1px solid var(--kant);
   border-radius: 5px;
   padding: 0.12rem 0.5rem;
 }
@@ -323,14 +538,17 @@ header.topp {
 }
 
 /* --------------------------------------------------------------------------
-   Om-utdrag og kontakt
+   Skillelinjer og kontakt
    -------------------------------------------------------------------------- */
 
+/* Skillelinjen er selve signaturstripen - tynn, men umiskjennelig */
 .skille {
   border: 0;
-  border-top: 1px solid var(--kull-kant);
+  height: 10px;
+  background: var(--stripe);
   max-width: var(--maks-bredde);
   margin: 0 auto;
+  border-radius: 5px;
 }
 
 .kontakt {
@@ -340,12 +558,12 @@ header.topp {
 .epost {
   font-family: var(--skrift-display);
   font-size: clamp(1.2rem, 3vw, 1.8rem);
-  color: var(--rav);
-  text-decoration-color: color-mix(in srgb, var(--rav) 40%, transparent);
+  color: var(--rust);
+  text-decoration-color: color-mix(in srgb, var(--rust) 40%, transparent);
 }
 
 .epost:hover {
-  color: var(--rav-lys);
+  color: var(--petrol);
 }
 
 /* --------------------------------------------------------------------------
@@ -368,9 +586,9 @@ header.topp {
 
 .verktoy-liste li {
   font-size: 0.9rem;
-  color: var(--papir-dus);
-  background: var(--kull-hev);
-  border: 1px solid var(--kull-kant);
+  color: var(--blekk-dus);
+  background: var(--papir-hev);
+  border: 1px solid var(--kant);
   border-radius: 6px;
   padding: 0.25rem 0.7rem;
 }
@@ -386,7 +604,7 @@ header.topp {
   height: auto;
   display: block;
   border-radius: 8px;
-  border: 1px solid var(--kull-kant);
+  border: 1px solid var(--kant);
   transform: rotate(-1.2deg);
   transition: transform 0.3s ease;
 }
@@ -398,7 +616,7 @@ header.topp {
 .portrett figcaption {
   margin-top: 0.9rem;
   font-size: 0.9rem;
-  color: var(--papir-dus);
+  color: var(--blekk-dus);
   font-style: italic;
 }
 
@@ -417,7 +635,7 @@ header.topp {
 
 .oppdatert {
   font-size: 0.85rem;
-  color: var(--papir-dus);
+  color: var(--blekk-dus);
 }
 
 /* --------------------------------------------------------------------------
@@ -434,27 +652,50 @@ header.topp {
 .parkert .tall {
   font-family: var(--skrift-display);
   font-size: clamp(5rem, 18vw, 10rem);
-  color: var(--rav);
+  color: var(--rust);
   line-height: 1;
   margin: 0;
 }
 
 /* --------------------------------------------------------------------------
-   Footer
+   Footer - dyp petrol, som kvelden etter en varm dag
    -------------------------------------------------------------------------- */
 
 footer {
-  border-top: 1px solid var(--kull-kant);
+  position: relative;
+  background: var(--petrol-dyp);
+  color: #e8ddc6;
   padding: 2.5rem 0 3rem;
-  color: var(--papir-dus);
   font-size: 0.9rem;
+}
+
+/* Stripen gjentas som bånd over footeren */
+footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: var(--stripe);
 }
 
 .footer-indre {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 1rem;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.footer-logo {
+  display: block;
+}
+
+.footer-logo img {
+  display: block;
+  width: clamp(150px, 14vw, 200px);
+  height: auto;
 }
 
 .footer-indre ul {
@@ -463,6 +704,16 @@ footer {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+footer a {
+  color: #e8ddc6;
+  text-decoration-color: color-mix(in srgb, #e8ddc6 40%, transparent);
+}
+
+footer a:hover {
+  color: var(--gull);
+  text-decoration-color: var(--gull);
 }
 
 /* --------------------------------------------------------------------------
