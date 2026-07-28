@@ -183,6 +183,11 @@ section {
   padding: 4.5rem 0;
 }
 
+/* Siste seksjon på hver side får ekstra luft mot footeren */
+main section:last-of-type {
+  padding-bottom: 6.5rem;
+}
+
 /* --------------------------------------------------------------------------
    Topp og navigasjon
    -------------------------------------------------------------------------- */

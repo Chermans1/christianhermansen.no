@@ -6,7 +6,7 @@
     "status": "Innsendt til App Store",
     "year": "2026",
     "featured": true,
-    "description": "Festivalappen til Fanatastisk, musikkfestivalen i Fana jeg er med og driver. Program, artistsider, interaktivt kart, favoritter med varsel før konsertstart. Bygget i SwiftUI mot samme Sanity-innhold som nettsiden.",
+    "description": "Festivalappen til Fanatastisk, musikkfestivalen i Fana jeg bidrar til. Program, artistsider, interaktivt kart, favoritter med varsel før konsertstart. Bygget i SwiftUI mot samme Sanity-innhold som nettsiden.",
     "tech": [
       "Swift",
       "SwiftUI",
@@ -199,7 +199,7 @@
     "utfordringer": "Å designe for seg selv er det vanskeligste oppdraget: kunden ombestemmer seg hele tiden. Min egen logo gikk gjennom mange runder før kjernen fikk eie merket og fargene ble noen jeg selv kan se forskjell på.",
     "galleri": [
       {
-        "src": "/assets/img/design-ch-logo.webp",
+        "src": "/assets/img/design-ch-logo-kvadrat.webp",
         "alt": "CH-logoen i stablet versjon på krem og petrol bakgrunn",
         "tekst": "Min egen identitet - petrol kjerne på lyst, krem på mørkt."
       },
