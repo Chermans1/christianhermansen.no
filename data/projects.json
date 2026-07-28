@@ -231,6 +231,27 @@
     ]
   },
   {
+    "slug": "turntable",
+    "title": "Turntable",
+    "type": "Musikk + nettside",
+    "status": "Live",
+    "year": "2025–2026",
+    "featured": true,
+    "description": "Min egen utgivelseskanal: ni låter på bergensk, tekstene mine, produsert i Suno. Spilles av på en illustrert platespiller der coveret er selve platelabelen og tonearmen faktisk vandrer innover mens låten spiller.",
+    "tech": [
+      "Next.js",
+      "TypeScript",
+      "Framer Motion",
+      "Suno"
+    ],
+    "links": {
+      "live": "https://musikk.christianhermansen.no"
+    },
+    "image": "/assets/img/turntable.webp",
+    "monogram": "T",
+    "utfordringer": "Å få en illustrert platespiller til å oppføre seg som en ekte: armen sporer låtens faktiske fremdrift, coveret spinner med platen, og alt er bygget av sammensatte paneler som ikke tåler klønete hender. Og så det vanskeligste: å velge ni låter fra fire tusen genereringer."
+  },
+  {
     "slug": "denne-siden",
     "title": "Denne siden",
     "type": "Nettside",

@@ -141,7 +141,7 @@ async function lastCase() {
       <h2 class="inn">Teknologi</h2>
       <ul class="verktoy-liste inn">${prosjekt.tech.map((t) => `<li>${t}</li>`).join("")}</ul>
       ${lenker.length ? `<div class="kort-lenker case-lenker inn">${lenker.join("")}</div>` : ""}
-      <p class="inn" style="margin-top: 2.5rem;"><a href="/prosjekter.html">← Alle prosjekter</a></p>
+      <p class="inn" style="margin-top: 2.5rem;"><a class="pil-lenke-venstre" href="/prosjekter.html">← Alle prosjekter</a></p>
     `;
     observerInn();
     observerLiveKort();
@@ -175,6 +175,35 @@ function observerLiveKort() {
     { threshold: [0, 0.6] }
   );
   kort.forEach((el) => io.observe(el));
+}
+
+// ---------------------------------------------------------------------------
+// Lysboks: galleri-flisene er beskåret til kvadrat - klikk viser hele bildet.
+// Native <dialog>, ingen avhengigheter. Esc lukker automatisk.
+// ---------------------------------------------------------------------------
+
+function initLysboks() {
+  document.addEventListener("click", (e) => {
+    const bilde = e.target.closest(".case-galleri img");
+    if (!bilde) return;
+
+    let dialog = document.getElementById("lysboks");
+    if (!dialog) {
+      dialog = document.createElement("dialog");
+      dialog.id = "lysboks";
+      dialog.innerHTML =
+        '<button type="button" aria-label="Lukk">&times;</button><img alt="">';
+      dialog.addEventListener("click", (ev) => {
+        if (ev.target === dialog || ev.target.closest("button")) dialog.close();
+      });
+      document.body.appendChild(dialog);
+    }
+
+    const img = dialog.querySelector("img");
+    img.src = bilde.src;
+    img.alt = bilde.alt;
+    dialog.showModal();
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -215,4 +244,5 @@ document.addEventListener("DOMContentLoaded", () => {
   observerInn();
   lastProsjekter();
   lastCase();
+  initLysboks();
 });

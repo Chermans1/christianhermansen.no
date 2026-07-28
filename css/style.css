@@ -107,7 +107,8 @@ p {
   color: var(--blekk-dus);
 }
 
-/* Script-kicker over overskrifter, som "Butikk" / "Kafé" i retro-plakatene */
+/* Script-kicker over overskrifter, som "Butikk" / "Kafé" i retro-plakatene.
+   Mini-utgaven av trippelstripen foran binder kickeren til båndet. */
 .kicker {
   font-family: var(--skrift-display);
   font-style: italic;
@@ -115,6 +116,17 @@ p {
   font-size: 1.25rem;
   color: var(--gull-dyp);
   margin: 0 0 0.2em;
+}
+
+.kicker::before {
+  content: "";
+  display: inline-block;
+  width: 1.75rem;
+  height: 6px;
+  margin-right: 0.55rem;
+  vertical-align: middle;
+  border-radius: 3px;
+  background: var(--stripe);
 }
 
 a {
@@ -128,6 +140,22 @@ a {
 a:hover {
   color: var(--petrol);
   text-decoration-color: var(--petrol);
+  text-decoration-thickness: 2px;
+}
+
+/* Pil-lenker nikker i leseretningen ved hover */
+.pil-lenke,
+.pil-lenke-venstre {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.pil-lenke:hover {
+  transform: translateX(4px);
+}
+
+.pil-lenke-venstre:hover {
+  transform: translateX(-4px);
 }
 
 a:focus-visible,
@@ -477,6 +505,15 @@ footer::before {
   display: block;
 }
 
+/* Stillbilder i kort zoomer rolig ved hover (live-scenen har egen zoom) */
+.kort-bilde > img {
+  transition: transform 0.5s ease;
+}
+
+.kort:hover .kort-bilde > img {
+  transform: scale(1.04);
+}
+
 /* Live-forhåndsvisning: mockup-scene med ekte side som ruller i skjermen.
    Scenen er 3:2 og sentreres bak kortets 16:9-vindu, så skjerm-
    koordinatene (i prosent av scenen) treffer uansett kortbredde. */
@@ -799,6 +836,50 @@ footer::before {
   color: var(--blekk-dus);
 }
 
+.case-galleri img {
+  cursor: zoom-in;
+}
+
+/* Lysboks - flisene er beskåret, klikk viser hele bildet */
+#lysboks {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  max-width: min(92vw, 68rem);
+  overflow: visible;
+}
+
+#lysboks::backdrop {
+  background: rgba(29, 60, 65, 0.88);
+}
+
+#lysboks img {
+  display: block;
+  max-width: 100%;
+  max-height: 86vh;
+  border-radius: 10px;
+  border: 2px solid var(--papir);
+}
+
+#lysboks button {
+  position: absolute;
+  top: -0.9rem;
+  right: -0.9rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 0;
+  border-radius: 50%;
+  background: var(--papir);
+  color: var(--petrol);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+#lysboks button:hover {
+  background: var(--gull);
+}
+
 .case-lenker {
   margin-top: 1rem;
 }
@@ -883,6 +964,11 @@ footer::before {
   display: block;
   width: clamp(150px, 14vw, 200px);
   height: auto;
+  transition: transform 0.3s ease;
+}
+
+.footer-logo:hover img {
+  transform: translateY(-3px);
 }
 
 .footer-indre ul {
@@ -922,6 +1008,10 @@ footer a:hover {
   html { scroll-behavior: auto; }
   .inn { opacity: 1; transform: none; transition: none; }
   .kort:hover { transform: none; }
+  .kort:hover .kort-bilde > img { transform: none; }
+  .pil-lenke:hover,
+  .pil-lenke-venstre:hover { transform: none; }
+  .footer-logo:hover img { transform: none; }
 }
 
 /* --------------------------------------------------------------------------
