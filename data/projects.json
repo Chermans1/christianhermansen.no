@@ -1,5 +1,26 @@
 [
   {
+    "slug": "bransjekart",
+    "title": "Bransjekart Norge",
+    "type": "Webapp",
+    "status": "Live",
+    "year": "2026",
+    "featured": true,
+    "description": "Startet med en Excel-fil jeg fikk tilgang til: 36 bedrifter, med navn, nettside og bransje. Jeg ville vite mer, og to dager senere var det blitt et åpent kart med 277 tech- og utviklingsselskaper i Norge, med verifisert adresse, nettside og organisasjonsnummer. Gratis, uten innlogging, uten annonser og uten betalt oppføring.",
+    "tech": [
+      "HTML/CSS",
+      "JavaScript",
+      "Leaflet",
+      "Node.js"
+    ],
+    "links": {
+      "live": "https://bransjekart.christianhermansen.no"
+    },
+    "image": "/assets/img/bransjekart.webp",
+    "monogram": "B",
+    "utfordringer": "Data råtner fort. Tre av de første 48 oppføringene var utdaterte allerede da listen ble laget. Derfor sjekker et eget skript hver oppføring mot Brønnøysundregistrene og selskapets egen nettside, og publiseringen nekter å gå live hvis dataene har hull. Hver adresse er verifisert mot selskapets egen kontaktside eller Brønnøysund, aldri mot en katalogside og aldri gjettet."
+  },
+  {
     "slug": "fanatastisk-app",
     "title": "Fanatastisk-appen",
     "type": "iOS-app",
