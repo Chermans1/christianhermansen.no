@@ -18,7 +18,13 @@
     },
     "image": "/assets/img/bransjekart.webp",
     "monogram": "B",
-    "utfordringer": "Data råtner fort. Tre av de første 48 oppføringene var utdaterte allerede da listen ble laget. Derfor sjekker et eget skript hver oppføring mot Brønnøysundregistrene og selskapets egen nettside, og publiseringen nekter å gå live hvis dataene har hull. Hver adresse er verifisert mot selskapets egen kontaktside eller Brønnøysund, aldri mot en katalogside og aldri gjettet."
+    "utfordringer": "Data råtner fort. Tre av de første 48 oppføringene var utdaterte allerede da listen ble laget. Derfor sjekker et eget skript hver oppføring mot Brønnøysundregistrene og selskapets egen nettside, og publiseringen nekter å gå live hvis dataene har hull.",
+    "omtale": [
+      "En åpen oversikt over selskaper i Norge som driver med programvareutvikling, IT-drift, digitalbyråvirksomhet eller har et reelt internt utviklingsmiljø. Du kan filtrere på type virksomhet, fagområde og område, og søke i navn og adresse. Hvert selskap kan merkes med egen status og notat, som bare lagres i din egen nettleser og aldri sendes noe sted.",
+      "Kartet er bredt og grunt, ikke uttømmende. Det er de mest kjente selskapene per by, ikke alle. En komplett liste ville blitt umulig å holde fersk for én person.",
+      "Ingen betalt oppføring, ingen fremhevede selskaper, ingen annonser. I det øyeblikket noen kan kjøpe seg en bedre plassering, slutter dette å være en oversikt og blir en reklameplass.",
+      "Adresser og nettsider er verifisert mot selskapets egen kontaktside eller Brønnøysundregistrene, aldri mot en katalogside og aldri gjettet. Koordinatene kommer fra Kartverkets adresseregister."
+    ]
   },
   {
     "slug": "fanatastisk-app",

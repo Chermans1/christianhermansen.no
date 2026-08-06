@@ -132,6 +132,7 @@ async function lastCase() {
       <p class="case-meta inn"><span class="status">${prosjekt.status}</span><span class="kort-aar">${prosjekt.year}</span></p>
       ${harBilde ? `<div class="kort kort-case inn"><div class="kort-bilde${prosjekt.preview ? " kort-live" : ""}">${byggForhaandsvisning(prosjekt)}</div></div>` : ""}
       <p class="ingress inn">${prosjekt.description}</p>
+      ${prosjekt.omtale && prosjekt.omtale.length ? prosjekt.omtale.map((avsnitt) => `<p class="inn">${avsnitt}</p>`).join("") : ""}
       ${prosjekt.utfordringer ? `<h2 class="inn">Utfordringer</h2><p class="inn">${prosjekt.utfordringer}</p>` : ""}
       ${prosjekt.galleri && prosjekt.galleri.length ? `
         <h2 class="inn">Fra verkstedet</h2>
