@@ -42,7 +42,14 @@
   <header class="topp">
     <nav class="nav ramme" aria-label="Hovedmeny">
       <a href="/" class="nav-navn"><img src="/assets/img/ch-logo-horisontal-petrol.svg" alt="Christian Hermansen" class="nav-logo" width="214" height="42"></a>
-      <ul>
+      <button class="burger" type="button" aria-expanded="false" aria-controls="nav-liste" aria-label="Meny">
+        <img class="lag lag-topp" src="/assets/img/burger/topp.png" alt="" width="36" height="14">
+        <img class="lag lag-salat" src="/assets/img/burger/salat.png" alt="" width="36" height="7">
+        <img class="lag lag-ost" src="/assets/img/burger/ost.png" alt="" width="35" height="7">
+        <img class="lag lag-kjott" src="/assets/img/burger/kjott.png" alt="" width="35" height="9">
+        <img class="lag lag-bunn" src="/assets/img/burger/bunn.png" alt="" width="36" height="11">
+      </button>
+      <ul id="nav-liste">
         <li><a href="/" aria-current="page">Hjem</a></li>
         <li><a href="/prosjekter.html">Prosjekter</a></li>
         <li><a href="/om.html">Om meg</a></li>

@@ -31,6 +31,17 @@
     var(--petrol) 66.6% 100%
   );
 
+  /* Flat variant med luft mellom fargene - samme proporsjoner som båndet.
+     Brukes der tråden er skjult (kompakt bredde) og på skillelinjer. */
+  --stripe-luft: linear-gradient(
+    to bottom,
+    var(--rust) 0 6px,
+    transparent 6px 9px,
+    var(--gull) 9px 15px,
+    transparent 15px 18px,
+    var(--petrol) 18px 24px
+  );
+
   /* Rytme */
   --maks-bredde: 75rem;
   --maks-prosa: 42rem;
@@ -175,6 +186,13 @@ button:focus-visible {
   padding: 0 1.25rem;
 }
 
+/* Mer luft ut mot sidene på små skjermer */
+@media (max-width: 48rem) {
+  .ramme {
+    padding: 0 1.75rem;
+  }
+}
+
 main {
   position: relative;
 }
@@ -201,8 +219,8 @@ header.topp {
 header.topp::after {
   content: "";
   display: none;
-  height: 10px;
-  background: var(--stripe);
+  height: 24px;
+  background: var(--stripe-luft);
 }
 
 /* Retro-båndet - selve den røde tråden gjennom forsiden.
@@ -368,26 +386,19 @@ footer::before {
   font-size: clamp(0.95rem, 1.3vw, 1.25rem);
 }
 
-/* Under 89rem (1424px): teksten stables over bildet - samme brytepunkt som båndet,
-   så hele "kompaktmodusen" slår inn samlet. */
+/* Under 89rem (1424px): SAMME layout som desktop - panelet over bildet.
+   Bildet legges som bakteppe bak innholdet (absolutt, dekker alt), så
+   panelet alltid får plass uansett tekstmengde, og luftstripen under
+   panelet viser arbeidsbenken. */
 @media (max-width: 89rem) {
-  .hero-bilde {
-    display: flex;
-    flex-direction: column;
+  .hero-bilde img {
+    position: absolute;
+    inset: 0;
+    height: 100%;
   }
   .hero-tekst {
-    position: static;
-    order: -1;
-    padding: 2.5rem 0 1.5rem;
-  }
-  .hero-tekst h1 { max-width: none; }
-  /* Stablet modus: teksten står på vanlig sidebakgrunn - ingen boks nødvendig */
-  .hero-panel {
-    background: none;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    padding: 0;
-    border-radius: 0;
+    position: relative;
+    padding: clamp(1.5rem, 4vw, 3rem) 0 min(52vw, 26rem);
   }
 }
 
@@ -396,7 +407,9 @@ footer::before {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1rem 0;
+  /* Kun topp/bunn - sidepaddingen kommer fra .ramme (shorthand her
+     overstyrte den og klistret logoen til venstre kant på mobil) */
+  padding-block: 1rem;
 }
 
 .nav-navn {
@@ -437,6 +450,105 @@ footer::before {
 .nav ul a[aria-current="page"] {
   border-bottom: 2px solid var(--rust);
   padding-bottom: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Burgermeny - bokstavelig talt en burger. I hvilestand vises lagene
+   eksplodert (som bildet den er skåret fra); når menyen åpnes stabler
+   burgeren seg sammen. Kun synlig på små skjermer.
+   -------------------------------------------------------------------------- */
+
+.burger {
+  display: none;
+  position: relative;
+  width: 44px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.burger .lag {
+  position: absolute;
+  left: 50%;
+  height: auto;
+  transform: translateX(-50%) translateY(0);
+  transition: transform 0.4s cubic-bezier(0.34, 1.4, 0.5, 1);
+}
+
+/* Eksploderte posisjoner (top) og sammenstablet forskyvning (--stable),
+   kalibrert mot lagfilene i assets/img/burger/. Rekkefølgen er korrigert
+   fra kildebildet: osten ligger OVER kjøttet. Øvre lag overlapper nedre
+   (z-index) så stabelen ser riktig ut når den er sammenklappet. */
+.lag-topp  { top: 0;      width: 36px; z-index: 5; --stable: 10px; }
+.lag-salat { top: 15.9px; width: 35.5px; z-index: 4; --stable: 5px;  transition-delay: 0.03s; }
+.lag-ost   { top: 24.6px; width: 35px; z-index: 3; --stable: 0px;  transition-delay: 0.06s; }
+.lag-kjott { top: 33.4px; width: 35px; z-index: 2; --stable: -5px; transition-delay: 0.09s; }
+.lag-bunn  { top: 44.5px; width: 35.5px; z-index: 1; --stable: -10px; transition-delay: 0.12s; }
+
+.burger[aria-expanded="true"] .lag {
+  transform: translateX(-50%) translateY(var(--stable));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .burger .lag { transition: none; }
+}
+
+@media (max-width: 48rem) {
+  .burger { display: block; }
+
+  .nav {
+    position: relative;
+    flex-wrap: nowrap;
+  }
+
+  .nav-logo {
+    width: clamp(150px, 44vw, 214px);
+    height: auto;
+  }
+
+  /* Lenkene blir en nedtrekksmeny under headeren */
+  .nav > ul {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    flex-direction: column;
+    gap: 0;
+    padding: 0.5rem 1.75rem 1rem;
+    background: var(--papir-hev);
+    box-shadow: 0 14px 28px rgba(38, 61, 66, 0.18);
+  }
+
+  .nav.meny-apen > ul {
+    display: flex;
+  }
+
+  /* Signaturstripen avslutter menypanelet */
+  .nav > ul::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 24px;
+    background: var(--stripe-luft);
+  }
+
+  .nav > ul a {
+    display: block;
+    padding: 0.85rem 0;
+    font-size: 1.15rem;
+  }
+
+  .nav > ul a[aria-current="page"] {
+    border-bottom: 0;
+    padding-bottom: 0.85rem;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -680,14 +792,14 @@ footer::before {
    Skillelinjer og kontakt
    -------------------------------------------------------------------------- */
 
-/* Skillelinjen er selve signaturstripen - tynn, men umiskjennelig */
+/* Skillelinjen er selve signaturstripen - med luft, som båndet */
 .skille {
   border: 0;
-  height: 10px;
-  background: var(--stripe);
+  height: 24px;
+  background: var(--stripe-luft);
   max-width: var(--maks-bredde);
   margin: 0 auto;
-  border-radius: 5px;
+  border-radius: 3px;
 }
 
 .kontakt {
@@ -949,8 +1061,8 @@ footer::before {
   top: 0;
   left: 0;
   right: 0;
-  height: 10px;
-  background: var(--stripe);
+  height: 24px;
+  background: var(--stripe-luft);
 }
 
 .footer-indre {
@@ -1024,11 +1136,6 @@ footer a:hover {
    -------------------------------------------------------------------------- */
 
 @media (max-width: 34rem) {
-  .nav {
-    flex-direction: column;
-    gap: 0.5rem;
-    align-items: flex-start;
-  }
   section { padding: 3rem 0; }
   .hero { padding: 3rem 0 2.5rem; }
 }

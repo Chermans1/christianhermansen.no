@@ -232,6 +232,34 @@ function observerInn() {
 }
 
 // ---------------------------------------------------------------------------
+// Hamburgermeny - bokstavelig talt. Burgeren vises i lag (eksplodert) og
+// stabler seg sammen når menyen åpnes. Ren CSS-animasjon, JS bytter kun state.
+// ---------------------------------------------------------------------------
+
+function initMeny() {
+  const knapp = document.querySelector(".burger");
+  const nav = document.querySelector("nav.nav");
+  if (!knapp || !nav) return;
+
+  const lukk = () => {
+    knapp.setAttribute("aria-expanded", "false");
+    nav.classList.remove("meny-apen");
+  };
+
+  knapp.addEventListener("click", () => {
+    const apen = knapp.getAttribute("aria-expanded") === "true";
+    knapp.setAttribute("aria-expanded", String(!apen));
+    nav.classList.toggle("meny-apen", !apen);
+  });
+
+  // Lukk ved lenkeklikk (viktig for #kontakt på samme side) og med Escape
+  nav.querySelectorAll("ul a").forEach((a) => a.addEventListener("click", lukk));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") lukk();
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Årstall i footer
 // ---------------------------------------------------------------------------
 
@@ -246,4 +274,5 @@ document.addEventListener("DOMContentLoaded", () => {
   lastProsjekter();
   lastCase();
   initLysboks();
+  initMeny();
 });
