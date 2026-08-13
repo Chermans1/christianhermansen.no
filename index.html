@@ -1,139 +1,295 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="nb">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Christian Hermansen - jeg bygger ting</title>
-  <meta name="description" content="Apper, nettsider, skilt og sanger fra arbeidsbenken i Bergen. Ærlig portefølje, ingen pynt.">
-  <meta name="theme-color" content="#f1e7d3">
-  <link rel="canonical" href="https://christianhermansen.no">
-  <meta property="og:site_name" content="Christian Hermansen">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Christian Hermansen - jeg bygger ting">
-  <meta property="og:description" content="Apper, nettsider, skilt og sanger fra arbeidsbenken i Bergen. Ærlig portefølje, ingen pynt.">
-  <meta property="og:url" content="https://christianhermansen.no">
-  <meta property="og:image" content="https://christianhermansen.no/og-bilde.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:locale" content="nb_NO">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,450;9..144,550&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Christian Hermansen",
-    "url": "https://christianhermansen.no",
-    "jobTitle": "Utvikler og designer",
-    "address": { "@type": "PostalAddress", "addressLocality": "Bergen", "addressCountry": "NO" },
-    "sameAs": ["https://github.com/Chermans1"]
-  }
-  </script>
-</head>
-<body class="forside">
-  <div class="gloed" aria-hidden="true"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Christian Hermansen - jeg bygger ting</title>
+    <meta
+      name="description"
+      content="Apper, nettsider, skilt og sanger fra arbeidsbenken i Bergen. Ærlig portefølje, ingen pynt."
+    />
+    <meta name="theme-color" content="#f1e7d3" />
+    <link rel="canonical" href="https://christianhermansen.no" />
+    <meta property="og:site_name" content="Christian Hermansen" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Christian Hermansen - jeg bygger ting" />
+    <meta
+      property="og:description"
+      content="Apper, nettsider, skilt og sanger fra arbeidsbenken i Bergen. Ærlig portefølje, ingen pynt."
+    />
+    <meta property="og:url" content="https://christianhermansen.no" />
+    <meta
+      property="og:image"
+      content="https://christianhermansen.no/og-bilde.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="nb_NO" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,450;9..144,550&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Christian Hermansen",
+        "url": "https://christianhermansen.no",
+        "jobTitle": "Utvikler og designer",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Bergen",
+          "addressCountry": "NO"
+        },
+        "sameAs": ["https://github.com/Chermans1"]
+      }
+    </script>
+  </head>
+  <body class="forside">
+    <div class="gloed" aria-hidden="true"></div>
 
-  <header class="topp">
-    <nav class="nav ramme" aria-label="Hovedmeny">
-      <a href="/" class="nav-navn"><img src="/assets/img/ch-logo-horisontal-petrol.svg" alt="Christian Hermansen" class="nav-logo" width="214" height="42"></a>
-      <button class="burger" type="button" aria-expanded="false" aria-controls="nav-liste" aria-label="Meny">
-        <img class="lag lag-topp" src="/assets/img/burger/topp.png" alt="" width="36" height="14">
-        <img class="lag lag-salat" src="/assets/img/burger/salat.png" alt="" width="36" height="7">
-        <img class="lag lag-ost" src="/assets/img/burger/ost.png" alt="" width="35" height="7">
-        <img class="lag lag-kjott" src="/assets/img/burger/kjott.png" alt="" width="35" height="9">
-        <img class="lag lag-bunn" src="/assets/img/burger/bunn.png" alt="" width="36" height="11">
-      </button>
-      <ul id="nav-liste">
-        <li><a href="/" aria-current="page">Hjem</a></li>
-        <li><a href="/prosjekter.html">Prosjekter</a></li>
-        <li><a href="/om.html">Om meg</a></li>
-        <li><a href="#kontakt">Kontakt</a></li>
-      </ul>
-    </nav>
-  </header>
+    <header class="topp">
+      <nav class="nav ramme" aria-label="Hovedmeny">
+        <a href="/" class="nav-navn"
+          ><img
+            src="/assets/img/ch-logo-horisontal-petrol.svg"
+            alt="Christian Hermansen"
+            class="nav-logo"
+            width="214"
+            height="42"
+        /></a>
+        <button
+          class="burger"
+          type="button"
+          aria-expanded="false"
+          aria-controls="nav-liste"
+          aria-label="Meny"
+        >
+          <img
+            class="lag lag-topp"
+            src="/assets/img/burger/topp.png"
+            alt=""
+            width="36"
+            height="14"
+          />
+          <img
+            class="lag lag-salat"
+            src="/assets/img/burger/salat.png"
+            alt=""
+            width="36"
+            height="7"
+          />
+          <img
+            class="lag lag-ost"
+            src="/assets/img/burger/ost.png"
+            alt=""
+            width="35"
+            height="7"
+          />
+          <img
+            class="lag lag-kjott"
+            src="/assets/img/burger/kjott.png"
+            alt=""
+            width="35"
+            height="9"
+          />
+          <img
+            class="lag lag-bunn"
+            src="/assets/img/burger/bunn.png"
+            alt=""
+            width="36"
+            height="11"
+          />
+        </button>
+        <ul id="nav-liste">
+          <li><a href="/" aria-current="page">Hjem</a></li>
+          <li><a href="/prosjekter.html">Prosjekter</a></li>
+          <li><a href="/om.html">Om meg</a></li>
+          <li><a href="#kontakt">Kontakt</a></li>
+        </ul>
+      </nav>
+    </header>
 
-  <main>
-    <section class="hero-bilde">
-      <img src="/assets/img/retro-hero.webp" alt="Illustrasjon av en arbeidsbenk med gammel radio, en retro datamaskin med kode på skjermen, kaffe og utsikt mot Bergen" width="1536" height="1024" fetchpriority="high">
-      <div class="baand-hero" aria-hidden="true"></div>
-      <div class="hero-tekst">
-        <div class="ramme">
-          <div class="hero-panel">
-            <h1 class="inn">Jeg bygger ting.</h1>
-            <p class="ingress inn">Jeg har vært tømrer, driftssjef og det meste imellom. Nå bygger jeg fra Bergen, med både kappsag og kompilator på benken. Denne siden er ikke et byrå og ikke en salgsplakat. Det er arbeidsbenken min: appene, nettsidene, skiltene, sangene og de rare byggeprosjektene, med ærlig status på hvert eneste ett.</p>
+    <main>
+      <section class="hero-bilde">
+        <img
+          src="/assets/img/retro-hero.webp"
+          alt="Illustrasjon av en arbeidsbenk med gammel radio, en retro datamaskin med kode på skjermen, kaffe og utsikt mot Bergen"
+          width="1536"
+          height="1024"
+          fetchpriority="high"
+        />
+        <div class="baand-hero" aria-hidden="true"></div>
+        <div class="hero-tekst">
+          <div class="ramme">
+            <div class="hero-panel">
+              <h1 class="inn">Jeg bygger ting.</h1>
+              <p class="ingress inn">
+                Jeg har vært tømrer, driftssjef og det meste imellom. Nå bygger
+                jeg fra Bergen, med både kappsag og kompilator på benken. Denne
+                siden er ikke et byrå og ikke en salgsplakat. Det er
+                arbeidsbenken min: appene, nettsidene, skiltene, sangene og de
+                rare byggeprosjektene, med ærlig status på hvert eneste ett.
+              </p>
+            </div>
           </div>
         </div>
+      </section>
+
+      <div class="sone sone-hoyre">
+        <section class="ramme" aria-labelledby="prosjekter-tittel">
+          <p class="kicker inn">Fra arbeidsbenken</p>
+          <h2 id="prosjekter-tittel" class="inn">Utvalgte prosjekter</h2>
+          <div
+            class="prosjekt-rutenett"
+            data-prosjekter
+            data-kun-utvalgte
+          ></div>
+          <noscript
+            ><p class="dus">
+              Prosjektene lastes med JavaScript. Du finner dem også på
+              <a href="/prosjekter.html">prosjektsiden</a>.
+            </p></noscript
+          >
+          <p style="margin-top: 2rem">
+            <a class="pil-lenke" href="/prosjekter.html">Alle prosjekter →</a>
+          </p>
+        </section>
       </div>
-    </section>
 
-    <div class="sone sone-hoyre">
-      <section class="ramme" aria-labelledby="prosjekter-tittel">
-        <p class="kicker inn">Fra arbeidsbenken</p>
-        <h2 id="prosjekter-tittel" class="inn">Utvalgte prosjekter</h2>
-        <div class="prosjekt-rutenett" data-prosjekter data-kun-utvalgte></div>
-        <noscript><p class="dus">Prosjektene lastes med JavaScript. Du finner dem også på <a href="/prosjekter.html">prosjektsiden</a>.</p></noscript>
-        <p style="margin-top: 2rem;"><a class="pil-lenke" href="/prosjekter.html">Alle prosjekter →</a></p>
-      </section>
-    </div>
+      <div class="baand-sving" aria-hidden="true">
+        <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M 1396 0 L 1396 80 A 108 108 0 0 1 1288 188 L 152 188 A 52 52 0 0 0 100 240 L 100 320"
+            fill="none"
+            stroke="#a8432a"
+            stroke-width="16"
+          />
+          <path
+            d="M 1368 0 L 1368 80 A 80 80 0 0 1 1288 160 L 152 160 A 80 80 0 0 0 72 240 L 72 320"
+            fill="none"
+            stroke="#d9923c"
+            stroke-width="16"
+          />
+          <path
+            d="M 1340 0 L 1340 80 A 52 52 0 0 1 1288 132 L 152 132 A 108 108 0 0 0 44 240 L 44 320"
+            fill="none"
+            stroke="#24494e"
+            stroke-width="16"
+          />
+        </svg>
+      </div>
 
-    <div class="baand-sving" aria-hidden="true">
-      <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
-        <path d="M 1396 0 L 1396 80 A 108 108 0 0 1 1288 188 L 152 188 A 52 52 0 0 0 100 240 L 100 320" fill="none" stroke="#a8432a" stroke-width="16"/>
-        <path d="M 1368 0 L 1368 80 A 80 80 0 0 1 1288 160 L 152 160 A 80 80 0 0 0 72 240 L 72 320" fill="none" stroke="#d9923c" stroke-width="16"/>
-        <path d="M 1340 0 L 1340 80 A 52 52 0 0 1 1288 132 L 152 132 A 108 108 0 0 0 44 240 L 44 320" fill="none" stroke="#24494e" stroke-width="16"/>
-      </svg>
-    </div>
-
-    <div class="sone sone-venstre">
-      <section class="ramme">
-        <div class="om-splitt">
-          <div>
-            <h2 class="inn">Kort om meg</h2>
-            <p class="inn">Jeg har rundt 40 år med data i fingrene, helt siden Commodore 64, men gikk veien om byggeplass, butikkgulv, klasserom og ledergruppe før jeg landet i koden. Da kroppen sa stopp etter årene som tømrer, tok jeg med meg håndverkertankegangen videre: mål to ganger, kutt én gang, og ikke lever noe du ikke ville hatt i eget hus.</p>
-            <p class="inn">Nå tar jeg fullstack-utdanning og bygger ting jeg selv trenger. Fokusappen min finnes fordi hodet mitt trengte den. Festivalappen finnes fordi festivalen jeg bidrar til trengte den. <a href="/om.html">Mer om meg her.</a></p>
+      <div class="sone sone-venstre">
+        <section class="ramme">
+          <div class="om-splitt">
+            <div>
+              <h2 class="inn">Kort om meg</h2>
+              <p class="inn">
+                Jeg har rundt 40 år med data i fingrene, helt siden Commodore
+                64, men gikk veien om byggeplass, butikkgulv, klasserom og
+                ledergruppe før jeg landet i koden. Da kroppen sa stopp etter
+                årene som tømrer, tok jeg med meg håndverkertankegangen videre:
+                mål to ganger, kutt én gang, og ikke lever noe du ikke ville
+                hatt i eget hus.
+              </p>
+              <p class="inn">
+                Nå tar jeg fullstack-utdanning og bygger ting jeg selv trenger.
+                Fokusappen min finnes fordi hodet mitt trengte den.
+                Festivalappen finnes fordi festivalen jeg bidrar til trengte
+                den. <a href="/om.html">Mer om meg her.</a>
+              </p>
+            </div>
+            <figure class="om-illustrasjon inn">
+              <img
+                src="/assets/img/verksted.webp"
+                alt="Illustrasjon laget av et ekte bilde: Christian lodder ved arbeidsbenken på loftet"
+                loading="lazy"
+                width="1200"
+                height="800"
+              />
+            </figure>
           </div>
-          <figure class="om-illustrasjon inn">
-            <img src="/assets/img/verksted.webp" alt="Illustrasjon laget av et ekte bilde: Christian lodder ved arbeidsbenken på loftet" loading="lazy" width="1200" height="800">
-          </figure>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
 
-    <div class="baand-sving" aria-hidden="true">
-      <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
-        <path d="M 100 0 L 100 40 A 52 52 0 0 0 152 92 L 1288 92 A 108 108 0 0 1 1396 200 L 1396 320" fill="none" stroke="#a8432a" stroke-width="16"/>
-        <path d="M 72 0 L 72 40 A 80 80 0 0 0 152 120 L 1288 120 A 80 80 0 0 1 1368 200 L 1368 320" fill="none" stroke="#d9923c" stroke-width="16"/>
-        <path d="M 44 0 L 44 40 A 108 108 0 0 0 152 148 L 1288 148 A 52 52 0 0 1 1340 200 L 1340 320" fill="none" stroke="#24494e" stroke-width="16"/>
-      </svg>
-    </div>
+      <div class="baand-sving" aria-hidden="true">
+        <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M 100 0 L 100 40 A 52 52 0 0 0 152 92 L 1288 92 A 108 108 0 0 1 1396 200 L 1396 320"
+            fill="none"
+            stroke="#a8432a"
+            stroke-width="16"
+          />
+          <path
+            d="M 72 0 L 72 40 A 80 80 0 0 0 152 120 L 1288 120 A 80 80 0 0 1 1368 200 L 1368 320"
+            fill="none"
+            stroke="#d9923c"
+            stroke-width="16"
+          />
+          <path
+            d="M 44 0 L 44 40 A 108 108 0 0 0 152 148 L 1288 148 A 52 52 0 0 1 1340 200 L 1340 320"
+            fill="none"
+            stroke="#24494e"
+            stroke-width="16"
+          />
+        </svg>
+      </div>
 
-    <div class="sone sone-hoyre">
-    <section id="kontakt" class="ramme kontakt">
-      <p class="kicker inn">Si hei</p>
-      <h2 class="inn">Kontakt</h2>
-      <p class="inn">Jeg tar oppdrag på forespørsel, nettsider og mindre apper. Ingen prisliste, intet skjema. Send en e-post, så snakker vi om hva du trenger.</p>
-      <p class="inn"><a class="epost" href="mailto:epost@christianhermansen.no">epost@christianhermansen.no</a></p>
-    </section>
-    </div>
-  </main>
+      <div class="sone sone-hoyre">
+        <section id="kontakt" class="ramme kontakt">
+          <p class="kicker inn">Si hei</p>
+          <h2 class="inn">Kontakt</h2>
+          <p class="inn">
+            Jeg tar oppdrag på forespørsel, nettsider og mindre apper. Ingen
+            prisliste, intet skjema. Send en e-post, så snakker vi om hva du
+            trenger.
+          </p>
+          <p class="inn">
+            <a class="epost" href="mailto:epost@christianhermansen.no"
+              >epost@christianhermansen.no</a
+            >
+          </p>
+        </section>
+      </div>
+    </main>
 
-  <footer>
-    <div class="ramme footer-indre">
-      <a href="/" class="footer-logo"><img src="/assets/img/ch-logo-stablet-krem.svg" alt="Christian Hermansen" width="190" height="119" loading="lazy"></a>
-      <span>© <span data-aar>2026</span> Christian Hermansen. Bygd for hånd i Bergen, uten maler og uten sporing.</span>
-      <ul>
-        <li><a href="https://github.com/Chermans1" target="_blank" rel="noopener">GitHub</a></li>
-        <li><a href="/personvern.html">Personvern</a></li>
-      </ul>
-    </div>
-  </footer>
+    <footer>
+      <div class="ramme footer-indre">
+        <a href="/" class="footer-logo"
+          ><img
+            src="/assets/img/ch-logo-stablet-krem.svg"
+            alt="Christian Hermansen"
+            width="190"
+            height="119"
+            loading="lazy"
+        /></a>
+        <span
+          >© <span data-aar>2026</span> Christian Hermansen. Bygd for hånd i
+          Bergen, uten maler og uten sporing.</span
+        >
+        <ul>
+          <li>
+            <a
+              href="https://github.com/Chermans1"
+              target="_blank"
+              rel="noopener"
+              >GitHub</a
+            >
+          </li>
+          <li><a href="/personvern.html">Personvern</a></li>
+        </ul>
+      </div>
+    </footer>
 
-  <script src="/js/main.js"></script>
-</body>
+    <script src="/js/main.js"></script>
+    <script defer src="/_vercel/insights/script.js"></script>
+  </body>
 </html>
