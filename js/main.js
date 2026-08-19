@@ -135,7 +135,7 @@ async function lastCase() {
       ${prosjekt.omtale && prosjekt.omtale.length ? prosjekt.omtale.map((avsnitt) => `<p class="inn">${avsnitt}</p>`).join("") : ""}
       ${prosjekt.utfordringer ? `<h2 class="inn">Utfordringer</h2><p class="inn">${prosjekt.utfordringer}</p>` : ""}
       ${prosjekt.galleri && prosjekt.galleri.length ? `
-        <h2 class="inn">Fra verkstedet</h2>
+        <h2 class="inn">${prosjekt.galleriTittel || "Fra verkstedet"}</h2>
         <div class="case-galleri inn">
           ${prosjekt.galleri.map((b) => `<figure><img src="${b.src}" alt="${b.alt}" loading="lazy">${b.tekst ? `<figcaption>${b.tekst}</figcaption>` : ""}</figure>`).join("")}
         </div>` : ""}

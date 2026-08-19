@@ -30,21 +30,61 @@
     "slug": "fanatastisk-app",
     "title": "Fanatastisk-appen",
     "type": "iOS-app",
-    "status": "Innsendt til App Store",
+    "status": "Live i App Store",
     "year": "2026",
     "featured": true,
-    "description": "Festivalappen til Fanatastisk, musikkfestivalen i Fana jeg bidrar til. Program, artistsider, interaktivt kart, favoritter med varsel før konsertstart. Bygget i SwiftUI mot samme Sanity-innhold som nettsiden.",
+    "description": "Festivalappen til Fanatastisk, musikkfestivalen i Fana jeg bidrar til. Program, artistsider, interaktivt kart og favoritter med varsel før konsertstart. Bygget i SwiftUI mot samme Sanity-innhold som nettsiden, og ute i App Store siden 17. august 2026.",
     "tech": [
       "Swift",
       "SwiftUI",
-      "Sanity"
+      "Sanity",
+      "Xcode"
     ],
     "links": {
+      "appstore": "https://apps.apple.com/no/app/fanatastisk/id6787214002",
       "website": "https://fanatastisk.no"
     },
-    "image": null,
+    "image": "/assets/img/fanatastisk-app.webp",
     "monogram": "F",
-    "utfordringer": "Appen deler alt innhold med nettsiden gjennom Sanity. Utfordringen var å bygge en native opplevelse med kart, favoritter og varsler oppå et innholdssystem som redigeres av flere, uten at appen knekker når innholdet endrer seg."
+    "utfordringer": "Appen deler alt innhold med nettsiden gjennom Sanity. Utfordringen var å bygge en native opplevelse med kart, favoritter og varsler oppå et innholdssystem som redigeres av flere, uten at appen knekker når innholdet endrer seg. Selve innsendingen var en jobb for seg: personvernerklæring, aldersgrense, App Privacy og skjermbilder i riktige formater. Den gikk gjennom review hos Apple på under et døgn.",
+    "omtale": [
+      "Dette er den første appen min som er ute i App Store. Jeg har bygget apper før, men å ta en helt ut, gjennom review og ut til folk som faktisk skal bruke den på en festival, er noe annet enn å teste i simulatoren.",
+      "Programmet, artistene, nyhetene og kartet kommer fra Sanity, det samme innholdet som driver fanatastisk.no. Legger noen inn en ny artist i Studio, dukker den opp i appen uten at jeg gjør noe. Alt siste svar caches på telefonen, så appen virker også når mobilnettet gir opp midt på festivalområdet.",
+      "Android-versjonen er ferdig bygget og ligger i lukket testing. Google krever tolv testere i fjorten sammenhengende dager før produksjon, og den klokken rekker ikke fram til festivalen. Publikum på Android bruker nettsiden i år."
+    ],
+    "galleriTittel": "Fra appen",
+    "galleri": [
+      {
+        "src": "/assets/img/fanatastisk-app-hjem.webp",
+        "alt": "Forsiden i Fanatastisk-appen med festivallogo, nedtelling og neste artist ut",
+        "tekst": "Forsiden med nedtelling til første artist."
+      },
+      {
+        "src": "/assets/img/fanatastisk-app-program.webp",
+        "alt": "Programfanen med faner for fredag, lørdag og søndag og en liste over artister",
+        "tekst": "Programmet dag for dag, med favorittmerking."
+      },
+      {
+        "src": "/assets/img/fanatastisk-app-artist.webp",
+        "alt": "Artistsiden for Datarock med bilde, omtale og knapp for billettkjøp",
+        "tekst": "Artistsiden henter bilde og omtale fra Sanity."
+      },
+      {
+        "src": "/assets/img/fanatastisk-app-kart.webp",
+        "alt": "Interaktivt festivalkart med markører for scener, barer, mat og toaletter",
+        "tekst": "Festivalkartet. Punktene ligger i Sanity, ikke i koden."
+      },
+      {
+        "src": "/assets/img/fanatastisk-app-nytt.webp",
+        "alt": "Nyhetslisten i appen med artistslipp og festivalnyheter",
+        "tekst": "Siste nytt, samme artikler som på nettsiden."
+      },
+      {
+        "src": "/assets/img/fanatastisk-app-morkt.webp",
+        "alt": "Forsiden i appen vist i mørk modus",
+        "tekst": "Mørk modus. Fargene er semantiske tokens, ikke to sett verdier."
+      }
+    ]
   },
   {
     "slug": "signal-noise",
