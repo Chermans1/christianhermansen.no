@@ -304,7 +304,7 @@
     "status": "Live",
     "year": "2025–2026",
     "featured": true,
-    "description": "Min egen utgivelseskanal: ni låter på bergensk, tekstene mine, produsert i Suno. Spilles av på en illustrert platespiller der coveret er selve platelabelen og tonearmen faktisk vandrer innover mens låten spiller.",
+    "description": "Min egen utgivelseskanal: elleve låter på bergensk, tekstene mine, produsert i Suno. Spilles av på en illustrert platespiller der coveret er selve platelabelen og tonearmen faktisk vandrer innover mens låten spiller. Blir skjermen smalere, bytter spilleren format til kassettdekk og deretter CD.",
     "tech": [
       "Next.js",
       "TypeScript",
@@ -316,7 +316,25 @@
     },
     "image": "/assets/img/turntable.webp",
     "monogram": "T",
-    "utfordringer": "Å få en illustrert platespiller til å oppføre seg som en ekte: armen sporer låtens faktiske fremdrift, coveret spinner med platen, og alt er bygget av sammensatte paneler som ikke tåler klønete hender. Og så det vanskeligste: å velge ni låter fra fire tusen genereringer."
+    "utfordringer": "Å få en illustrert platespiller til å oppføre seg som en ekte: armen sporer låtens faktiske fremdrift, coveret spinner med platen, og alt er bygget av sammensatte paneler som ikke tåler klønete hender. Og så det vanskeligste: å velge elleve låter fra fire tusen genereringer.",
+    "omtale": [
+      "Spilleren bytter format med skjermen. Platespiller på desktop, kassettdekk på nettbrett og liggende telefon, CD i et buevindu når telefonen står. Ikke tre ulike sider, men samme spiller som kler seg om underveis.",
+      "Detaljene er der enten du ser dem eller ikke. Tonearmen står ikke stille mens låten går, den vandrer innover i platen i takt med hvor langt ut i sporet du er, slik en ekte arm gjør. På kassetten tømmes venstre spole og høyre fylles mens du lytter, så selve tapen er fremdriftsindikatoren. Det finnes ingen fremdriftslinje noe sted i spilleren, bare mekanikk som oppfører seg riktig.",
+      "De færreste legger merke til det. Det er litt av poenget. Forskjellen på noe som ser ut som en platespiller og noe som oppfører seg som en, ligger i ting du ikke ser før du har sett på det en stund."
+    ],
+    "galleriTittel": "Samme spiller, tre formater",
+    "galleri": [
+      {
+        "src": "/assets/img/turntable-kassett.webp",
+        "alt": "Kassettdekk med roterende spoler, vist på en telefon som holdes liggende",
+        "tekst": "Kassettdekket på liggende telefon og nettbrett. Venstre spole tømmes mens høyre fylles."
+      },
+      {
+        "src": "/assets/img/turntable-cd.webp",
+        "alt": "Buevindu med roterende CD over låtlisten, vist på en telefon som holdes stående",
+        "tekst": "Stående telefon: coveret roterer bak buevinduet som en CD i skuffen."
+      }
+    ]
   },
   {
     "slug": "denne-siden",

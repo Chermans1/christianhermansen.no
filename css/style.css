@@ -555,8 +555,11 @@ footer::before {
    Hero
    -------------------------------------------------------------------------- */
 
+/* NB: padding-block (longhand), ikke padding-shorthand. Seksjonene har
+   class="hero ramme", og shorthand ville nullet .ramme sin sidepadding -
+   samme felle som .nav hadde. Da klistret casene seg til skjermkanten. */
 .hero {
-  padding: 5rem 0 4rem;
+  padding-block: 5rem 4rem;
 }
 
 .hero h1 .strek {
@@ -1137,5 +1140,5 @@ footer a:hover {
 
 @media (max-width: 34rem) {
   section { padding: 3rem 0; }
-  .hero { padding: 3rem 0 2.5rem; }
+  .hero { padding-block: 3rem 2.5rem; }
 }
