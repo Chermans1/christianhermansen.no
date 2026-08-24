@@ -339,11 +339,11 @@
   {
     "slug": "turntable",
     "title": "Turntable",
-    "type": "Musikk + nettside",
+    "type": "Interaktiv spiller",
     "status": "Live",
     "year": "2025–2026",
     "featured": true,
-    "description": "Min egen utgivelseskanal: elleve låter på bergensk, tekstene mine, produsert i Suno. Spilles av på en illustrert platespiller der coveret er selve platelabelen og tonearmen faktisk vandrer innover mens låten spiller. Blir skjermen smalere, bytter spilleren format til kassettdekk og deretter CD.",
+    "description": "En illustrert platespiller bygget som nettside: coveret er selve platelabelen, og tonearmen vandrer faktisk innover mens låten spiller. Blir skjermen smalere, bytter spilleren format til kassettdekk og deretter CD. Låtene er demoinnhold, elleve tekster jeg har skrevet, produsert i Suno, så spilleren har noe ekte å spille.",
     "tech": [
       "Next.js",
       "TypeScript",
