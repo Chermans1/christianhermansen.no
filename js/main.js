@@ -93,6 +93,13 @@ async function lastProsjekter() {
     }
     observerInn();
     observerLiveKort();
+
+    // Nettleseren hopper til #ankeret FØR kortene er rendret, så innholdet
+    // over dytter målet nedover etterpå. Hopp på nytt nå som høyden stemmer.
+    if (window.location.hash) {
+      const maal = document.querySelector(window.location.hash);
+      if (maal) maal.scrollIntoView({ behavior: "instant", block: "start" });
+    }
   } catch {
     beholder.innerHTML =
       '<p class="dus">Fikk ikke lastet prosjektene. Prøv å laste siden på nytt.</p>';

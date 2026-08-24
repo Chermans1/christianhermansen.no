@@ -27,6 +27,45 @@
     ]
   },
   {
+    "slug": "kodehode",
+    "title": "Kodehode",
+    "type": "Fullstack-kurs",
+    "status": "Pågående",
+    "year": "2026",
+    "featured": true,
+    "description": "Jeg er selvlært frontend-utvikler. Kodehode er et 12-måneders fullstack-kurs jeg går nå for å bygge et formelt grunnlag på toppen av det jeg kan fra før: repetere HTML og CSS, lære JavaScript ordentlig, og ta det hele veien til backend. Prosjektene her er arbeider fra kurset, lenket til kildekoden på GitHub.",
+    "tech": [
+      "HTML",
+      "CSS",
+      "JavaScript"
+    ],
+    "links": {
+      "live": "https://chermans1.github.io/kodehode/",
+      "github": "https://github.com/Chermans1/kodehode"
+    },
+    "image": "/assets/img/kodehode-kort.webp",
+    "monogram": "K",
+    "utfordringer": "Å lære systematisk etter år med å plukke opp det man trenger. Kurset tvinger meg til å forstå grunnlaget, ikke bare få det til å virke.",
+    "galleriTittel": "Prosjekter fra kurset",
+    "galleri": [
+      {
+        "src": "/assets/img/kodehode-mos-eisley.webp",
+        "alt": "Mos Eisley Munchies - nettbutikk for snacks fra Tatooine",
+        "tekst": "Mos Eisley Munchies - HTML/CSS-oppgave. Fullstendig nettbutikk-layout med header, produktgrid, FAQ og nyhetsbrev. Laget som en recap-oppgave for å repetere alt HTML og CSS."
+      },
+      {
+        "src": "/assets/img/kodehode-gjett-tallet.webp",
+        "alt": "Gjett-tallet i spill - måleren viser Brennhett og tidligere gjett ligger under innfeltet",
+        "tekst": "Gjett-tallet - første JavaScript-prosjekt. Spillet trekker et hemmelig tall og svarer med høyere/lavere og en varm/kald-måler. Forsøkene vises som prikker, tidligere gjett huskes, og rekorder lagres per nivå."
+      },
+      {
+        "src": "/assets/img/kodehode-gjett-tallet-start.webp",
+        "alt": "Startskjermen i Gjett-tallet med fire vanskelighetsgrader",
+        "tekst": "Fire nivåer, fra 1-20 med tallknapper til 1-1000 med skrivefelt. Nivåkortene bygges av JavaScript og viser rekorden din."
+      }
+    ]
+  },
+  {
     "slug": "fanatastisk-app",
     "title": "Fanatastisk-appen",
     "type": "iOS-app",
