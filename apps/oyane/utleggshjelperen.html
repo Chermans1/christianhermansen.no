@@ -1,0 +1,692 @@
+<title>Utleggshjelperen Øyane</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+  :root{
+    --navy:#1F3A5F; --navy2:#16293F; --papir:#F7F8FB; --panel:#EEF2F7;
+    --gul:#FFF3C4; --gultekst:#7A5C00; --gronn:#2E7D52; --gronnlys:#E4F0E8;
+    --rod:#A63A3A; --rodlys:#F5D9D9; --gra:#5A6472; --strek:#D7DEE8;
+    --blekk:#22303F; --hvit:#FFFFFF;
+  }
+  *{box-sizing:border-box}
+  html{color-scheme:light}
+  body{margin:0; background:var(--papir); color:var(--blekk);
+    font-family:"Atkinson Hyperlegible", Arial, sans-serif; font-size:16px; line-height:1.5}
+  h1,h2,h3{font-family:"Bricolage Grotesque","Atkinson Hyperlegible",Arial,sans-serif; text-wrap:balance; margin:0}
+  .tall{font-variant-numeric:tabular-nums}
+  header{background:var(--navy); color:var(--hvit); padding:24px 20px 26px}
+  .hwrap{max-width:900px; margin:0 auto}
+  .eyebrow{text-transform:uppercase; letter-spacing:.09em; font-size:12px; color:#BFD0E6; margin:0 0 6px}
+  header h1{font-size:32px; line-height:1.1}
+  header p.under{margin:8px 0 0; color:#D7E2F0; max-width:40em}
+  main{max-width:900px; margin:0 auto; padding:22px 20px 80px; display:flex; flex-direction:column; gap:20px}
+  button{font-family:inherit; font-size:15px; cursor:pointer; border-radius:8px}
+  button:focus-visible, input:focus-visible, textarea:focus-visible{outline:3px solid #6FA8DC; outline-offset:2px}
+  .kort{background:var(--hvit); border:1px solid var(--strek); border-radius:14px; padding:22px 22px 20px}
+  .stegintro{margin:4px 0 16px; color:var(--gra); max-width:44em}
+  .steghode{display:flex; gap:14px; align-items:flex-start; margin-bottom:6px}
+  .stegnr{flex:0 0 auto; width:40px; height:40px; border-radius:50%; background:var(--navy); color:var(--hvit);
+    display:flex; align-items:center; justify-content:center; font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:19px}
+  .steghode h2{font-size:22px; padding-top:5px}
+  .tilbake{align-self:flex-start; background:none; border:none; color:var(--navy); font-weight:700; padding:4px 0; font-size:15px}
+  .tilbake:hover{text-decoration:underline}
+
+  /* Forside */
+  .valggrid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px}
+  @media (max-width:760px){ .valggrid{grid-template-columns:1fr} }
+  .valgkort{background:var(--hvit); border:1.5px solid var(--strek); border-radius:14px; padding:20px; text-align:left;
+    display:flex; flex-direction:column; gap:8px; cursor:pointer}
+  .valgkort:hover{border-color:var(--navy)}
+  .valgkort h3{font-size:19px; color:var(--navy)}
+  .valgkort p{margin:0; color:var(--gra); font-size:14.5px}
+  .valgkort .eks{font-size:13.5px; color:var(--gra); background:var(--panel); border-radius:8px; padding:8px 10px}
+  .valgkort .aapne{margin-top:auto; align-self:flex-start; background:var(--navy); color:var(--hvit); border:none; padding:9px 16px; font-weight:700}
+  .veiviser .sp{font-weight:700; margin:14px 0 8px}
+  .janei{display:flex; gap:8px}
+  .janei button{background:var(--panel); border:1.5px solid var(--strek); color:var(--navy); padding:9px 20px; font-weight:700}
+  .janei button.valgt{background:var(--navy); border-color:var(--navy); color:var(--hvit)}
+  .anbefaling{margin-top:14px; background:var(--gronnlys); color:#1E5238; border-radius:10px; padding:14px 16px; font-size:15.5px; display:none}
+  .anbefaling b{font-size:16.5px}
+
+  /* Felt */
+  .infogrid{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  @media (max-width:640px){ .infogrid{grid-template-columns:1fr} }
+  label.felt{display:flex; flex-direction:column; gap:4px; font-weight:700; font-size:14px}
+  label.felt .hint{font-weight:400; color:var(--gra); font-size:13px}
+  input[type="text"], textarea{font-family:inherit; font-size:16px; padding:10px 12px; border:1.5px solid var(--strek);
+    border-radius:8px; background:var(--hvit); color:var(--blekk); width:100%}
+  textarea{resize:vertical; min-height:70px}
+  input[type="text"]:hover, textarea:hover{border-color:#B8C4D4}
+  .feltok{font-weight:400; font-size:13px; color:var(--gronn)}
+  .feltfeil{font-weight:400; font-size:13px; color:var(--rod)}
+  .gulboks{background:var(--gul); color:var(--gultekst); border-radius:10px; padding:12px 14px; font-size:14.5px; margin-top:14px}
+  .gulboks b{color:var(--gultekst)}
+
+  /* Linjer */
+  .linjer{display:flex; flex-direction:column; gap:8px}
+  .ulinje{display:grid; grid-template-columns:82px 1fr 130px 34px; gap:8px; align-items:center}
+  .ulinje .vedl{font-size:12.5px; color:var(--gra); background:var(--panel); border-radius:8px; padding:8px 6px; text-align:center; font-weight:700}
+  .ulinje input.belop{text-align:right}
+  .slett{background:none; border:none; color:#9AA6B5; font-size:20px; line-height:1; padding:4px}
+  .slett:hover{color:var(--rod)}
+  .leggtil{margin-top:10px; background:none; border:1.5px dashed #B8C4D4; color:var(--navy); padding:9px 14px; width:100%; font-weight:700}
+  .leggtil:hover{border-color:var(--navy)}
+  .sumlinje{display:flex; justify-content:space-between; align-items:baseline; border-top:2px solid var(--navy);
+    margin-top:16px; padding-top:10px; font-weight:700; font-size:18px}
+  .sumliten{display:flex; justify-content:space-between; color:var(--gra); font-size:15px; margin-top:6px}
+
+  /* Km-tabell */
+  .kmwrap{overflow-x:auto}
+  .kmhode,.kmlinje{display:grid; grid-template-columns:96px 1fr 1fr 74px 84px 1.1fr 30px; gap:6px; align-items:center; min-width:720px}
+  .kmhode{font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--gra); margin-bottom:4px}
+  .kmlinje{margin-bottom:6px}
+  .kmlinje input{padding:8px 8px; font-size:15px}
+  .kmlinje input.num{text-align:right}
+  .phode,.plinje{display:grid; grid-template-columns:96px 1fr 1fr 74px 1.1fr 30px; gap:6px; align-items:center; min-width:640px}
+  .phode{font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--gra); margin-bottom:4px}
+  .plinje{margin-bottom:6px}
+  .plinje input{padding:8px 8px; font-size:15px}
+  .plinje input.num{text-align:right}
+  .satslinje{display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin:4px 0 12px}
+  .satslinje label{display:flex; gap:8px; align-items:center; font-size:14px; font-weight:700}
+  .satslinje input{width:80px; text-align:right}
+
+  .bryterrad{display:flex; gap:10px; align-items:center; font-weight:700; margin-top:16px}
+  .bryterrad input[type="checkbox"]{width:20px; height:20px; accent-color:#1F3A5F}
+
+  /* Sjekk / status */
+  .mangler{border-radius:10px; padding:14px 16px; font-size:15px}
+  .mangler.rod{background:var(--rodlys); color:#6E2323}
+  .mangler.gronn{background:var(--gronnlys); color:#1E5238}
+  .mangler ul{margin:8px 0 0; padding-left:20px}
+  .sjekkliste{list-style:none; margin:12px 0 0; padding:0; display:flex; flex-direction:column; gap:10px}
+  .sjekkliste li{display:flex; gap:10px; align-items:flex-start}
+  .sjekkliste input[type="checkbox"]{width:20px; height:20px; margin-top:2px; accent-color:var(--gronn)}
+  .eksportknapp{background:var(--navy); color:var(--hvit); border:none; padding:14px 22px; font-size:17px; font-weight:700; margin-top:16px}
+  .eksportknapp:hover{background:#28497A}
+
+  /* Print-ark */
+  #trykk{display:none}
+  @media print{
+    body *{visibility:hidden}
+    #trykk, #trykk *{visibility:visible}
+    #trykk{display:block; position:absolute; top:0; left:0; width:100%; background:#FFFFFF; color:#22303F; font-size:12.5px; padding:0}
+    #trykk h2{font-size:20px; color:#1F3A5F}
+    #trykk .topplinje{color:#5A6472; font-size:11px; text-transform:uppercase; letter-spacing:.08em; margin:0 0 4px}
+    #trykk table{width:100%; border-collapse:collapse; margin-top:8px}
+    #trykk th{text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:#5A6472;
+      border-bottom:2px solid #1F3A5F; padding:4px 6px}
+    #trykk th.h{text-align:right}
+    #trykk td{border-bottom:1px solid #E4E9F1; padding:5px 6px; vertical-align:top}
+    #trykk td.h{text-align:right; white-space:nowrap}
+    #trykk tr.sum td{font-weight:700; border-top:2px solid #1F3A5F; border-bottom:none}
+    #trykk .metaliste{margin:8px 0 0; display:flex; flex-wrap:wrap; gap:3px 20px; padding:0; list-style:none}
+    #trykk h3{font-size:13px; color:#1F3A5F; margin:16px 0 4px; text-transform:uppercase; letter-spacing:.05em}
+    #trykk .signaturer{display:grid; grid-template-columns:1fr 1fr 1fr; gap:22px; margin-top:34px}
+    #trykk .signaturer div{border-top:1px solid #22303F; padding-top:5px; font-size:11.5px; color:#5A6472}
+    #trykk .fot{margin-top:20px; font-size:10.5px; color:#5A6472}
+    #trykk .notat{font-size:11px; color:#5A6472; margin:6px 0 0}
+  }
+</style>
+
+<header>
+  <div class="hwrap">
+    <p class="eyebrow">ADHD Norge Øyane lokallag</p>
+    <h1>Utleggshjelperen</h1>
+    <p class="under">Riktig skjema, riktig utfylt, første gang. Velg hva det gjelder, følg stegene, skriv ut og send inn med kvitteringene.</p>
+  </div>
+</header>
+
+<main id="app"></main>
+<div id="trykk"></div>
+
+<script>
+(function(){
+  "use strict";
+  var LAGER="oyane-utleggshjelper-v1";
+  var nf=new Intl.NumberFormat("nb-NO",{maximumFractionDigits:2});
+  var app=document.getElementById("app");
+
+  function tall(v){
+    if(v===null||v===undefined) return 0;
+    var s=String(v).replace(/\s/g,"").replace(",",".");
+    var n=parseFloat(s);
+    return isNaN(n)?0:n;
+  }
+  function kr(n){ return "kr "+nf.format(Math.round(n*100)/100); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function e(s){ return esc(s)||"-"; }
+
+  function kontonrStatus(v){
+    var s=String(v||"").replace(/[^0-9]/g,"");
+    if(s.length===0) return {kl:"",tekst:""};
+    if(s.length!==11) return {kl:"feltfeil",tekst:"Et kontonummer har 11 siffer - dette har "+s.length+"."};
+    var vekter=[5,4,3,2,7,6,5,4,3,2], sum=0;
+    for(var i=0;i<10;i++) sum+=parseInt(s[i],10)*vekter[i];
+    var rest=sum%11, kontroll=(rest===0)?0:11-rest;
+    if(kontroll===10 || kontroll!==parseInt(s[10],10))
+      return {kl:"feltfeil",tekst:"Dette ser ikke ut som et gyldig kontonummer - dobbeltsjekk sifrene."};
+    return {kl:"feltok",tekst:"Kontonummeret ser riktig ut."};
+  }
+
+  var state={
+    person:{navn:"",adresse:"",postnr:"",sted:"",epost:"",tlf:"",kontonr:""},
+    utlegg:{maaned:"",aktivitet:"",linjer:[{t:"",b:""}],forskudd:"",kommentar:"",sjekk:{}},
+    reise:{gjelder:"",dato:"",linjer:[{t:"",b:""}],honorar:false,honorarBelop:"",skattekommune:"",personnr:"",kommentar:"",sjekk:{}},
+    km:{maaned:"",sats:"3,50",psats:"1,00",linjer:[{dato:"",fra:"",til:"",km:"",bom:"",formaal:""}],
+        passasjer:false,plinjer:[{dato:"",fra:"",til:"",km:"",navn:""}],kommentar:"",sjekk:{}}
+  };
+  function lagre(){ try{ localStorage.setItem(LAGER, JSON.stringify(state)); }catch(err){} }
+  function lastInn(){
+    try{
+      var raw=localStorage.getItem(LAGER);
+      if(!raw) return;
+      var s=JSON.parse(raw);
+      if(s && typeof s==="object"){ for(var k in state){ if(s[k]!==undefined) state[k]=s[k]; } }
+    }catch(err){}
+  }
+  function bind(el,obj,felt,etterpaa){
+    el.value=obj[felt]||"";
+    el.addEventListener("input",function(){ obj[felt]=el.value; if(etterpaa) etterpaa(); lagre(); });
+  }
+
+  /* ================= FORSIDEN ================= */
+  function visHjem(){
+    app.innerHTML=
+      '<section class="valggrid">'+
+      '<div class="valgkort" data-vis="utlegg"><h3>Utlegg</h3>'+
+        '<p>Du har lagt ut egne penger for laget - uten at det var en reise.</p>'+
+        '<div class="eks">F.eks. innkjøp til møte, mat til aktivitet, materiell, premier.</div>'+
+        '<button class="aapne">Fyll ut utlegg</button></div>'+
+      '<div class="valgkort" data-vis="reise"><h3>Reiseregning</h3>'+
+        '<p>Du hadde utgifter i forbindelse med en reise, et arrangement eller et prosjekt.</p>'+
+        '<div class="eks">F.eks. buss, tog, ferje, parkering, overnatting, mat på reise.</div>'+
+        '<button class="aapne">Fyll ut reiseregning</button></div>'+
+      '<div class="valgkort" data-vis="km"><h3>Kilometergodtgjørelse</h3>'+
+        '<p>Du kjørte egen bil, med eller uten passasjer.</p>'+
+        '<div class="eks">Eget skjema for kjøring - kommer i tillegg til reiseregningen hvis du også hadde andre utgifter.</div>'+
+        '<button class="aapne">Fyll ut km-skjema</button></div>'+
+      '</section>'+
+      '<section class="kort veiviser"><h2 style="font-size:20px">Usikker på hvilket skjema?</h2>'+
+      '<p class="stegintro">Svar på to spørsmål, så peker vi på riktig skjema.</p>'+
+      '<div class="sp">1. Var utgiften knyttet til en reise, et arrangement eller et prosjekt?</div>'+
+      '<div class="janei" id="sp1"><button data-v="ja">Ja</button><button data-v="nei">Nei</button></div>'+
+      '<div class="sp">2. Kjørte du egen bil?</div>'+
+      '<div class="janei" id="sp2"><button data-v="ja">Ja</button><button data-v="nei">Nei</button></div>'+
+      '<div class="anbefaling" id="anbefaling"></div>'+
+      '</section>'+
+      '<section class="kort"><h2 style="font-size:20px">Tre ting som gjør at skjemaet går rett igjennom</h2>'+
+      '<p class="stegintro" style="margin-bottom:0">'+
+      '1. <b>Kvittering for alt</b> - hver linje i skjemaet skal ha en kvittering eller billett vedlagt, nummerert. '+
+      'For flyreiser må dokumentasjonen vise totalpris med mva - en e-postbekreftelse uten pris godtas ikke.<br>'+
+      '2. <b>Riktig kontonummer</b> - skjemaet sjekker det for deg mens du skriver.<br>'+
+      '3. <b>Ett skjema per reise eller arrangement</b> - ikke bland flere turer i samme skjema.</p>'+
+      '</section>';
+    app.querySelectorAll(".valgkort").forEach(function(kort){
+      kort.addEventListener("click",function(){ vis(kort.getAttribute("data-vis")); });
+    });
+    var svar={s1:null,s2:null};
+    function oppdaterAnbefaling(){
+      var a=document.getElementById("anbefaling");
+      if(svar.s1===null||svar.s2===null){ a.style.display="none"; return; }
+      var tekst;
+      if(svar.s1==="ja" && svar.s2==="ja") tekst="<b>Reiseregning + kilometergodtgjørelse.</b> Kjøringen føres på km-skjemaet, alle andre utgifter på reiseregningen. Send begge inn sammen.";
+      else if(svar.s1==="ja") tekst="<b>Reiseregning.</b> Alle utgifter knyttet til reisen eller arrangementet føres der.";
+      else if(svar.s2==="ja") tekst="<b>Kilometergodtgjørelse.</b> Kjøringen føres der - hadde du ingen andre utgifter, holder det med det skjemaet.";
+      else tekst="<b>Utlegg.</b> Enkeltinnkjøp uten reise føres på utleggsskjemaet.";
+      a.innerHTML=tekst;
+      a.style.display="block";
+    }
+    ["sp1","sp2"].forEach(function(id,idx){
+      document.getElementById(id).addEventListener("click",function(ev){
+        var b=ev.target.closest("button"); if(!b) return;
+        svar[idx===0?"s1":"s2"]=b.getAttribute("data-v");
+        this.querySelectorAll("button").forEach(function(x){ x.className=(x===b)?"valgt":""; });
+        oppdaterAnbefaling();
+      });
+    });
+  }
+
+  /* ================= OM DEG (felles) ================= */
+  function personHtml(){
+    return '<section class="kort"><div class="steghode"><div class="stegnr">1</div><h2>Om deg</h2></div>'+
+      '<p class="stegintro">Fylles ut én gang - huskes til neste skjema. Pengene utbetales til kontoen du oppgir her.</p>'+
+      '<div class="infogrid">'+
+      '<label class="felt">Fullt navn<input type="text" id="pe-navn"></label>'+
+      '<label class="felt">Adresse<input type="text" id="pe-adresse"><span class="hint">Må alltid fylles ut</span></label>'+
+      '<label class="felt">Postnummer og sted<input type="text" id="pe-postnr" placeholder="F.eks. 5363 Ågotnes"></label>'+
+      '<label class="felt">E-post<input type="text" id="pe-epost"></label>'+
+      '<label class="felt">Telefon / mobil<input type="text" id="pe-tlf"></label>'+
+      '<label class="felt">Kontonummer (11 siffer)<input type="text" id="pe-kontonr" inputmode="numeric" placeholder="XXXX XX XXXXX">'+
+      '<span id="pe-kontosjekk" class="hint"></span></label>'+
+      '</div></section>';
+  }
+  function kobleP(){
+    bind(document.getElementById("pe-navn"),state.person,"navn");
+    bind(document.getElementById("pe-adresse"),state.person,"adresse");
+    bind(document.getElementById("pe-postnr"),state.person,"postnr");
+    bind(document.getElementById("pe-epost"),state.person,"epost");
+    bind(document.getElementById("pe-tlf"),state.person,"tlf");
+    var k=document.getElementById("pe-kontonr"), sj=document.getElementById("pe-kontosjekk");
+    function sjekk(){ var st=kontonrStatus(state.person.kontonr); sj.className=st.kl||"hint"; sj.textContent=st.tekst; }
+    bind(k,state.person,"kontonr",sjekk);
+    sjekk();
+  }
+  function personMangler(){
+    var m=[];
+    if(!state.person.navn.trim()) m.push("Navn (Om deg)");
+    if(!state.person.adresse.trim()) m.push("Adresse (Om deg)");
+    var st=kontonrStatus(state.person.kontonr);
+    if(!String(state.person.kontonr||"").trim()) m.push("Kontonummer (Om deg)");
+    else if(st.kl==="feltfeil") m.push("Kontonummeret ser ikke riktig ut");
+    return m;
+  }
+
+  /* ================= sjekkliste + eksport ================= */
+  function sjekkHtml(id, punkter){
+    var li=punkter.map(function(p,i){
+      return '<li><input type="checkbox" id="'+id+'-c'+i+'"><label for="'+id+'-c'+i+'">'+p+"</label></li>";
+    }).join("");
+    return '<section class="kort"><div class="steghode"><div class="stegnr">3</div><h2>Før du sender</h2></div>'+
+      '<div class="mangler" id="'+id+'-mangler"></div>'+
+      '<ul class="sjekkliste">'+li+"</ul>"+
+      '<button class="eksportknapp" id="'+id+'-print">Skriv ut / lagre som PDF</button>'+
+      '<p class="stegintro" style="margin-top:10px">Send det ferdige skjemaet sammen med kvitteringene til økonomiansvarlig i lokallaget.</p>'+
+      "</section>";
+  }
+  function kobleSjekk(id, obj, punkter, manglerFn, printFn){
+    punkter.forEach(function(_,i){
+      var el=document.getElementById(id+"-c"+i);
+      el.checked=!!obj.sjekk["c"+i];
+      el.addEventListener("change",function(){ obj.sjekk["c"+i]=el.checked; lagre(); });
+    });
+    function oppdaterMangler(){
+      var m=manglerFn(), boks=document.getElementById(id+"-mangler");
+      if(!boks) return;
+      if(m.length===0){ boks.className="mangler gronn"; boks.innerHTML="<b>Alt som må fylles ut, er på plass.</b>"; }
+      else { boks.className="mangler rod"; boks.innerHTML="<b>Dette mangler fortsatt:</b><ul><li>"+m.join("</li><li>")+"</li></ul>"; }
+    }
+    document.getElementById(id+"-print").addEventListener("click",function(){
+      document.getElementById("trykk").innerHTML=printFn();
+      window.print();
+    });
+    oppdaterMangler();
+    return oppdaterMangler;
+  }
+  function trykkTopp(tittel){
+    return '<p class="topplinje">ADHD Norge Øyane lokallag</p><h2>'+tittel+"</h2>";
+  }
+  function trykkPerson(){
+    return '<ul class="metaliste">'+
+      "<li><b>Navn:</b> "+e(state.person.navn)+"</li>"+
+      "<li><b>Adresse:</b> "+e(state.person.adresse)+(state.person.postnr?", "+esc(state.person.postnr):"")+"</li>"+
+      "<li><b>E-post:</b> "+e(state.person.epost)+"</li>"+
+      "<li><b>Telefon:</b> "+e(state.person.tlf)+"</li>"+
+      "<li><b>Kontonummer:</b> "+e(state.person.kontonr)+"</li>"+
+      "</ul>";
+  }
+  function trykkSignaturer(){
+    return '<div class="signaturer"><div>Dato og signatur (utfyller)</div><div>Attestert</div><div>Anvist</div></div>';
+  }
+  function trykkFot(ekstra){
+    return '<p class="fot">'+(ekstra?ekstra+" ":"")+
+      "Basert på ADHD Norges mal for reise- og utleggsskjema. Legg ved billetter og kvitteringer, nummerert som i skjemaet. "+
+      "For flyreiser må dokumentasjonen vise totalpris med mva - e-postbekreftelse uten pris aksepteres ikke.</p>";
+  }
+  function radHarInnhold(r){ return (r.t&&r.t.trim()) || tall(r.b)>0; }
+
+  /* ================= UTLEGG ================= */
+  function visUtlegg(){
+    var u=state.utlegg;
+    app.innerHTML='<button class="tilbake" id="tilbake">&larr; Til forsiden</button>'+
+      '<section class="kort" style="padding:16px 22px"><b>Utlegg</b><span style="color:var(--gra)"> - kun enkeltinnkjøp du har lagt ut for laget. '+
+      'Var du på reise eller arrangement? Da skal du bruke <a href="#" id="tilreise">reiseregning</a> i stedet. Kjørte du egen bil? Bruk <a href="#" id="tilkm">km-skjemaet</a>.</span></section>'+
+      personHtml()+
+      '<section class="kort"><div class="steghode"><div class="stegnr">2</div><h2>Utleggene</h2></div>'+
+      '<p class="stegintro">Én linje per kvittering. Nummeret i den grå boksen skriver du på kvitteringen - da finner vi den igjen.</p>'+
+      '<div class="infogrid" style="margin-bottom:14px">'+
+      '<label class="felt">Måned<input type="text" id="u-maaned" placeholder="F.eks. september 2026"></label>'+
+      '<label class="felt">Gjelder aktivitet / prosjektnummer<input type="text" id="u-aktivitet"><span class="hint">Hvis utlegget hører til en aktivitet</span></label>'+
+      '</div>'+
+      '<div class="linjer" id="u-linjer"></div>'+
+      '<button class="leggtil" id="u-ny">+ Legg til utlegg</button>'+
+      '<div class="sumlinje"><span>Sum utlegg</span><span class="tall" id="u-sum">kr 0</span></div>'+
+      '<div class="sumliten"><span>- Forskudd du alt har fått utbetalt</span><span><input type="text" id="u-forskudd" inputmode="decimal" placeholder="0" style="width:110px;text-align:right"></span></div>'+
+      '<div class="sumlinje"><span>Til utbetaling</span><span class="tall" id="u-tilutb">kr 0</span></div>'+
+      '<label class="felt" style="margin-top:14px">Kommentarer<textarea id="u-kommentar"></textarea></label>'+
+      "</section>"+
+      sjekkHtml("u",[
+        "Alle kvitteringer ligger ved, og vedleggsnummeret er skrevet på hver kvittering",
+        "Dette er enkeltutlegg - ikke kjøregodtgjørelse eller reise (da gjelder egne skjema)"
+      ]);
+    document.getElementById("tilbake").addEventListener("click",visHjem);
+    document.getElementById("tilreise").addEventListener("click",function(ev){ ev.preventDefault(); vis("reise"); });
+    document.getElementById("tilkm").addEventListener("click",function(ev){ ev.preventDefault(); vis("km"); });
+    kobleP();
+    var oppdaterMangler;
+    function summer(){
+      var s=u.linjer.reduce(function(a,r){return a+tall(r.b);},0);
+      document.getElementById("u-sum").textContent=kr(s);
+      document.getElementById("u-tilutb").textContent=kr(s-tall(u.forskudd));
+      if(oppdaterMangler) oppdaterMangler();
+    }
+    function tegnLinjer(){
+      var m=document.getElementById("u-linjer"); m.innerHTML="";
+      u.linjer.forEach(function(rad,i){
+        var d=document.createElement("div");
+        d.className="ulinje";
+        d.innerHTML='<span class="vedl">Vedlegg '+(i+1)+'</span>'+
+          '<input type="text" class="tekst" placeholder="Hva kjøpte du, og til hva?">'+
+          '<input type="text" class="belop" inputmode="decimal" placeholder="0">'+
+          '<button class="slett" aria-label="Fjern linjen">&times;</button>';
+        var t=d.querySelector(".tekst"), b=d.querySelector(".belop");
+        t.value=rad.t; b.value=rad.b;
+        t.addEventListener("input",function(){ rad.t=t.value; if(oppdaterMangler) oppdaterMangler(); lagre(); });
+        b.addEventListener("input",function(){ rad.b=b.value; summer(); lagre(); });
+        d.querySelector(".slett").addEventListener("click",function(){ u.linjer.splice(i,1); tegnLinjer(); summer(); lagre(); });
+        m.appendChild(d);
+      });
+    }
+    tegnLinjer();
+    document.getElementById("u-ny").addEventListener("click",function(){
+      u.linjer.push({t:"",b:""}); tegnLinjer(); lagre();
+      var s=document.querySelector("#u-linjer .ulinje:last-child .tekst"); if(s) s.focus();
+    });
+    bind(document.getElementById("u-maaned"),u,"maaned",function(){ if(oppdaterMangler) oppdaterMangler(); });
+    bind(document.getElementById("u-aktivitet"),u,"aktivitet");
+    bind(document.getElementById("u-forskudd"),u,"forskudd",summer);
+    bind(document.getElementById("u-kommentar"),u,"kommentar");
+    function mangler(){
+      var m=personMangler();
+      if(!u.maaned.trim()) m.push("Måned");
+      if(!u.linjer.some(radHarInnhold)) m.push("Minst ett utlegg med tekst og beløp");
+      u.linjer.forEach(function(r,i){
+        if(r.t.trim() && tall(r.b)===0) m.push("Beløp på vedlegg "+(i+1));
+        if(!r.t.trim() && tall(r.b)>0) m.push("Tekst på vedlegg "+(i+1));
+      });
+      return m;
+    }
+    oppdaterMangler=kobleSjekk("u",u,["",""],mangler,function(){
+      var sum=u.linjer.reduce(function(a,r){return a+tall(r.b);},0);
+      var rader=u.linjer.filter(radHarInnhold).map(function(r,i){
+        return "<tr><td>"+e(r.t)+'</td><td class="h">'+(i+1)+'</td><td class="h tall">'+kr(tall(r.b))+"</td></tr>";
+      }).join("");
+      return trykkTopp("Utlegg")+trykkPerson()+
+        '<ul class="metaliste"><li><b>Måned:</b> '+e(u.maaned)+"</li>"+
+        (u.aktivitet?"<li><b>Gjelder:</b> "+esc(u.aktivitet)+"</li>":"")+"</ul>"+
+        '<table><thead><tr><th>Tekst</th><th class="h">Vedlegg nr.</th><th class="h">Beløp</th></tr></thead><tbody>'+rader+
+        '<tr class="sum"><td>Sum utlegg</td><td></td><td class="h tall">'+kr(sum)+"</td></tr>"+
+        '<tr><td>- Forskudd</td><td></td><td class="h tall">'+kr(tall(u.forskudd))+"</td></tr>"+
+        '<tr class="sum"><td>Til utbetaling</td><td></td><td class="h tall">'+kr(sum-tall(u.forskudd))+"</td></tr>"+
+        "</tbody></table>"+
+        (u.kommentar?"<h3>Kommentarer</h3><p>"+esc(u.kommentar)+"</p>":"")+
+        trykkSignaturer()+
+        trykkFot("Kun enkeltutlegg etter regning - ikke kjøregodtgjørelse eller honorarer.");
+    });
+    summer();
+  }
+
+  /* ================= REISEREGNING ================= */
+  function visReise(){
+    var r=state.reise;
+    app.innerHTML='<button class="tilbake" id="tilbake">&larr; Til forsiden</button>'+
+      '<section class="kort" style="padding:16px 22px"><b>Reiseregning</b><span style="color:var(--gra)"> - alle utgifter knyttet til én reise, ett arrangement eller ett prosjekt. '+
+      'Fyll ut ett skjema per reise. Kjørte du egen bil? Da fører du kjøringen på <a href="#" id="tilkm">km-skjemaet</a> i tillegg.</span></section>'+
+      personHtml()+
+      '<section class="kort"><div class="steghode"><div class="stegnr">2</div><h2>Reisen og utgiftene</h2></div>'+
+      '<div class="infogrid" style="margin-bottom:14px">'+
+      '<label class="felt">Reisen gjelder<input type="text" id="r-gjelder" placeholder="F.eks. Arbeidshelg for styret"><span class="hint">Kurs, arrangement, prosjekt e.l.</span></label>'+
+      '<label class="felt">Dato for reisen<input type="text" id="r-dato" placeholder="F.eks. 4.-6. september 2026"></label>'+
+      '</div>'+
+      '<p class="stegintro">Én linje per kvittering. Nummeret i den grå boksen skriver du på kvitteringen.</p>'+
+      '<div class="linjer" id="r-linjer"></div>'+
+      '<button class="leggtil" id="r-ny">+ Legg til utgift (buss, ferje, parkering, overnatting ...)</button>'+
+      '<div class="bryterrad"><input type="checkbox" id="r-honorar"><label for="r-honorar">Det skal også utbetales honorar</label></div>'+
+      '<div id="r-honorarfelt" style="display:none">'+
+      '<div class="infogrid" style="margin-top:12px">'+
+      '<label class="felt">Honorarbeløp<input type="text" id="r-honorarbelop" inputmode="decimal" placeholder="0"></label>'+
+      '<label class="felt">Skattekommune<input type="text" id="r-skattekommune"></label>'+
+      '<label class="felt">Personnummer<input type="text" id="r-personnr" inputmode="numeric"><span class="hint">Kan stå tomt her og fylles inn for hånd etter utskrift</span></label>'+
+      '</div>'+
+      '<div class="gulboks">Ved honorar er skattekommune og personnummer påkrevd. Maks skattefritt beløp er kr 10 000 per år.</div>'+
+      "</div>"+
+      '<div class="sumlinje"><span>Totalt</span><span class="tall" id="r-sum">kr 0</span></div>'+
+      '<label class="felt" style="margin-top:14px">Kommentarer<textarea id="r-kommentar"></textarea></label>'+
+      "</section>"+
+      sjekkHtml("r",[
+        "Alle billetter og kvitteringer ligger ved, nummerert som i skjemaet",
+        "Flyreise? Dokumentasjonen viser totalpris med mva - ikke bare en e-postbekreftelse",
+        "Dette skjemaet gjelder én reise / ett arrangement"
+      ]);
+    document.getElementById("tilbake").addEventListener("click",visHjem);
+    document.getElementById("tilkm").addEventListener("click",function(ev){ ev.preventDefault(); vis("km"); });
+    kobleP();
+    var oppdaterMangler;
+    function summer(){
+      var s=r.linjer.reduce(function(a,x){return a+tall(x.b);},0)+(r.honorar?tall(r.honorarBelop):0);
+      document.getElementById("r-sum").textContent=kr(s);
+      if(oppdaterMangler) oppdaterMangler();
+    }
+    function tegnLinjer(){
+      var m=document.getElementById("r-linjer"); m.innerHTML="";
+      r.linjer.forEach(function(rad,i){
+        var d=document.createElement("div");
+        d.className="ulinje";
+        d.innerHTML='<span class="vedl">Vedlegg '+(i+1)+'</span>'+
+          '<input type="text" class="tekst" placeholder="Hva gjelder utgiften?">'+
+          '<input type="text" class="belop" inputmode="decimal" placeholder="0">'+
+          '<button class="slett" aria-label="Fjern linjen">&times;</button>';
+        var t=d.querySelector(".tekst"), b=d.querySelector(".belop");
+        t.value=rad.t; b.value=rad.b;
+        t.addEventListener("input",function(){ rad.t=t.value; if(oppdaterMangler) oppdaterMangler(); lagre(); });
+        b.addEventListener("input",function(){ rad.b=b.value; summer(); lagre(); });
+        d.querySelector(".slett").addEventListener("click",function(){ r.linjer.splice(i,1); tegnLinjer(); summer(); lagre(); });
+        m.appendChild(d);
+      });
+    }
+    tegnLinjer();
+    document.getElementById("r-ny").addEventListener("click",function(){
+      r.linjer.push({t:"",b:""}); tegnLinjer(); lagre();
+      var s=document.querySelector("#r-linjer .ulinje:last-child .tekst"); if(s) s.focus();
+    });
+    bind(document.getElementById("r-gjelder"),r,"gjelder",function(){ if(oppdaterMangler) oppdaterMangler(); });
+    bind(document.getElementById("r-dato"),r,"dato",function(){ if(oppdaterMangler) oppdaterMangler(); });
+    bind(document.getElementById("r-honorarbelop"),r,"honorarBelop",summer);
+    bind(document.getElementById("r-skattekommune"),r,"skattekommune",function(){ if(oppdaterMangler) oppdaterMangler(); });
+    bind(document.getElementById("r-personnr"),r,"personnr",function(){ if(oppdaterMangler) oppdaterMangler(); });
+    bind(document.getElementById("r-kommentar"),r,"kommentar");
+    var hcb=document.getElementById("r-honorar");
+    hcb.checked=r.honorar;
+    document.getElementById("r-honorarfelt").style.display=r.honorar?"block":"none";
+    hcb.addEventListener("change",function(){
+      r.honorar=hcb.checked;
+      document.getElementById("r-honorarfelt").style.display=r.honorar?"block":"none";
+      summer(); lagre();
+    });
+    function mangler(){
+      var m=personMangler();
+      if(!r.gjelder.trim()) m.push("Hva reisen gjelder");
+      if(!r.dato.trim()) m.push("Dato for reisen");
+      if(!r.linjer.some(radHarInnhold) && !(r.honorar&&tall(r.honorarBelop)>0)) m.push("Minst én utgift (eller honorar)");
+      r.linjer.forEach(function(x,i){
+        if(x.t.trim() && tall(x.b)===0) m.push("Beløp på vedlegg "+(i+1));
+        if(!x.t.trim() && tall(x.b)>0) m.push("Tekst på vedlegg "+(i+1));
+      });
+      if(r.honorar){
+        if(tall(r.honorarBelop)===0) m.push("Honorarbeløp");
+        if(!r.skattekommune.trim()) m.push("Skattekommune (påkrevd ved honorar)");
+        if(!r.personnr.trim()) m.push("Personnummer (påkrevd ved honorar - kan fylles inn for hånd etter utskrift)");
+      }
+      return m;
+    }
+    oppdaterMangler=kobleSjekk("r",r,["","",""],mangler,function(){
+      var sum=r.linjer.reduce(function(a,x){return a+tall(x.b);},0)+(r.honorar?tall(r.honorarBelop):0);
+      var rader=r.linjer.filter(radHarInnhold).map(function(x,i){
+        return "<tr><td>"+e(x.t)+'</td><td class="h">'+(i+1)+'</td><td class="h tall">'+kr(tall(x.b))+"</td></tr>";
+      }).join("");
+      if(r.honorar) rader+="<tr><td>Honorar</td><td></td><td class=\"h tall\">"+kr(tall(r.honorarBelop))+"</td></tr>";
+      return trykkTopp("Reiseregning / honorar")+
+        '<ul class="metaliste"><li><b>Gjelder:</b> '+e(r.gjelder)+"</li><li><b>Dato:</b> "+e(r.dato)+"</li></ul>"+
+        trykkPerson()+
+        (r.honorar?'<ul class="metaliste"><li><b>Skattekommune:</b> '+e(r.skattekommune)+"</li><li><b>Personnummer:</b> "+(esc(r.personnr)||"_______________ (fylles ut for hånd)")+"</li></ul>"+
+          '<p class="notat">Skattekommune og personnummer er påkrevd ved honorar. Maks skattefritt beløp er kr 10 000 per år.</p>':"")+
+        '<table><thead><tr><th>Utgift (kvittering vedlagt)</th><th class="h">Vedlegg nr.</th><th class="h">Beløp</th></tr></thead><tbody>'+rader+
+        '<tr class="sum"><td>Totalt</td><td></td><td class="h tall">'+kr(sum)+"</td></tr></tbody></table>"+
+        (r.kommentar?"<h3>Kommentarer</h3><p>"+esc(r.kommentar)+"</p>":"")+
+        trykkSignaturer()+
+        trykkFot("Ett skjema per reise / arrangement / prosjekt.");
+    });
+    summer();
+  }
+
+  /* ================= KILOMETERGODTGJØRELSE ================= */
+  function visKm(){
+    var k=state.km;
+    app.innerHTML='<button class="tilbake" id="tilbake">&larr; Til forsiden</button>'+
+      '<section class="kort" style="padding:16px 22px"><b>Kilometergodtgjørelse</b><span style="color:var(--gra)"> - for kjøring med egen bil. '+
+      'Hadde du også andre utgifter på turen, fører du dem på <a href="#" id="tilreise">reiseregningen</a> og sender begge inn sammen.</span></section>'+
+      personHtml()+
+      '<section class="kort"><div class="steghode"><div class="stegnr">2</div><h2>Kjøringen</h2></div>'+
+      '<p class="stegintro">Én linje per kjøretur - tur og retur er to linjer. Skriv alltid hva turen gjaldt, og legg ved kvittering eller oversikt for bompenger.</p>'+
+      '<div class="infogrid" style="margin-bottom:14px">'+
+      '<label class="felt">Måned / år<input type="text" id="k-maaned" placeholder="F.eks. september 2026"></label>'+
+      '</div>'+
+      '<div class="satslinje"><label>Km-sats<input type="text" id="k-sats" inputmode="decimal"></label>'+
+      '<span style="color:var(--gra);font-size:13.5px">Sats per km i ADHD Norges mal: 3,50. Ikke endre uten avtale.</span></div>'+
+      '<div class="kmwrap"><div class="kmhode"><span>Dato</span><span>Fra</span><span>Til</span><span style="text-align:right">Km</span><span style="text-align:right">Bompenger</span><span>Formålet med turen</span><span></span></div>'+
+      '<div id="k-linjer"></div></div>'+
+      '<button class="leggtil" id="k-ny">+ Legg til kjøretur</button>'+
+      '<div class="bryterrad"><input type="checkbox" id="k-pass"><label for="k-pass">Jeg hadde passasjer (passasjertillegg)</label></div>'+
+      '<div id="k-passfelt" style="display:none">'+
+      '<div class="satslinje" style="margin-top:12px"><label>Passasjersats<input type="text" id="k-psats" inputmode="decimal"></label>'+
+      '<span style="color:var(--gra);font-size:13.5px">Sats per km per passasjer i malen: 1,00.</span></div>'+
+      '<div class="kmwrap"><div class="phode"><span>Dato</span><span>Fra</span><span>Til</span><span style="text-align:right">Km</span><span>Passasjerens navn</span><span></span></div>'+
+      '<div id="k-plinjer"></div></div>'+
+      '<button class="leggtil" id="k-pny">+ Legg til passasjertur</button>'+
+      "</div>"+
+      '<div class="sumliten"><span>Kjøregodtgjørelse</span><span class="tall" id="k-sumkm">kr 0</span></div>'+
+      '<div class="sumliten"><span>Passasjertillegg</span><span class="tall" id="k-sumpass">kr 0</span></div>'+
+      '<div class="sumliten"><span>Bompenger</span><span class="tall" id="k-sumbom">kr 0</span></div>'+
+      '<div class="sumlinje"><span>Totalt</span><span class="tall" id="k-total">kr 0</span></div>'+
+      '<label class="felt" style="margin-top:14px">Kommentarer<textarea id="k-kommentar"></textarea></label>'+
+      "</section>"+
+      sjekkHtml("k",[
+        "Alle turene har dato, fra/til og formål - tur og retur som egne linjer",
+        "Kvittering eller oversikt for bompenger ligger ved",
+        "Kjørte du til/fra et arrangement med andre utgifter? Reiseregningen sendes inn sammen med dette skjemaet"
+      ]);
+    document.getElementById("tilbake").addEventListener("click",visHjem);
+    document.getElementById("tilreise").addEventListener("click",function(ev){ ev.preventDefault(); vis("reise"); });
+    kobleP();
+    var oppdaterMangler;
+    function sumKm(){ return k.linjer.reduce(function(a,x){return a+tall(x.km);},0)*tall(k.sats); }
+    function sumPass(){ return k.passasjer ? k.plinjer.reduce(function(a,x){return a+tall(x.km);},0)*tall(k.psats) : 0; }
+    function sumBom(){ return k.linjer.reduce(function(a,x){return a+tall(x.bom);},0); }
+    function summer(){
+      document.getElementById("k-sumkm").textContent=kr(sumKm());
+      document.getElementById("k-sumpass").textContent=kr(sumPass());
+      document.getElementById("k-sumbom").textContent=kr(sumBom());
+      document.getElementById("k-total").textContent=kr(sumKm()+sumPass()+sumBom());
+      if(oppdaterMangler) oppdaterMangler();
+    }
+    function kmRad(mount, rad, i, felt, liste, tegnOm){
+      var d=document.createElement("div");
+      d.className=felt.length===6?"kmlinje":"plinje";
+      d.innerHTML=felt.map(function(f){
+        return '<input type="text" class="'+(f.num?"num":"")+'" data-f="'+f.n+'"'+(f.num?' inputmode="decimal"':"")+(f.ph?' placeholder="'+f.ph+'"':"")+">";
+      }).join("")+'<button class="slett" aria-label="Fjern linjen">&times;</button>';
+      felt.forEach(function(f){
+        var inp=d.querySelector('input[data-f="'+f.n+'"]');
+        inp.value=rad[f.n]||"";
+        inp.addEventListener("input",function(){ rad[f.n]=inp.value; summer(); lagre(); });
+      });
+      d.querySelector(".slett").addEventListener("click",function(){ liste.splice(i,1); tegnOm(); summer(); lagre(); });
+      mount.appendChild(d);
+    }
+    var KFELT=[{n:"dato",ph:"1.9."},{n:"fra"},{n:"til"},{n:"km",num:true},{n:"bom",num:true},{n:"formaal",ph:"F.eks. familietur i regi av laget"}];
+    var PFELT=[{n:"dato",ph:"1.9."},{n:"fra"},{n:"til"},{n:"km",num:true},{n:"navn"}];
+    function tegnK(){
+      var m=document.getElementById("k-linjer"); m.innerHTML="";
+      k.linjer.forEach(function(rad,i){ kmRad(m,rad,i,KFELT,k.linjer,tegnK); });
+    }
+    function tegnP(){
+      var m=document.getElementById("k-plinjer"); m.innerHTML="";
+      k.plinjer.forEach(function(rad,i){ kmRad(m,rad,i,PFELT,k.plinjer,tegnP); });
+    }
+    tegnK(); tegnP();
+    document.getElementById("k-ny").addEventListener("click",function(){
+      k.linjer.push({dato:"",fra:"",til:"",km:"",bom:"",formaal:""}); tegnK(); lagre();
+    });
+    document.getElementById("k-pny").addEventListener("click",function(){
+      k.plinjer.push({dato:"",fra:"",til:"",km:"",navn:""}); tegnP(); lagre();
+    });
+    bind(document.getElementById("k-maaned"),k,"maaned",function(){ if(oppdaterMangler) oppdaterMangler(); });
+    bind(document.getElementById("k-sats"),k,"sats",summer);
+    bind(document.getElementById("k-psats"),k,"psats",summer);
+    bind(document.getElementById("k-kommentar"),k,"kommentar");
+    var pcb=document.getElementById("k-pass");
+    pcb.checked=k.passasjer;
+    document.getElementById("k-passfelt").style.display=k.passasjer?"block":"none";
+    pcb.addEventListener("change",function(){
+      k.passasjer=pcb.checked;
+      document.getElementById("k-passfelt").style.display=k.passasjer?"block":"none";
+      summer(); lagre();
+    });
+    function kmHarInnhold(x){ return x.dato.trim()||x.fra.trim()||x.til.trim()||tall(x.km)>0; }
+    function mangler(){
+      var m=personMangler();
+      if(!k.maaned.trim()) m.push("Måned / år");
+      var aktive=k.linjer.filter(kmHarInnhold);
+      if(aktive.length===0) m.push("Minst én kjøretur");
+      aktive.forEach(function(x,i){
+        if(!x.dato.trim()) m.push("Dato på kjøretur "+(i+1));
+        if(!x.fra.trim()||!x.til.trim()) m.push("Fra/til på kjøretur "+(i+1));
+        if(tall(x.km)===0) m.push("Antall km på kjøretur "+(i+1));
+        if(!x.formaal.trim()) m.push("Formål på kjøretur "+(i+1));
+      });
+      if(k.passasjer){
+        var pa=k.plinjer.filter(kmHarInnhold);
+        if(pa.length===0) m.push("Minst én passasjertur (eller skru av passasjertillegg)");
+        pa.forEach(function(x,i){ if(!x.navn.trim()) m.push("Passasjerens navn på passasjertur "+(i+1)); });
+      }
+      return m;
+    }
+    oppdaterMangler=kobleSjekk("k",k,["","",""],mangler,function(){
+      var rader=k.linjer.filter(kmHarInnhold).map(function(x){
+        return "<tr><td>"+e(x.dato)+"</td><td>"+e(x.fra)+"</td><td>"+e(x.til)+'</td><td class="h tall">'+nf.format(tall(x.km))+
+          '</td><td class="h tall">'+nf.format(tall(k.sats))+'</td><td class="h tall">'+kr(tall(x.km)*tall(k.sats))+
+          '</td><td class="h tall">'+(tall(x.bom)>0?kr(tall(x.bom)):"-")+"</td><td>"+e(x.formaal)+"</td></tr>";
+      }).join("");
+      var html=trykkTopp("Kilometergodtgjørelse")+trykkPerson()+
+        '<ul class="metaliste"><li><b>Måned / år:</b> '+e(k.maaned)+"</li></ul>"+
+        '<table><thead><tr><th>Dato</th><th>Fra</th><th>Til</th><th class="h">Km</th><th class="h">Sats</th><th class="h">Sum</th><th class="h">Bompenger</th><th>Formål</th></tr></thead><tbody>'+rader+
+        '<tr class="sum"><td colspan="5">Sum kjøregodtgjørelse</td><td class="h tall">'+kr(sumKm())+'</td><td class="h tall">'+kr(sumBom())+"</td><td></td></tr></tbody></table>";
+      if(k.passasjer){
+        var prader=k.plinjer.filter(kmHarInnhold).map(function(x){
+          return "<tr><td>"+e(x.dato)+"</td><td>"+e(x.fra)+"</td><td>"+e(x.til)+'</td><td class="h tall">'+nf.format(tall(x.km))+
+            '</td><td class="h tall">'+nf.format(tall(k.psats))+'</td><td class="h tall">'+kr(tall(x.km)*tall(k.psats))+"</td><td>"+e(x.navn)+"</td></tr>";
+        }).join("");
+        html+="<h3>Passasjertillegg</h3>"+
+          '<table><thead><tr><th>Dato</th><th>Fra</th><th>Til</th><th class="h">Km</th><th class="h">Sats</th><th class="h">Sum</th><th>Passasjer</th></tr></thead><tbody>'+prader+
+          '<tr class="sum"><td colspan="5">Sum passasjertillegg</td><td class="h tall">'+kr(sumPass())+"</td><td></td></tr></tbody></table>";
+      }
+      html+='<table><tbody><tr class="sum"><td>Totalt til utbetaling (kjøring + passasjertillegg + bompenger)</td><td class="h tall">'+kr(sumKm()+sumPass()+sumBom())+"</td></tr></tbody></table>"+
+        (k.kommentar?"<h3>Kommentarer</h3><p>"+esc(k.kommentar)+"</p>":"")+
+        trykkSignaturer()+
+        trykkFot("For reiser i Norge.");
+      return html;
+    });
+    summer();
+  }
+
+  /* ================= router ================= */
+  function vis(navn){
+    window.scrollTo(0,0);
+    if(navn==="utlegg") visUtlegg();
+    else if(navn==="reise") visReise();
+    else if(navn==="km") visKm();
+    else visHjem();
+  }
+  lastInn();
+  visHjem();
+})();
+</script>

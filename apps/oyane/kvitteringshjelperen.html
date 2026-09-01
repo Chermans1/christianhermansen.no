@@ -1,0 +1,338 @@
+<title>Kvitteringshjelperen Øyane</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+  :root{
+    --navy:#1F3A5F; --navy2:#16293F; --papir:#F7F8FB; --panel:#EEF2F7;
+    --gul:#FFF3C4; --gultekst:#7A5C00; --gronn:#2E7D52; --gronnlys:#E4F0E8;
+    --rod:#A63A3A; --rodlys:#F5D9D9; --gra:#5A6472; --strek:#D7DEE8;
+    --blekk:#22303F; --hvit:#FFFFFF;
+  }
+  *{box-sizing:border-box}
+  html{color-scheme:light}
+  body{margin:0; background:var(--papir); color:var(--blekk);
+    font-family:"Atkinson Hyperlegible", Arial, sans-serif; font-size:16px; line-height:1.5}
+  h1,h2,h3{font-family:"Bricolage Grotesque","Atkinson Hyperlegible",Arial,sans-serif; text-wrap:balance; margin:0}
+  header{background:var(--navy); color:var(--hvit); padding:22px 20px 24px}
+  .hwrap{max-width:620px; margin:0 auto}
+  .eyebrow{text-transform:uppercase; letter-spacing:.09em; font-size:12px; color:#BFD0E6; margin:0 0 6px}
+  header h1{font-size:30px; line-height:1.1}
+  header p.under{margin:8px 0 0; color:#D7E2F0; max-width:36em}
+  main{max-width:620px; margin:0 auto; padding:20px 16px 70px; display:flex; flex-direction:column; gap:18px}
+  button{font-family:inherit; font-size:16px; cursor:pointer; border-radius:10px}
+  button:focus-visible, input:focus-visible{outline:3px solid #6FA8DC; outline-offset:2px}
+  .kort{background:var(--hvit); border:1px solid var(--strek); border-radius:14px; padding:20px}
+  .steghode{display:flex; gap:12px; align-items:flex-start; margin-bottom:4px}
+  .stegnr{flex:0 0 auto; width:38px; height:38px; border-radius:50%; background:var(--navy); color:var(--hvit);
+    display:flex; align-items:center; justify-content:center; font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:18px}
+  .steghode h2{font-size:21px; padding-top:5px}
+  .stegintro{margin:2px 0 14px; color:var(--gra)}
+
+  .fotoknapp{display:block; width:100%; background:var(--navy); color:var(--hvit); border:none; padding:20px 16px;
+    font-size:18px; font-weight:700}
+  .fotoknapp:hover{background:#28497A}
+  .fotoknapp small{display:block; font-weight:400; font-size:13.5px; color:#C6D3E2; margin-top:4px}
+  #fil{display:none}
+  .forh{margin-top:14px; display:none}
+  .forh img{width:100%; border-radius:10px; border:1px solid var(--strek); display:block}
+  .byttknapp{margin-top:10px; background:var(--panel); border:1px solid var(--strek); color:var(--navy); padding:9px 14px; font-weight:700; font-size:14px}
+
+  label.felt{display:flex; flex-direction:column; gap:4px; font-weight:700; font-size:14px; margin-bottom:12px}
+  label.felt .hint{font-weight:400; color:var(--gra); font-size:13px}
+  input[type="text"]{font-family:inherit; font-size:17px; padding:12px; border:1.5px solid var(--strek);
+    border-radius:10px; background:var(--hvit); color:var(--blekk); width:100%}
+  .torad{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+
+  .mangler{border-radius:10px; padding:13px 15px; font-size:15px; margin-bottom:14px}
+  .mangler.rod{background:var(--rodlys); color:#6E2323}
+  .mangler.gronn{background:var(--gronnlys); color:#1E5238}
+  .mangler ul{margin:6px 0 0; padding-left:20px}
+
+  .sendknapp{display:block; width:100%; background:var(--gronn); color:var(--hvit); border:none; padding:18px 16px;
+    font-size:18px; font-weight:700; margin-bottom:10px}
+  .sendknapp:hover{background:#256B45}
+  .sendknapp:disabled{background:#A9B6C6; cursor:not-allowed}
+  .sekundaer{display:block; width:100%; background:var(--hvit); border:1.5px solid var(--navy); color:var(--navy);
+    padding:13px 16px; font-weight:700; margin-bottom:10px}
+  .sekundaer:disabled{border-color:#A9B6C6; color:#A9B6C6; cursor:not-allowed}
+  .epostboks{background:var(--panel); border-radius:10px; padding:13px 15px; font-size:14.5px; display:flex;
+    gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap}
+  .epost{font-family:"Courier New",monospace; font-size:13.5px; word-break:break-all}
+  .kopier{background:var(--hvit); border:1px solid var(--strek); color:var(--navy); padding:7px 12px; font-weight:700; font-size:13px}
+  .gulboks{background:var(--gul); color:var(--gultekst); border-radius:10px; padding:12px 14px; font-size:14.5px; margin-top:12px}
+  .gulboks b{color:var(--gultekst)}
+  .kvittert{display:none; background:var(--gronnlys); color:#1E5238; border-radius:10px; padding:14px 16px; margin-top:12px}
+  .nesteknapp{margin-top:10px; background:var(--gronn); color:var(--hvit); border:none; padding:11px 16px; font-weight:700; font-size:15px}
+  .person{color:var(--gra); font-size:13.5px; margin-top:10px}
+</style>
+
+<header>
+  <div class="hwrap">
+    <p class="eyebrow">ADHD Norge Øyane lokallag</p>
+    <h1>Kvitteringshjelperen</h1>
+    <p class="under">Ta bilde av kvitteringen, fyll ut tre felt, send. Bildet stemples med prosjektnummeret så regnskapet finner det igjen.</p>
+  </div>
+</header>
+
+<main>
+  <section class="kort">
+    <div class="steghode"><div class="stegnr">1</div><h2>Ta bilde av kvitteringen</h2></div>
+    <p class="stegintro">Hele kvitteringen må med - totalbeløpet skal synes. Én kvittering per bilde.</p>
+    <button class="fotoknapp" id="taFoto">📷 Ta bilde eller velg fra bilder<small>Bildet blir bare liggende på din enhet til du selv sender det.</small></button>
+    <input type="file" id="fil" accept="image/*">
+    <div class="forh" id="forh">
+      <img id="forhBilde" alt="Forhåndsvisning av kvitteringen med påstemplet informasjon">
+      <button class="byttknapp" id="bytt">Bytt bilde</button>
+    </div>
+  </section>
+
+  <section class="kort">
+    <div class="steghode"><div class="stegnr">2</div><h2>Fyll ut</h2></div>
+    <label class="felt">Prosjektnummer
+      <input type="text" id="f-prosjekt" placeholder="F.eks. 2026-04">
+      <span class="hint">Får du av aktivitetsansvarlig eller økonomiansvarlig. Dette er det viktigste feltet.</span>
+    </label>
+    <label class="felt">Hva gjelder kjøpet?
+      <input type="text" id="f-hva" placeholder="F.eks. pizza til medlemsmøtet">
+    </label>
+    <div class="torad">
+      <label class="felt">Beløp
+        <input type="text" id="f-belop" inputmode="decimal" placeholder="0">
+      </label>
+      <label class="felt">Dato på kvitteringen
+        <input type="text" id="f-dato" placeholder="F.eks. 5.9.2026">
+      </label>
+    </div>
+    <label class="felt">Ditt navn
+      <input type="text" id="f-navn" placeholder="Huskes til neste gang">
+    </label>
+  </section>
+
+  <section class="kort">
+    <div class="steghode"><div class="stegnr">3</div><h2>Send</h2></div>
+    <label class="felt">Kvitteringsadressen (e-post til regnskapet)
+      <input type="text" id="f-epost" inputmode="email" placeholder="Limes inn én gang">
+      <span class="hint">Får du av økonomiansvarlig. Huskes på denne enheten - av sikkerhetshensyn ligger den ikke i selve siden.</span>
+    </label>
+    <div class="mangler rod" id="mangler"></div>
+    <button class="sendknapp" id="del" disabled>Send bildet</button>
+    <button class="sekundaer" id="epostutkast" disabled>Åpne e-postutkast (legg ved bildet selv)</button>
+    <button class="sekundaer" id="lastned" disabled>Last ned det stemplede bildet</button>
+    <div class="gulboks"><b>Husk:</b> behold originalkvitteringen til regnskapet er godkjent. Gjelder kjøpet flere prosjekter, send ett bilde per prosjekt.</div>
+    <div class="kvittert" id="kvittert"><b>Sendt?</b> Da er du ferdig med denne kvitteringen.
+      <button class="nesteknapp" id="neste">Neste kvittering</button></div>
+    <p class="person">Alt skjer på din enhet - bildet og det du fyller ut sendes ingen steder før du selv trykker send i e-post- eller delingsvinduet.</p>
+  </section>
+</main>
+
+<script>
+(function(){
+  "use strict";
+  var LAGER="oyane-kvitteringshjelper-v1";
+
+  // Nedlasting: i Claude-visningen går lagring via plattformen, ellers vanlig nedlasting
+  var dlNs=null;
+  if(window.claude && window.claude.use){
+    window.claude.use("downloads").then(function(d){ dlNs=d; }).catch(function(){});
+  }
+
+  var felt={prosjekt:"",hva:"",belop:"",dato:"",navn:"",epost:""};
+  function gyldigEpost(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v||"").trim()); }
+  function EPOST(){ return String(felt.epost||"").trim(); }
+  // Adressen kan følge med i den delte lenken etter #-tegnet (#m=adresse) - den delen ligger ikke i sidens kildekode
+  (function(){
+    var m=location.hash.match(/[#&]m=([^&]+)/);
+    if(m){
+      try{
+        var a=decodeURIComponent(m[1]);
+        if(gyldigEpost(a)) felt.epost=a;
+      }catch(e){}
+    }
+  })();
+  var bilde=null;        // Image-objekt
+  var stempletBlob=null; // ferdig jpg
+  var stempletUrl=null;
+
+  function lagre(){ try{ localStorage.setItem(LAGER, JSON.stringify({navn:felt.navn, prosjekt:felt.prosjekt, epost:felt.epost})); }catch(e){} }
+  function lastInn(){
+    try{
+      var s=JSON.parse(localStorage.getItem(LAGER)||"{}");
+      if(s.navn) felt.navn=s.navn;
+      if(s.prosjekt) felt.prosjekt=s.prosjekt;
+      if(s.epost && !felt.epost) felt.epost=s.epost;
+    }catch(e){}
+  }
+  function tall(v){ var n=parseFloat(String(v||"").replace(/\s/g,"").replace(",",".")); return isNaN(n)?0:n; }
+
+  /* ---------- bilde inn ---------- */
+  var fil=document.getElementById("fil");
+  document.getElementById("taFoto").addEventListener("click",function(){ fil.click(); });
+  document.getElementById("bytt").addEventListener("click",function(){ fil.click(); });
+  fil.addEventListener("change",function(){
+    var f=fil.files && fil.files[0];
+    if(!f) return;
+    var img=new Image();
+    img.onload=function(){ bilde=img; oppdater(); };
+    img.onerror=function(){ bilde=null; alertTekst("Kunne ikke lese bildet - prøv et annet."); };
+    img.src=URL.createObjectURL(f);
+  });
+  function alertTekst(t){
+    var m=document.getElementById("mangler");
+    m.className="mangler rod"; m.textContent=t;
+  }
+
+  /* ---------- stempling ---------- */
+  function stemple(){
+    if(!bilde) return null;
+    var maks=1600;
+    var skala=Math.min(1, maks/bilde.naturalWidth);
+    var bw=Math.round(bilde.naturalWidth*skala), bh=Math.round(bilde.naturalHeight*skala);
+    var f1=Math.max(18, Math.round(bw*0.026));   // liten linje
+    var f2=Math.max(22, Math.round(bw*0.034));   // stor linje
+    var pad=Math.round(f2*0.8);
+    var linjer=[
+      {t:"ADHD Norge Øyane lokallag - kvittering", f:f1, farge:"#5A6472", fet:false},
+      {t:"Prosjekt "+(felt.prosjekt||"?")+"  ·  kr "+(felt.belop||"?")+"  ·  "+(felt.dato||"dato mangler"), f:f2, farge:"#1F3A5F", fet:true},
+      {t:(felt.hva||"")+(felt.navn?"  ·  Innsendt av "+felt.navn:""), f:f1, farge:"#22303F", fet:false}
+    ].filter(function(l){ return l.t.trim()!=="·" && l.t.trim()!==""; });
+    var bannerH=pad;
+    linjer.forEach(function(l){ bannerH+=l.f+Math.round(l.f*0.45); });
+    var c=document.createElement("canvas");
+    c.width=bw; c.height=bh+bannerH;
+    var ctx=c.getContext("2d");
+    ctx.fillStyle="#FFFFFF"; ctx.fillRect(0,0,c.width,c.height);
+    ctx.drawImage(bilde,0,0,bw,bh);
+    ctx.fillStyle="#FFFFFF"; ctx.fillRect(0,bh,bw,bannerH);
+    ctx.strokeStyle="#1F3A5F"; ctx.lineWidth=Math.max(2,Math.round(bw*0.004));
+    ctx.beginPath(); ctx.moveTo(0,bh); ctx.lineTo(bw,bh); ctx.stroke();
+    var y=bh+pad;
+    linjer.forEach(function(l){
+      y+=l.f;
+      ctx.fillStyle=l.farge;
+      ctx.font=(l.fet?"bold ":"")+l.f+"px Arial, sans-serif";
+      ctx.fillText(l.t, pad, y, bw-2*pad);
+      y+=Math.round(l.f*0.45);
+    });
+    return c;
+  }
+
+  function filnavn(){
+    var p=(felt.prosjekt||"prosjekt").replace(/[^\wæøåÆØÅ-]+/g,"-");
+    var h=(felt.hva||"kvittering").toLowerCase().replace(/[^\wæøåÆØÅ-]+/g,"-").slice(0,30);
+    return "kvittering_"+p+"_"+h+".jpg";
+  }
+
+  /* ---------- status og knapper ---------- */
+  function manglerListe(){
+    var m=[];
+    if(!bilde) m.push("Bilde av kvitteringen");
+    if(!felt.prosjekt.trim()) m.push("Prosjektnummer");
+    if(!felt.hva.trim()) m.push("Hva kjøpet gjelder");
+    if(tall(felt.belop)===0) m.push("Beløp");
+    if(!felt.dato.trim()) m.push("Dato");
+    if(!felt.navn.trim()) m.push("Ditt navn");
+    if(!gyldigEpost(felt.epost)) m.push("Kvitteringsadressen (får du av økonomiansvarlig)");
+    return m;
+  }
+  var travel=false;
+  function oppdater(){
+    var m=manglerListe();
+    var boks=document.getElementById("mangler");
+    if(m.length===0){ boks.className="mangler gronn"; boks.innerHTML="<b>Alt er klart - velg hvordan du vil sende.</b>"; }
+    else { boks.className="mangler rod"; boks.innerHTML="<b>Dette mangler:</b><ul><li>"+m.join("</li><li>")+"</li></ul>"; }
+    var klar=m.length===0;
+    document.getElementById("del").disabled=!klar;
+    document.getElementById("epostutkast").disabled=!klar;
+    document.getElementById("lastned").disabled=!klar;
+    // forhåndsvisning
+    var forh=document.getElementById("forh");
+    if(bilde){
+      forh.style.display="block";
+      if(!travel){
+        travel=true;
+        setTimeout(function(){
+          travel=false;
+          var c=stemple();
+          if(!c) return;
+          if(stempletUrl) URL.revokeObjectURL(stempletUrl);
+          c.toBlob(function(b){
+            if(!b) return;
+            stempletBlob=b;
+            stempletUrl=URL.createObjectURL(b);
+            document.getElementById("forhBilde").src=stempletUrl;
+          },"image/jpeg",0.85);
+        },250);
+      }
+    } else forh.style.display="none";
+  }
+
+  ["prosjekt","hva","belop","dato","navn","epost"].forEach(function(n){
+    var el=document.getElementById("f-"+n);
+    el.value=felt[n]||"";
+    el.addEventListener("input",function(){ felt[n]=el.value; oppdater(); lagre(); });
+  });
+
+  function emne(){ return "Kvittering prosjekt "+felt.prosjekt+" - "+felt.hva; }
+  function brodtekst(){
+    return "Kvittering vedlagt.\n\nProsjekt: "+felt.prosjekt+"\nGjelder: "+felt.hva+
+      "\nBeløp: kr "+felt.belop+"\nDato: "+felt.dato+"\nInnsendt av: "+felt.navn+"\n";
+  }
+  function visKvittert(){ document.getElementById("kvittert").style.display="block"; }
+
+  document.getElementById("del").addEventListener("click",function(){
+    if(!stempletBlob) return;
+    var f=new File([stempletBlob], filnavn(), {type:"image/jpeg"});
+    if(navigator.canShare && navigator.canShare({files:[f]})){
+      navigator.share({files:[f], title:emne(), text:"Sendes til: "+EPOST()+"\n\n"+brodtekst()})
+        .then(visKvittert).catch(function(){});
+    } else {
+      // fallback: last ned + e-postutkast
+      lastNed().then(function(ok){
+        if(!ok) return;
+        setTimeout(function(){ location.href=mailtoUrl(); },600);
+        visKvittert();
+      });
+    }
+  });
+  function mailtoUrl(){
+    return "mailto:"+EPOST()+"?subject="+encodeURIComponent(emne())+
+      "&body="+encodeURIComponent(brodtekst()+"\n(Husk å legge ved bildet du lastet ned.)");
+  }
+  document.getElementById("epostutkast").addEventListener("click",function(){
+    lastNed().then(function(ok){
+      if(!ok) return;
+      setTimeout(function(){ location.href=mailtoUrl(); },600);
+      visKvittert();
+    });
+  });
+  function lastNed(){
+    if(!stempletBlob) return Promise.resolve(false);
+    if(dlNs){
+      return dlNs.save({filename:filnavn(), data:stempletBlob})
+        .then(function(){ return true; })
+        .catch(function(){ return false; });
+    }
+    var a=document.createElement("a");
+    a.href=stempletUrl; a.download=filnavn();
+    document.body.appendChild(a); a.click(); a.remove();
+    return Promise.resolve(true);
+  }
+  document.getElementById("lastned").addEventListener("click",function(){
+    lastNed().then(function(ok){ if(ok) visKvittert(); });
+  });
+
+  document.getElementById("neste").addEventListener("click",function(){
+    bilde=null; stempletBlob=null;
+    if(stempletUrl){ URL.revokeObjectURL(stempletUrl); stempletUrl=null; }
+    fil.value="";
+    felt.hva=""; felt.belop=""; felt.dato="";
+    ["hva","belop","dato"].forEach(function(n){ document.getElementById("f-"+n).value=""; });
+    document.getElementById("kvittert").style.display="none";
+    window.scrollTo(0,0);
+    oppdater();
+  });
+
+  lastInn();
+  ["prosjekt","navn","epost"].forEach(function(n){ document.getElementById("f-"+n).value=felt[n]||""; });
+  oppdater();
+})();
+</script>
