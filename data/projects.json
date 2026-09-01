@@ -62,7 +62,21 @@
         "src": "/assets/img/kodehode-gjett-tallet-start.webp",
         "alt": "Startskjermen i Gjett-tallet med fire vanskelighetsgrader",
         "tekst": "Fire nivåer, fra 1-20 med tallknapper til 1-1000 med skrivefelt. Nivåkortene bygges av JavaScript og viser rekorden din."
+      },
+      {
+        "src": "/assets/img/kodehode-craftsvilla.webp",
+        "alt": "Forsiden til Craftsvilla med hero-bilde fra verkstedet og de tre kunstformene under",
+        "tekst": "Craftsvilla - fem sider som henger sammen. Booking-kalenderen og tilbakemeldingsskjemaet er første gang JavaScript måtte holde styr på data mellom sidene, ikke bare på én."
+      },
+      {
+        "src": "/assets/img/kodehode-boksjakten.webp",
+        "alt": "Boksjakten i spill: blå spiller, gule kuler og en flokk røde jegere på nivå 6",
+        "tekst": "Boksjakten - modul 2. Samle kulene, unngå jegerne, blink deg ut av knipa med et klikk. Jegerne dytter hverandre unna så flokken ikke smelter sammen til én klump, og farten øker for hvert nivå."
       }
+    ],
+    "omtale": [
+      "Prosjektene ligger i den rekkefølgen de ble til, og det er halve poenget. Mos Eisley Munchies er ren HTML og CSS. Gjett tallet er første gang JavaScript styrer noe. Craftsvilla er fem sider som henger sammen. Boksjakten er der leksjonsoppgaven ble til noe eget.",
+      "Boksjakten begynte som WASD-boksen fra leksjon 2 i JavaScript Advanced: en firkant du flytter med piltastene. Problemet med leksjonsversjonen er at bevegelsen skjer i keydown, og keydown fyrer i tastaturets repeteringstakt for én tast om gangen. Du kan ikke gå på skrå. Løsningen var å lese tastaturet som tilstand i stedet for som hendelser, og flytte selve bevegelsen inn i en game loop som regner i piksler per sekund ganget med delta-tid. Da går figuren like fort på en 60 Hz skjerm som på en 144 Hz."
     ]
   },
   {
