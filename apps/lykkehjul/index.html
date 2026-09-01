@@ -1,0 +1,2082 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Lykkehjulet - Christian Hermansen</title>
+<meta name="description" content="Et lykkehjul for premietrekning. Legg inn deltakere og premier, sett din egen logo og farge, og trekk til premiene er tomme.">
+<meta name="theme-color" content="#f1e7d3">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,450;9..144,550;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   Lykkehjulet - selvstendig fil, ingen avhengigheter, ingen sporing.
+   Samme palett og typografi som christianhermansen.no.
+   NB: rød-grønn fargeblindhet. Feltene på hjulet skilles på lyshet,
+   aldri på rød mot grønn alene. Tekstfargen i hvert felt regnes ut
+   fra feltets lyshet, så den alltid har nok kontrast.
+   ========================================================================== */
+
+:root {
+  --papir: #f1e7d3;
+  --papir-hev: #e9dcc4;
+  --kant: #d3c2a0;
+  --blekk: #263d42;
+  --blekk-dus: #6f6553;
+  --rust: #a8432a;
+  --rust-lys: #c05233;
+  --gull: #d9923c;
+  --gull-dyp: #b0731f;
+  --petrol: #24494e;
+  --petrol-dyp: #1d3c41;
+
+  --skrift-display: "Fraunces", Georgia, serif;
+  --skrift-broed: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --stripe: linear-gradient(to bottom,
+    var(--rust) 0 33.3%, var(--gull) 33.3% 66.6%, var(--petrol) 66.6% 100%);
+
+  /* Settes av JS ut fra valgt bakgrunnsfarge */
+  --bg: #f1e7d3;
+  --paa-bg: #263d42;
+  --paa-bg-dus: #6f6553;
+  --panel-skygge: rgba(38, 61, 66, 0.10);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--paa-bg);
+  font-family: var(--skrift-broed);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.4s ease;
+}
+
+/* Kornet fra hovedsiden. Papir skal ha fiber. */
+.korn {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 900;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+h1, h2, h3 {
+  font-family: var(--skrift-display);
+  font-weight: 550;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+::selection { background: var(--rust); color: var(--papir); }
+
+a { color: inherit; }
+
+a:focus-visible, button:focus-visible, input:focus-visible,
+textarea:focus-visible, select:focus-visible {
+  outline: 2px solid var(--rust);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Topp
+   -------------------------------------------------------------------------- */
+
+/* Tre kolonner der sidene er like brede, ellers dytter knappene til høyre
+   tittelen ut av senter. Midtkolonnen lander da nøyaktig på sidens akse,
+   samme akse som hjulet står på. */
+.topp {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 1.5rem 0.4rem;
+  max-width: 96rem;
+  margin: 0 auto;
+}
+
+.tilbake {
+  font-size: 0.85rem;
+  color: var(--paa-bg-dus);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 0.25s ease;
+  justify-self: start;
+}
+.tilbake:hover { transform: translateX(-3px); color: var(--paa-bg); }
+
+.tittelblokk { min-width: 0; text-align: center; }
+
+.kicker {
+  font-family: var(--skrift-display);
+  font-style: italic;
+  font-weight: 450;
+  font-size: 0.95rem;
+  color: var(--gull-dyp);
+  margin: 0;
+}
+
+.topp h1 {
+  font-size: clamp(1.5rem, 3.4vw, 2.4rem);
+  color: var(--paa-bg);
+}
+
+.topp-knapper { display: flex; gap: 0.5rem; justify-self: end; }
+
+/* Smal skjerm: knappene og tilbakelenken på én rad, tittelen på egen rad under */
+@media (max-width: 46rem) {
+  .topp {
+    grid-template-columns: 1fr auto;
+    row-gap: 0.6rem;
+    padding: 0.9rem 1rem 0.3rem;
+  }
+  .tilbake { grid-area: 1 / 1; }
+  .topp-knapper { grid-area: 1 / 2; }
+  .tittelblokk { grid-area: 2 / 1 / 3 / 3; }
+}
+
+/* --------------------------------------------------------------------------
+   Knapper
+   -------------------------------------------------------------------------- */
+
+.kn {
+  font-family: var(--skrift-broed);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  border-radius: 8px;
+  border: 1px solid var(--kant);
+  background: var(--papir-hev);
+  color: var(--blekk);
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+  transition: transform 0.12s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+.kn:hover { border-color: var(--rust); }
+.kn:active { transform: translateY(1px); }
+.kn[aria-pressed="true"] { background: var(--petrol); color: var(--papir); border-color: var(--petrol); }
+.kn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.kn-rust {
+  background: var(--rust);
+  border-color: var(--rust);
+  color: var(--papir);
+}
+.kn-rust:hover { background: var(--rust-lys); border-color: var(--rust-lys); }
+
+.kn-mini {
+  font-size: 0.72rem;
+  padding: 0.22rem 0.45rem;
+  border-radius: 6px;
+  line-height: 1.2;
+}
+
+.kn-lenke {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--rust);
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Oppsett
+   -------------------------------------------------------------------------- */
+
+/* Sidepanelene er like brede med vilje. Ulik bredde flytter midtkolonnen,
+   og da står hjulet et annet sted enn tittelen over det. */
+.oppsett {
+  display: grid;
+  grid-template-columns: 20rem minmax(0, 1fr) 20rem;
+  gap: 1.25rem;
+  align-items: start;
+  max-width: 96rem;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem 3rem;
+}
+
+/* Blir det for trangt til tre kolonner, går hjulet øverst i full bredde
+   og panelene under. Da er det fortsatt sentrert. */
+@media (max-width: 70rem) {
+  .oppsett { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hjulfelt { grid-column: 1 / -1; order: -1; }
+}
+@media (max-width: 48rem) {
+  .oppsett { grid-template-columns: minmax(0, 1fr); padding: 0.75rem 1rem 3rem; }
+}
+
+.panel {
+  background: var(--papir);
+  border: 1px solid var(--kant);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px var(--panel-skygge);
+  color: var(--blekk);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Signaturstripen langs toppen av panelene */
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: var(--stripe);
+  opacity: 0.85;
+}
+
+.panel-innhold { padding: 1rem 1rem 1.1rem; }
+
+/* Faner */
+.faner {
+  display: flex;
+  border-bottom: 1px solid var(--kant);
+  background: var(--papir-hev);
+  padding-top: 4px;
+}
+
+.fane {
+  flex: 1;
+  border: none;
+  background: none;
+  font-family: var(--skrift-broed);
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--blekk-dus);
+  padding: 0.7rem 0.2rem 0.6rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.fane:hover { color: var(--blekk); }
+.fane[aria-selected="true"] {
+  color: var(--rust);
+  border-bottom-color: var(--rust);
+  background: var(--papir);
+}
+
+.rute[hidden] { display: none; }
+
+/* Skjemaelementer */
+.merke {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blekk-dus);
+  margin: 0 0 0.35rem;
+}
+
+.merke + .hjelp { margin-top: -0.25rem; }
+
+.hjelp {
+  font-size: 0.78rem;
+  color: var(--blekk-dus);
+  margin: 0 0 0.6rem;
+  line-height: 1.45;
+}
+
+textarea, input[type="text"], input[type="number"], select {
+  width: 100%;
+  font-family: var(--skrift-broed);
+  font-size: 0.9rem;
+  color: var(--blekk);
+  background: #fff;
+  border: 1px solid var(--kant);
+  border-radius: 9px;
+  padding: 0.55rem 0.65rem;
+}
+textarea { min-height: 12rem; resize: vertical; line-height: 1.5; }
+textarea:focus, input:focus, select:focus { outline: none; border-color: var(--rust); box-shadow: 0 0 0 3px rgba(168, 67, 42, 0.12); }
+
+.felt { margin-bottom: 0.9rem; }
+
+.rad {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 0.6rem;
+}
+
+.bryter {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-size: 0.85rem;
+  color: var(--blekk);
+  cursor: pointer;
+  padding: 0.35rem 0;
+}
+.bryter input { margin: 0.28rem 0 0; accent-color: var(--rust); flex: none; }
+.bryter span small { display: block; color: var(--blekk-dus); font-size: 0.75rem; line-height: 1.4; }
+
+.teller { font-size: 0.78rem; color: var(--blekk-dus); }
+
+.slippsone {
+  border: 1px dashed var(--kant);
+  border-radius: 9px;
+  padding: 0.55rem;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--blekk-dus);
+  margin-top: 0.5rem;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.slippsone.over { border-color: var(--rust); background: rgba(168, 67, 42, 0.06); }
+
+/* Premieliste */
+.premieliste { list-style: none; margin: 0.7rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+
+.premie {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--papir-hev);
+  border: 1px solid var(--kant);
+  border-radius: 9px;
+  padding: 0.45rem 0.55rem;
+  font-size: 0.87rem;
+}
+.premie.aktiv { border-color: var(--rust); background: rgba(168, 67, 42, 0.07); }
+.premie.ferdig { opacity: 0.5; }
+.premie.ferdig .premie-navn { text-decoration: line-through; }
+
+.premie-nr {
+  font-family: var(--skrift-display);
+  font-size: 0.8rem;
+  color: var(--gull-dyp);
+  width: 1.2rem;
+  flex: none;
+  text-align: center;
+}
+.premie-navn { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.premie-antall { font-size: 0.74rem; color: var(--blekk-dus); white-space: nowrap; }
+.premie-verktoy { display: flex; gap: 0.15rem; flex: none; }
+.premie-verktoy button {
+  border: none; background: none; cursor: pointer; color: var(--blekk-dus);
+  font-size: 0.8rem; padding: 0.15rem 0.25rem; border-radius: 5px; line-height: 1;
+}
+.premie-verktoy button:hover { color: var(--rust); background: rgba(168, 67, 42, 0.1); }
+
+.tom {
+  font-size: 0.82rem;
+  color: var(--blekk-dus);
+  font-style: italic;
+  margin: 0.7rem 0 0;
+}
+
+/* Fargeplukk */
+.fargerad { display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; }
+
+input[type="color"] {
+  width: 2.4rem;
+  height: 2.1rem;
+  padding: 2px;
+  border: 1px solid var(--kant);
+  border-radius: 7px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.forvalg { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-top: 0.5rem; }
+.forvalg button {
+  border: 1px solid var(--kant);
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.74rem;
+  background: var(--papir-hev);
+  color: var(--blekk);
+  cursor: pointer;
+}
+.forvalg button:hover { border-color: var(--rust); }
+.forvalg button[aria-pressed="true"] { background: var(--petrol); color: var(--papir); border-color: var(--petrol); }
+
+.palett { display: flex; gap: 0.35rem; flex-wrap: wrap; align-items: center; margin-top: 0.5rem; }
+.palett input[type="color"] { width: 2rem; height: 1.8rem; }
+
+.logoboks { display: flex; gap: 0.6rem; align-items: center; margin-top: 0.5rem; }
+.logo-forhaand {
+  width: 3.4rem; height: 3.4rem; border-radius: 50%;
+  border: 1px solid var(--kant); background: #fff;
+  display: grid; place-items: center; flex: none; overflow: hidden;
+}
+.logo-forhaand img { width: 100%; height: 100%; object-fit: contain; }
+.logo-forhaand span { font-size: 0.7rem; color: var(--blekk-dus); }
+
+input[type="file"] { display: none; }
+
+input[type="range"] { width: 100%; accent-color: var(--rust); }
+
+/* --------------------------------------------------------------------------
+   Hjulet
+   -------------------------------------------------------------------------- */
+
+.hjulfelt { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+
+.premiebanner {
+  text-align: center;
+  min-height: 4.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.premiebanner .kicker { color: var(--paa-bg-dus); font-size: 0.9rem; }
+.premiebanner h2 {
+  font-size: clamp(1.3rem, 2.6vw, 2rem);
+  color: var(--paa-bg);
+  overflow-wrap: anywhere;
+}
+
+.hjulboks {
+  position: relative;
+  width: min(100%, 40rem);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+canvas#hjul { width: 100%; height: 100%; display: block; touch-action: manipulation; cursor: pointer; }
+
+/* Pekeren: rust kile med gullnagle, henger over kanten kl. 12.
+   Bredden følger hjulet, så den ikke blir en knappenål i presentasjonsmodus. */
+.pekerholder {
+  position: absolute;
+  top: -0.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(2.4rem, 8%, 5.5rem);
+  z-index: 5;
+  pointer-events: none;
+}
+.peker {
+  width: 100%;
+  aspect-ratio: 26 / 34;
+  transform-origin: 50% 14%;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.3));
+}
+.peker svg { width: 100%; height: 100%; display: block; }
+
+.snurrknapp {
+  font-family: var(--skrift-display);
+  font-size: 1.15rem;
+  font-weight: 550;
+  letter-spacing: 0.02em;
+  padding: 0.85rem 2.4rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--rust);
+  color: var(--papir);
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(168, 67, 42, 0.35);
+  transition: transform 0.12s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.snurrknapp:hover:not(:disabled) { background: var(--rust-lys); transform: translateY(-1px); }
+.snurrknapp:active:not(:disabled) { transform: translateY(1px); }
+.snurrknapp:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+
+.hint { font-size: 0.76rem; color: var(--paa-bg-dus); margin: 0; }
+
+/* --------------------------------------------------------------------------
+   Vinnere
+   -------------------------------------------------------------------------- */
+
+.vinnerliste { list-style: none; margin: 0.6rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; max-height: 26rem; overflow-y: auto; }
+
+.vinnerrad {
+  display: flex;
+  gap: 0.55rem;
+  align-items: baseline;
+  border-bottom: 1px dashed var(--kant);
+  padding-bottom: 0.4rem;
+}
+.vinnerrad:last-child { border-bottom: none; }
+.vinnerrad .nr {
+  font-family: var(--skrift-display);
+  font-size: 0.9rem;
+  color: var(--gull-dyp);
+  flex: none;
+  width: 1.4rem;
+}
+.vinnerrad .hvem { font-weight: 500; overflow-wrap: anywhere; }
+.vinnerrad .hva { display: block; font-size: 0.78rem; color: var(--blekk-dus); }
+.vinnerrad .naar { margin-left: auto; font-size: 0.72rem; color: var(--blekk-dus); flex: none; }
+
+/* --------------------------------------------------------------------------
+   Vinnermodal
+   -------------------------------------------------------------------------- */
+
+#vinnerboks {
+  position: fixed;
+  inset: 0;
+  background: rgba(29, 60, 65, 0.72);
+  backdrop-filter: blur(3px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 80;
+  padding: 1.5rem;
+}
+#vinnerboks.vis { display: flex; }
+
+.vinnerkort {
+  background: var(--papir);
+  border-radius: 20px;
+  border: 1px solid var(--kant);
+  padding: 2.6rem 3rem 2rem;
+  text-align: center;
+  max-width: min(38rem, 92vw);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
+  animation: hopp 0.5s cubic-bezier(0.2, 1.5, 0.4, 1);
+  position: relative;
+  overflow: hidden;
+  color: var(--blekk);
+}
+.vinnerkort::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 6px;
+  background: var(--stripe);
+}
+@keyframes hopp { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.vinnerkort .premietekst {
+  font-family: var(--skrift-display);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--gull-dyp);
+  margin: 0 0 0.2rem;
+}
+.vinnerkort .navn {
+  font-family: var(--skrift-display);
+  font-size: clamp(2rem, 6vw, 3.6rem);
+  font-weight: 700;
+  color: var(--rust);
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+  margin: 0.2rem 0 0.4rem;
+}
+.vinnerkort .status-tekst { font-size: 0.85rem; color: var(--blekk-dus); margin: 0; }
+.vinnerkort .rad { justify-content: center; margin-top: 1.4rem; }
+
+/* --------------------------------------------------------------------------
+   Presentasjonsmodus
+   -------------------------------------------------------------------------- */
+
+body.presentasjon .panel,
+body.presentasjon .hint { display: none; }
+
+/* Skjules med visibility, ikke display: da holder den plassen sin i
+   rutenettet, og tittelen blir stående midt på skjermen. */
+body.presentasjon .tilbake { visibility: hidden; }
+
+body.presentasjon .oppsett {
+  grid-template-columns: minmax(0, 1fr);
+  padding-top: 0;
+  min-height: calc(100dvh - 9rem);
+  align-content: center;
+}
+body.presentasjon .hjulboks { width: min(100%, min(68vh, 60rem)); }
+body.presentasjon .topp { padding-bottom: 0; }
+body.presentasjon .topp h1 { font-size: clamp(1.8rem, 4vw, 3rem); }
+body.presentasjon .premiebanner h2 { font-size: clamp(1.5rem, 3vw, 2.4rem); }
+
+#konfetti { position: fixed; inset: 0; pointer-events: none; z-index: 90; }
+
+.skjult-visuelt {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* Liten varsellinje nederst i venstre panel */
+.varsel {
+  font-size: 0.78rem;
+  color: var(--rust);
+  margin: 0.6rem 0 0;
+  min-height: 1.1rem;
+}
+
+.bunn {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--paa-bg-dus);
+  padding: 0 1.5rem 2rem;
+}
+body.presentasjon .bunn { display: none; }
+
+@media print { body { display: none; } }
+</style>
+</head>
+<body>
+<div class="korn" aria-hidden="true"></div>
+
+<header class="topp">
+  <a class="tilbake" href="/">&larr; christianhermansen.no</a>
+  <div class="tittelblokk">
+    <p class="kicker" id="visUndertittel">Trekning</p>
+    <h1 id="visTittel">Lykkehjulet</h1>
+  </div>
+  <div class="topp-knapper">
+    <button class="kn" id="knLyd" aria-pressed="true" title="Slå lyd av og på">Lyd på</button>
+    <button class="kn" id="knPresentasjon" title="Skjul panelene og fyll skjermen">Presentasjon</button>
+  </div>
+</header>
+
+<main class="oppsett">
+
+  <!-- Venstre panel: alt oppsett -->
+  <aside class="panel panel-venstre">
+    <div class="faner" role="tablist" aria-label="Oppsett">
+      <button class="fane" role="tab" id="fane-deltakere" aria-controls="rute-deltakere" aria-selected="true">Deltakere</button>
+      <button class="fane" role="tab" id="fane-premier" aria-controls="rute-premier" aria-selected="false">Premier</button>
+      <button class="fane" role="tab" id="fane-utseende" aria-controls="rute-utseende" aria-selected="false">Utseende</button>
+      <button class="fane" role="tab" id="fane-regler" aria-controls="rute-regler" aria-selected="false">Regler</button>
+    </div>
+
+    <!-- Deltakere -->
+    <div class="panel-innhold rute" role="tabpanel" id="rute-deltakere" aria-labelledby="fane-deltakere">
+      <label class="merke" for="navneliste">Deltakere, én per linje</label>
+      <p class="hjelp">Skriv <code>Kari Nordmann *3</code> for å gi noen flere lodd. Lim inn rett fra regneark, eller slipp en fil under.</p>
+      <textarea id="navneliste" spellcheck="false" placeholder="Ola Nordmann&#10;Kari Nordmann *3&#10;Per Hansen"></textarea>
+      <div class="slippsone" id="slippsone">Slipp en CSV- eller tekstfil her, eller <button class="kn-lenke" id="knVelgFil" type="button">velg fil</button></div>
+      <input type="file" id="filvelger" accept=".csv,.txt,.tsv,text/plain,text/csv">
+      <div class="rad">
+        <button class="kn kn-rust" id="knOppdater">Oppdater hjulet</button>
+        <span class="teller" id="antall">0 deltakere</span>
+      </div>
+      <label class="bryter"><input type="checkbox" id="dedup" checked><span>Fjern duplikater<small>Samme navn to ganger blir til ett.</small></span></label>
+      <label class="bryter"><input type="checkbox" id="blandNavn"><span>Bland rekkefølgen<small>Stokker feltene så naboer i listen ikke havner ved siden av hverandre.</small></span></label>
+      <p class="varsel" id="varselDeltakere" role="status"></p>
+    </div>
+
+    <!-- Premier -->
+    <div class="panel-innhold rute" role="tabpanel" id="rute-premier" aria-labelledby="fane-premier" hidden>
+      <label class="merke" for="premienavn">Legg til premie</label>
+      <p class="hjelp">Legg inn alt på forhånd. Hjulet tar den øverste som ikke er trukket, og går videre av seg selv.</p>
+      <div class="rad" style="margin-top:0; flex-wrap:nowrap;">
+        <input type="text" id="premienavn" placeholder="F.eks. Høytrykkspyler" autocomplete="off">
+        <input type="number" id="premieantall" value="1" min="1" max="99" style="width:4.2rem; flex:none;" aria-label="Antall">
+        <button class="kn kn-rust" id="knLeggTilPremie" style="flex:none;">Legg til</button>
+      </div>
+      <ul class="premieliste" id="premieliste"></ul>
+      <p class="tom" id="premieTom">Ingen premier lagt inn ennå. Uten premier trekker hjulet bare et navn.</p>
+      <div class="rad">
+        <button class="kn" id="knNullstillPremier">Nullstill trukne premier</button>
+        <button class="kn" id="knTomPremier">Tøm listen</button>
+      </div>
+    </div>
+
+    <!-- Utseende -->
+    <div class="panel-innhold rute" role="tabpanel" id="rute-utseende" aria-labelledby="fane-utseende" hidden>
+      <div class="felt">
+        <label class="merke" for="tittel">Tittel og undertittel</label>
+        <input type="text" id="tittel" placeholder="Lykkehjulet" autocomplete="off">
+        <input type="text" id="undertittel" placeholder="Trekning" autocomplete="off" style="margin-top:0.4rem;">
+      </div>
+
+      <div class="felt">
+        <label class="merke">Logo eller bilde i navet</label>
+        <div class="logoboks">
+          <div class="logo-forhaand" id="logoForhaand"><span>Tomt</span></div>
+          <div>
+            <button class="kn" id="knVelgLogo" type="button">Velg bilde</button>
+            <button class="kn" id="knFjernLogo" type="button">Fjern</button>
+            <input type="file" id="logovelger" accept="image/*">
+          </div>
+        </div>
+        <label class="merke" for="logostorrelse" style="margin-top:0.7rem;">Størrelse på navet</label>
+        <input type="range" id="logostorrelse" min="10" max="34" value="19">
+      </div>
+
+      <div class="felt">
+        <label class="merke" for="bakgrunn">Bakgrunnsfarge</label>
+        <div class="fargerad">
+          <input type="color" id="bakgrunn" value="#f1e7d3" aria-label="Bakgrunnsfarge">
+          <input type="text" id="bakgrunnHex" value="#f1e7d3" style="width:7rem;" aria-label="Bakgrunnsfarge som heksadesimal" spellcheck="false">
+        </div>
+        <div class="forvalg" id="bakgrunnForvalg"></div>
+      </div>
+
+      <div class="felt">
+        <label class="merke">Farger på hjulet</label>
+        <div class="forvalg" id="palettForvalg"></div>
+        <div class="palett" id="palettRedigering"></div>
+        <p class="hjelp" style="margin-top:0.5rem;">Tekstfargen i hvert felt regnes ut fra feltets lyshet, så den blir lesbar uansett hva du velger.</p>
+      </div>
+    </div>
+
+    <!-- Regler -->
+    <div class="panel-innhold rute" role="tabpanel" id="rute-regler" aria-labelledby="fane-regler" hidden>
+      <label class="bryter"><input type="checkbox" id="fjernVinner" checked><span>Fjern vinneren fra hjulet<small>Skru av hvis samme person kan vinne flere premier.</small></span></label>
+      <label class="bryter"><input type="checkbox" id="brukLodd" checked><span>Bruk lodd<small>Gjør feltet større for den som har flere lodd. <code>Navn *3</code> gir tre lodd.</small></span></label>
+      <label class="bryter"><input type="checkbox" id="autoNeste" checked><span>Gå videre til neste premie<small>Etter en vinner er neste premie klar med det samme.</small></span></label>
+      <label class="bryter"><input type="checkbox" id="visNavnAlltid"><span>Vis navn selv på fulle hjul<small>Over 60 felt blir teksten uleselig. Skru på hvis du vil ha den likevel.</small></span></label>
+
+      <div class="felt" style="margin-top:1rem;">
+        <label class="merke" for="varighet">Hvor lenge hjulet snurrer</label>
+        <input type="range" id="varighet" min="2" max="12" step="0.5" value="5.5">
+        <span class="teller" id="varighetTekst">5,5 sekunder</span>
+      </div>
+
+      <hr style="border:0; border-top:1px dashed var(--kant); margin:1.1rem 0;">
+
+      <label class="merke">Oppsettet ditt</label>
+      <p class="hjelp">Alt lagres i denne nettleseren. Del-lenken tar med navn, premier og farger, men ikke logoen hvis den er stor.</p>
+      <div class="rad" style="margin-top:0;">
+        <button class="kn" id="knDelLenke">Kopier del-lenke</button>
+        <button class="kn" id="knNullstillAlt">Nullstill alt</button>
+      </div>
+      <p class="varsel" id="varselRegler" role="status"></p>
+    </div>
+  </aside>
+
+  <!-- Hjulet -->
+  <section class="hjulfelt">
+    <div class="premiebanner">
+      <p class="kicker" id="premieTeller"></p>
+      <h2 id="premieNaa">Klar til trekning</h2>
+    </div>
+
+    <div class="hjulboks">
+      <div class="pekerholder" aria-hidden="true">
+        <div class="peker" id="peker">
+          <svg viewBox="0 0 52 68" xmlns="http://www.w3.org/2000/svg">
+            <path d="M26 66 L6 20 A22 22 0 0 1 46 20 Z" fill="#a8432a"/>
+            <path d="M26 66 L16 43 A22 22 0 0 0 36 43 Z" fill="#8f3722" opacity="0.55"/>
+            <circle cx="26" cy="20" r="11" fill="#d9923c"/>
+            <circle cx="26" cy="20" r="5" fill="#f1e7d3"/>
+          </svg>
+        </div>
+      </div>
+      <canvas id="hjul" role="img" aria-label="Lykkehjul med deltakerne"></canvas>
+    </div>
+
+    <button class="snurrknapp" id="snurr">Snurr hjulet</button>
+    <p class="hint">Mellomrom snurrer også. Klikk på hjulet hvis du vil.</p>
+    <p class="skjult-visuelt" id="livsstatus" role="status" aria-live="polite"></p>
+  </section>
+
+  <!-- Vinnere -->
+  <aside class="panel panel-hoyre">
+    <div class="panel-innhold">
+      <h3 style="font-size:0.95rem; color:var(--petrol);">Vinnere</h3>
+      <p class="tom" id="vinnerTom">Ingen trekninger ennå.</p>
+      <ol class="vinnerliste" id="vinnerliste"></ol>
+      <div class="rad">
+        <button class="kn" id="knAngre">Angre siste</button>
+        <button class="kn" id="knKopierVinnere">Kopier</button>
+        <button class="kn" id="knEksportCsv">CSV</button>
+      </div>
+      <p class="varsel" id="varselVinnere" role="status"></p>
+    </div>
+  </aside>
+</main>
+
+<p class="bunn">Alt skjer i nettleseren din. Ingen navn sendes noe sted, og det finnes ingen sporing på denne siden.</p>
+
+<div id="vinnerboks" role="dialog" aria-modal="true" aria-labelledby="vinnerNavn">
+  <div class="vinnerkort">
+    <p class="premietekst" id="vinnerPremie">Vinneren er</p>
+    <p class="navn" id="vinnerNavn"></p>
+    <p class="status-tekst" id="vinnerStatus"></p>
+    <div class="rad">
+      <button class="kn kn-rust" id="knNeste">Neste premie</button>
+      <button class="kn" id="knOmIgjen">Trekk om igjen</button>
+      <button class="kn" id="knLukk">Lukk</button>
+    </div>
+  </div>
+</div>
+
+<canvas id="konfetti" aria-hidden="true"></canvas>
+
+<script>
+(function () {
+"use strict";
+
+/* ==========================================================================
+   Lykkehjulet. Vanilla JS, ingen avhengigheter.
+   Alt av tilstand ligger i «stat», og lagres i localStorage ved hver endring.
+   ========================================================================== */
+
+var LAGERNOKKEL = "lykkehjul-v1";
+
+var PALETTER = {
+  papir: { navn: "Papir", farger: ["#a8432a", "#e9dcc4", "#24494e", "#d9923c", "#1d3c41", "#d3c2a0"] },
+  festival: { navn: "Festival", farger: ["#c1440e", "#fff8ee", "#2aa8c4", "#d4a853", "#14100f", "#e07b39"] },
+  natt: { navn: "Natt", farger: ["#1d3c41", "#8fb7ba", "#d9923c", "#0f2528", "#4c8f95", "#b0731f"] },
+  blekk: { navn: "Gull og blekk", farger: ["#24494e", "#d9923c", "#f1e7d3", "#1d3c41", "#b0731f", "#e9dcc4"] }
+};
+
+var BAKGRUNNER = [
+  { navn: "Papir", verdi: "#f1e7d3" },
+  { navn: "Krem", verdi: "#fff8ee" },
+  { navn: "Petrol", verdi: "#1d3c41" },
+  { navn: "Natt", verdi: "#14100f" },
+  { navn: "Rust", verdi: "#7d3220" },
+  { navn: "Hvit", verdi: "#ffffff" }
+];
+
+var STANDARD = {
+  raatekst: "",
+  dedup: true,
+  bland: false,
+  blandeFro: 1,
+  premier: [],
+  tittel: "",
+  undertittel: "",
+  logo: "",
+  navStorrelse: 19,
+  bakgrunn: "#f1e7d3",
+  palettNavn: "papir",
+  palett: PALETTER.papir.farger.slice(),
+  fjernVinner: true,
+  brukLodd: true,
+  autoNeste: true,
+  visNavnAlltid: false,
+  varighet: 5.5,
+  lyd: true,
+  vinnere: []
+};
+
+var stat = kopi(STANDARD);
+var deltakere = [];      // [{navn, lodd}]
+var vinkel = 0;          // hjulets rotasjon i radianer
+var snurrer = false;
+var fremhevet = -1;      // indeks som lyser opp etter en trekning
+var venterOppfriskning = false;  // hjulet står stille med vinneren tent til modalen lukkes
+
+var canvas = document.getElementById("hjul");
+var ctx = canvas.getContext("2d");
+var dpr = 1;
+var logoBilde = null;
+
+/* --------------------------------------------------------------------------
+   Småting
+   -------------------------------------------------------------------------- */
+
+function $(id) { return document.getElementById(id); }
+function kopi(o) { return JSON.parse(JSON.stringify(o)); }
+
+function si(el, tekst) {
+  el.textContent = tekst;
+  clearTimeout(el._t);
+  el._t = setTimeout(function () { el.textContent = ""; }, 4500);
+}
+
+/* Deterministisk stokking, så hjulet ikke hopper hver gang man taster. */
+function froRand(fro) {
+  return function () {
+    fro |= 0; fro = (fro + 0x6D2B79F5) | 0;
+    var t = Math.imul(fro ^ (fro >>> 15), 1 | fro);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function stokk(liste, fro) {
+  var r = froRand(fro), ut = liste.slice();
+  for (var i = ut.length - 1; i > 0; i--) {
+    var j = Math.floor(r() * (i + 1));
+    var m = ut[i]; ut[i] = ut[j]; ut[j] = m;
+  }
+  return ut;
+}
+
+function tilfeldig(maks) {
+  // Krypografisk der det finnes, med avvisning så fordelingen holder seg jevn.
+  if (window.crypto && window.crypto.getRandomValues) {
+    var buf = new Uint32Array(1);
+    var grense = Math.floor(4294967296 / maks) * maks;
+    do { window.crypto.getRandomValues(buf); } while (buf[0] >= grense);
+    return buf[0] % maks;
+  }
+  return Math.floor(Math.random() * maks);
+}
+
+function lyshet(hex) {
+  var c = hex.replace("#", "");
+  if (c.length === 3) c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
+  var r = parseInt(c.slice(0, 2), 16) / 255,
+      g = parseInt(c.slice(2, 4), 16) / 255,
+      b = parseInt(c.slice(4, 6), 16) / 255;
+  function lin(v) { return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+}
+
+function erGyldigHex(v) { return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v); }
+
+/* --------------------------------------------------------------------------
+   Lagring, del-lenke
+   -------------------------------------------------------------------------- */
+
+function lagre() {
+  try { localStorage.setItem(LAGERNOKKEL, JSON.stringify(stat)); } catch (e) { /* full disk eller privat modus */ }
+}
+
+function hentLagret() {
+  try {
+    var r = localStorage.getItem(LAGERNOKKEL);
+    return r ? JSON.parse(r) : null;
+  } catch (e) { return null; }
+}
+
+function tilBase64(s) {
+  return btoa(unescape(encodeURIComponent(s))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function fraBase64(s) {
+  s = s.replace(/-/g, "+").replace(/_/g, "/");
+  while (s.length % 4) s += "=";
+  return decodeURIComponent(escape(atob(s)));
+}
+
+function lagDelLenke() {
+  var d = kopi(stat);
+  delete d.vinnere;
+  var mistetLogo = false;
+  if (d.logo && d.logo.length > 40000) { d.logo = ""; mistetLogo = true; }
+  var url = location.origin + location.pathname + "#d=" + tilBase64(JSON.stringify(d));
+  return { url: url, mistetLogo: mistetLogo };
+}
+
+function lesFraLenke() {
+  var m = location.hash.match(/[#&]d=([A-Za-z0-9_-]+)/);
+  if (!m) return null;
+  try { return JSON.parse(fraBase64(m[1])); } catch (e) { return null; }
+}
+
+function flett(inn) {
+  if (!inn || typeof inn !== "object") return;
+  Object.keys(STANDARD).forEach(function (k) {
+    if (inn[k] !== undefined && inn[k] !== null) stat[k] = inn[k];
+  });
+  if (!Array.isArray(stat.palett) || !stat.palett.length) stat.palett = PALETTER.papir.farger.slice();
+  if (!Array.isArray(stat.premier)) stat.premier = [];
+  if (!Array.isArray(stat.vinnere)) stat.vinnere = [];
+}
+
+/* --------------------------------------------------------------------------
+   Deltakere
+   -------------------------------------------------------------------------- */
+
+function lesDeltakere() {
+  var linjer = stat.raatekst.split("\n").map(function (l) { return l.trim(); }).filter(Boolean);
+  var ut = [];
+  linjer.forEach(function (l) {
+    var lodd = 1;
+    var m = l.match(/^(.*?)\s*[*x]\s*(\d{1,3})$/i);
+    if (m && stat.brukLodd) { l = m[1].trim(); lodd = Math.max(1, parseInt(m[2], 10)); }
+    else if (m) { l = m[1].trim(); }
+    if (l) ut.push({ navn: l, lodd: lodd });
+  });
+
+  if (stat.dedup) {
+    var sett = Object.create(null), samlet = [];
+    ut.forEach(function (d) {
+      var k = d.navn.toLowerCase();
+      if (sett[k] !== undefined) { samlet[sett[k]].lodd = Math.max(samlet[sett[k]].lodd, d.lodd); return; }
+      sett[k] = samlet.length;
+      samlet.push(d);
+    });
+    ut = samlet;
+  }
+
+  if (stat.bland) ut = stokk(ut, stat.blandeFro);
+  deltakere = ut;
+
+  var lodd = totaltLodd();
+  var t = deltakere.length + (deltakere.length === 1 ? " deltaker" : " deltakere");
+  if (stat.brukLodd && lodd !== deltakere.length) t += ", " + lodd + " lodd";
+  $("antall").textContent = t;
+}
+
+function totaltLodd() {
+  return deltakere.reduce(function (s, d) { return s + (stat.brukLodd ? d.lodd : 1); }, 0);
+}
+
+function vekt(d) { return stat.brukLodd ? d.lodd : 1; }
+
+/* Startvinkel og bredde for hvert felt, i radianer. */
+function feltGrenser() {
+  var total = totaltLodd(), gaa = 0, ut = [];
+  for (var i = 0; i < deltakere.length; i++) {
+    var bredde = (vekt(deltakere[i]) / total) * Math.PI * 2;
+    ut.push({ start: gaa, bredde: bredde });
+    gaa += bredde;
+  }
+  return ut;
+}
+
+/* --------------------------------------------------------------------------
+   Tegning
+   -------------------------------------------------------------------------- */
+
+function passStorrelse() {
+  var boks = canvas.parentElement.getBoundingClientRect();
+  var s = Math.max(220, Math.floor(Math.min(boks.width, boks.height)));
+  dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+  canvas.width = Math.round(s * dpr);
+  canvas.height = Math.round(s * dpr);
+  canvas.style.width = s + "px";
+  canvas.style.height = s + "px";
+  tegn();
+}
+
+function kortTekst(tekst, maks) {
+  if (ctx.measureText(tekst).width <= maks) return tekst;
+  var t = tekst;
+  while (t.length > 1 && ctx.measureText(t + "…").width > maks) t = t.slice(0, -1);
+  return t.replace(/\s+$/, "") + "…";
+}
+
+function tegn() {
+  var s = canvas.width / dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, s, s);
+
+  var midt = s / 2;
+  var r = midt - Math.max(8, s * 0.035);
+  var navR = Math.max(26, r * (stat.navStorrelse / 100));
+  var palett = stat.palett.length ? stat.palett : PALETTER.papir.farger;
+
+  if (!deltakere.length) {
+    ctx.save();
+    ctx.translate(midt, midt);
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(233, 220, 196, 0.85)";
+    ctx.fill();
+    ctx.setLineDash([9, 9]);
+    ctx.strokeStyle = "#d3c2a0";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = "#6f6553";
+    ctx.font = "500 " + Math.max(13, s * 0.033) + "px Inter, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    // Under navet, ellers ligger teksten bak navsirkelen
+    ctx.fillText("Legg inn deltakere", 0, navR + Math.max(28, r * 0.09));
+    ctx.fillText("så tegner hjulet seg selv", 0, navR + Math.max(52, r * 0.155));
+    ctx.restore();
+    tegnNav(midt, navR);
+    return;
+  }
+
+  var grenser = feltGrenser();
+  var visTekst = stat.visNavnAlltid || deltakere.length <= 60;
+
+  ctx.save();
+  ctx.translate(midt, midt);
+  ctx.rotate(vinkel);
+
+  for (var i = 0; i < deltakere.length; i++) {
+    var g = grenser[i];
+    var farge = velgFarge(i, palett);
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, r, g.start, g.start + g.bredde);
+    ctx.closePath();
+    ctx.fillStyle = farge;
+    ctx.fill();
+
+    if (deltakere.length > 1) {
+      ctx.strokeStyle = "rgba(241, 231, 211, 0.55)";
+      ctx.lineWidth = deltakere.length > 40 ? 0.6 : 1.4;
+      ctx.stroke();
+    }
+
+    if (i === fremhevet) {
+      ctx.fillStyle = "rgba(255, 255, 255, 0.28)";
+      ctx.fill();
+      ctx.strokeStyle = "#d9923c";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+
+    if (visTekst) {
+      var buelengde = g.bredde * (r * 0.72);
+      var str = Math.min(r * 0.075, Math.max(8, buelengde * 0.62));
+      if (str >= 7) {
+        ctx.save();
+        ctx.rotate(g.start + g.bredde / 2);
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        ctx.font = "600 " + str.toFixed(1) + "px Inter, sans-serif";
+        ctx.fillStyle = lyshet(farge) > 0.42 ? "#1d3c41" : "#f1e7d3";
+        var etikett = deltakere[i].navn;
+        if (stat.brukLodd && deltakere[i].lodd > 1) etikett += " (" + deltakere[i].lodd + ")";
+        ctx.fillText(kortTekst(etikett, r - navR - r * 0.09), r - r * 0.055, 0);
+        ctx.restore();
+      }
+    }
+  }
+
+  // Ytre ring, og deretter naglene oppå den, som på et gammelt tivolihjul.
+  // Naglene ligger inne i den roterte konteksten, så de går rundt med hjulet.
+  var ringR = r + Math.max(5, r * 0.03);
+  ctx.beginPath();
+  ctx.arc(0, 0, ringR, 0, Math.PI * 2);
+  ctx.strokeStyle = "#24494e";
+  ctx.lineWidth = Math.max(4, r * 0.026);
+  ctx.stroke();
+
+  var nagler = Math.min(40, Math.max(12, deltakere.length <= 20 ? deltakere.length : 24));
+  for (var n = 0; n < nagler; n++) {
+    var a = (n / nagler) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.arc(Math.cos(a) * ringR, Math.sin(a) * ringR, Math.max(2.2, r * 0.016), 0, Math.PI * 2);
+    ctx.fillStyle = "#d9923c";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(Math.cos(a) * ringR - r * 0.004, Math.sin(a) * ringR - r * 0.004, Math.max(0.8, r * 0.006), 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255,248,238,0.75)";
+    ctx.fill();
+  }
+
+  ctx.restore();
+
+  // Et hint av lys ovenfra
+  ctx.save();
+  ctx.translate(midt, midt);
+
+  var glans = ctx.createRadialGradient(-r * 0.3, -r * 0.45, r * 0.1, 0, 0, r);
+  glans.addColorStop(0, "rgba(255,255,255,0.16)");
+  glans.addColorStop(0.65, "rgba(255,255,255,0)");
+  glans.addColorStop(1, "rgba(0,0,0,0.10)");
+  ctx.beginPath();
+  ctx.arc(0, 0, r, 0, Math.PI * 2);
+  ctx.fillStyle = glans;
+  ctx.fill();
+  ctx.restore();
+
+  tegnNav(midt, navR);
+}
+
+/* Unngå at to naboer, og første og siste felt, får samme farge. */
+function velgFarge(i, palett) {
+  var n = deltakere.length, p = palett.length;
+  if (n === 1) return palett[0];
+  var f = palett[i % p];
+  if (i === n - 1 && palett[0] === f) f = palett[(i + 1) % p];
+  if (f === palett[(i - 1 + p) % p] && i > 0) f = palett[(i + 1) % p];
+  return f;
+}
+
+function tegnNav(midt, navR) {
+  ctx.save();
+  ctx.translate(midt, midt);
+  ctx.beginPath();
+  ctx.arc(0, 0, navR, 0, Math.PI * 2);
+  ctx.fillStyle = "#f1e7d3";
+  ctx.fill();
+  ctx.strokeStyle = "#a8432a";
+  ctx.lineWidth = Math.max(3, navR * 0.11);
+  ctx.stroke();
+
+  if (logoBilde && logoBilde.complete && logoBilde.naturalWidth) {
+    var indre = navR * 0.82;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(0, 0, indre, 0, Math.PI * 2);
+    ctx.clip();
+    var iw = logoBilde.naturalWidth, ih = logoBilde.naturalHeight;
+    var skala = Math.min((indre * 2) / iw, (indre * 2) / ih);
+    ctx.drawImage(logoBilde, -iw * skala / 2, -ih * skala / 2, iw * skala, ih * skala);
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+/* --------------------------------------------------------------------------
+   Lyd. Ingen filer, alt lages i WebAudio.
+   -------------------------------------------------------------------------- */
+
+var lydKontekst = null;
+
+function lyd() {
+  if (!stat.lyd) return null;
+  if (!lydKontekst) {
+    var K = window.AudioContext || window.webkitAudioContext;
+    if (!K) return null;
+    lydKontekst = new K();
+  }
+  if (lydKontekst.state === "suspended") lydKontekst.resume();
+  return lydKontekst;
+}
+
+function tikk(styrke) {
+  var k = lyd();
+  if (!k) return;
+  var o = k.createOscillator(), g = k.createGain(), t = k.currentTime;
+  o.type = "triangle";
+  o.frequency.setValueAtTime(1150 + Math.random() * 260, t);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(Math.max(0.02, 0.16 * styrke), t + 0.004);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.07);
+  o.connect(g).connect(k.destination);
+  o.start(t); o.stop(t + 0.09);
+}
+
+function fanfare() {
+  var k = lyd();
+  if (!k) return;
+  var toner = [523.25, 659.25, 783.99, 1046.5];
+  toner.forEach(function (f, i) {
+    var o = k.createOscillator(), g = k.createGain(), t = k.currentTime + i * 0.11;
+    o.type = i === toner.length - 1 ? "triangle" : "sine";
+    o.frequency.setValueAtTime(f, t);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.18, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + (i === toner.length - 1 ? 0.9 : 0.3));
+    o.connect(g).connect(k.destination);
+    o.start(t); o.stop(t + 1);
+  });
+}
+
+/* --------------------------------------------------------------------------
+   Premier
+   -------------------------------------------------------------------------- */
+
+function aktivPremie() {
+  for (var i = 0; i < stat.premier.length; i++) {
+    if ((stat.premier[i].trukket || 0) < stat.premier[i].antall) return { premie: stat.premier[i], indeks: i };
+  }
+  return null;
+}
+
+function premieTall() {
+  var total = 0, gjort = 0;
+  stat.premier.forEach(function (p) { total += p.antall; gjort += (p.trukket || 0); });
+  return { total: total, gjort: gjort };
+}
+
+function tegnPremieliste() {
+  var ul = $("premieliste");
+  ul.innerHTML = "";
+  var aktiv = aktivPremie();
+  $("premieTom").hidden = stat.premier.length > 0;
+
+  stat.premier.forEach(function (p, i) {
+    var li = document.createElement("li");
+    li.className = "premie" + (aktiv && aktiv.indeks === i ? " aktiv" : "") + ((p.trukket || 0) >= p.antall ? " ferdig" : "");
+    li.innerHTML =
+      '<span class="premie-nr">' + (i + 1) + "</span>" +
+      '<span class="premie-navn"></span>' +
+      '<span class="premie-antall">' + (p.trukket || 0) + "/" + p.antall + "</span>" +
+      '<span class="premie-verktoy">' +
+      '<button type="button" data-opp="' + i + '" title="Flytt opp" aria-label="Flytt opp">↑</button>' +
+      '<button type="button" data-ned="' + i + '" title="Flytt ned" aria-label="Flytt ned">↓</button>' +
+      '<button type="button" data-slett="' + i + '" title="Slett" aria-label="Slett">✕</button>' +
+      "</span>";
+    li.querySelector(".premie-navn").textContent = p.navn;
+    ul.appendChild(li);
+  });
+
+  oppdaterBanner();
+}
+
+function oppdaterBanner() {
+  var aktiv = aktivPremie(), tall = premieTall();
+  var tittel = $("premieNaa"), teller = $("premieTeller");
+
+  if (!stat.premier.length) {
+    teller.textContent = "";
+    tittel.textContent = "Klar til trekning";
+  } else if (!aktiv) {
+    teller.textContent = tall.total + " av " + tall.total + " trukket";
+    tittel.textContent = "Alle premier er trukket";
+  } else {
+    teller.textContent = "Premie " + (tall.gjort + 1) + " av " + tall.total;
+    tittel.textContent = aktiv.premie.navn;
+  }
+
+  $("snurr").disabled = snurrer || !deltakere.length || (stat.premier.length > 0 && !aktiv);
+}
+
+/* --------------------------------------------------------------------------
+   Trekning
+   -------------------------------------------------------------------------- */
+
+function snurrHjulet() {
+  friskOpp();
+  if (snurrer || !deltakere.length) return;
+  if (stat.premier.length && !aktivPremie()) return;
+
+  snurrer = true;
+  fremhevet = -1;
+  $("snurr").disabled = true;
+  lyd(); // vekk lydkortet mens brukeren fortsatt «rører» siden
+
+  var total = totaltLodd();
+  var trekk = tilfeldig(total);
+  var vinnerIdx = 0, sum = 0;
+  for (var i = 0; i < deltakere.length; i++) {
+    sum += vekt(deltakere[i]);
+    if (trekk < sum) { vinnerIdx = i; break; }
+  }
+
+  var grenser = feltGrenser();
+  var g = grenser[vinnerIdx];
+  // Land et tilfeldig sted inne i feltet, ikke alltid midt på. Ser mer ekte ut.
+  var innenfor = g.start + g.bredde * (0.2 + Math.random() * 0.6);
+  var maal = -Math.PI / 2 - innenfor;
+  var naa = vinkel % (Math.PI * 2);
+  var diff = maal - naa;
+  while (diff < 0) diff += Math.PI * 2;
+  var runder = 5 + Math.floor(Math.random() * 3);
+  var totalRotasjon = diff + Math.PI * 2 * runder;
+
+  var start = vinkel;
+  var varighet = stat.varighet * 1000;
+  var t0 = null;
+  var forrigeFelt = -1;
+
+  // Fjærbevegelse for pekeren, så den dulter borti hvert felt.
+  var pVinkel = 0, pFart = 0;
+  var pekerEl = $("peker");
+
+  function steg(ts) {
+    if (!t0) t0 = ts;
+    var t = Math.min(1, (ts - t0) / varighet);
+    var e = 1 - Math.pow(1 - t, 4);
+    vinkel = start + totalRotasjon * e;
+
+    // Hvilket felt står under pekeren nå?
+    var under = ((-Math.PI / 2 - vinkel) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+    var felt = 0;
+    for (var j = 0; j < grenser.length; j++) {
+      if (under >= grenser[j].start && under < grenser[j].start + grenser[j].bredde) { felt = j; break; }
+    }
+    if (felt !== forrigeFelt) {
+      if (forrigeFelt !== -1) {
+        pFart = -0.75 * (1 - t * 0.55);
+        tikk(1 - t * 0.6);
+      }
+      forrigeFelt = felt;
+    }
+
+    pFart += -pVinkel * 0.38;
+    pFart *= 0.74;
+    pVinkel += pFart;
+    pekerEl.style.transform = "rotate(" + (pVinkel * 26).toFixed(2) + "deg)";
+
+    tegn();
+
+    if (t < 1) {
+      requestAnimationFrame(steg);
+    } else {
+      pekerEl.style.transform = "";
+      snurrer = false;
+      fremhevet = vinnerIdx;
+      tegn();
+      fullfor(deltakere[vinnerIdx]);
+    }
+  }
+  requestAnimationFrame(steg);
+}
+
+function fullfor(vinner) {
+  var aktiv = aktivPremie();
+  var premienavn = aktiv ? aktiv.premie.navn : "";
+
+  // Ta vare på hele situasjonen, så «angre» faktisk kan angre.
+  var oppfor = { raatekst: stat.raatekst, premier: kopi(stat.premier) };
+
+  if (aktiv) aktiv.premie.trukket = (aktiv.premie.trukket || 0) + 1;
+
+  if (stat.fjernVinner) {
+    var igjen = stat.raatekst.split("\n").filter(function (l) {
+      var t = l.trim();
+      if (!t) return true;
+      var m = t.match(/^(.*?)\s*[*x]\s*\d{1,3}$/i);
+      var navn = m ? m[1].trim() : t;
+      return navn.toLowerCase() !== vinner.navn.toLowerCase();
+    });
+    stat.raatekst = igjen.join("\n").replace(/\n{3,}/g, "\n\n").trim();
+    $("navneliste").value = stat.raatekst;
+  }
+
+  stat.vinnere.push({
+    navn: vinner.navn,
+    premie: premienavn,
+    tid: new Date().toISOString(),
+    oppfor: oppfor
+  });
+
+  // Hjulet står som det står, med vinnerfeltet tent, til modalen lukkes.
+  // Først da fjernes navnet og feltene tegnes på nytt.
+  venterOppfriskning = true;
+  tegnPremieliste();
+  tegnVinnere();
+  lagre();
+  visVinner(vinner.navn, premienavn);
+  $("livsstatus").textContent = vinner.navn + " vant" + (premienavn ? " " + premienavn : "") + ".";
+}
+
+function visVinner(navn, premie) {
+  $("vinnerPremie").textContent = premie ? "Vinner av " + premie : "Vinneren er";
+  $("vinnerNavn").textContent = navn;
+
+  var aktiv = aktivPremie();
+  var status = "";
+  if (stat.premier.length && !aktiv) status = "Det var siste premie.";
+  else if (aktiv) status = "Neste ut: " + aktiv.premie.navn;
+  else if (deltakere.length) status = deltakere.length + " igjen på hjulet.";
+  $("vinnerStatus").textContent = status;
+  $("knNeste").textContent = aktiv ? "Neste premie" : "Ferdig";
+
+  $("vinnerboks").classList.add("vis");
+  $("knNeste").focus();
+  fanfare();
+  konfettiRegn();
+}
+
+function lukkModal() {
+  $("vinnerboks").classList.remove("vis");
+  friskOpp();
+  $("snurr").focus();
+}
+
+function friskOpp() {
+  if (!venterOppfriskning) return;
+  venterOppfriskning = false;
+  fremhevet = -1;
+  lesDeltakere();
+  tegn();
+  oppdaterBanner();
+}
+
+function angre() {
+  if (!stat.vinnere.length) return null;
+  var siste = stat.vinnere.pop();
+  if (siste.oppfor) {
+    stat.raatekst = siste.oppfor.raatekst;
+    stat.premier = siste.oppfor.premier;
+    $("navneliste").value = stat.raatekst;
+  }
+  venterOppfriskning = false;
+  fremhevet = -1;
+  lesDeltakere();
+  tegn();
+  tegnPremieliste();
+  tegnVinnere();
+  lagre();
+  return siste;
+}
+
+/* --------------------------------------------------------------------------
+   Vinnerlisten
+   -------------------------------------------------------------------------- */
+
+function tegnVinnere() {
+  var ol = $("vinnerliste");
+  ol.innerHTML = "";
+  $("vinnerTom").hidden = stat.vinnere.length > 0;
+  $("knAngre").disabled = !stat.vinnere.length;
+  $("knKopierVinnere").disabled = !stat.vinnere.length;
+  $("knEksportCsv").disabled = !stat.vinnere.length;
+
+  stat.vinnere.forEach(function (v, i) {
+    var li = document.createElement("li");
+    li.className = "vinnerrad";
+    var d = new Date(v.tid);
+    var klokke = isNaN(d) ? "" : ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
+    li.innerHTML = '<span class="nr">' + (i + 1) + '</span><span><span class="hvem"></span><span class="hva"></span></span><span class="naar">' + klokke + "</span>";
+    li.querySelector(".hvem").textContent = v.navn;
+    li.querySelector(".hva").textContent = v.premie || "Trekning uten premie";
+    ol.appendChild(li);
+  });
+  ol.scrollTop = ol.scrollHeight;
+}
+
+function vinnereSomTekst() {
+  return stat.vinnere.map(function (v, i) {
+    return (i + 1) + ". " + v.navn + (v.premie ? " - " + v.premie : "");
+  }).join("\n");
+}
+
+function lastNed(filnavn, innhold, type) {
+  var blob = new Blob([innhold], { type: type });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = filnavn;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+}
+
+function csvFelt(v) { return '"' + String(v).replace(/"/g, '""') + '"'; }
+
+function eksporterCsv() {
+  var rader = [["Nr", "Navn", "Premie", "Tidspunkt"].join(";")];
+  stat.vinnere.forEach(function (v, i) {
+    var d = new Date(v.tid);
+    rader.push([i + 1, csvFelt(v.navn), csvFelt(v.premie || ""), csvFelt(isNaN(d) ? "" : d.toLocaleString("nb-NO"))].join(";"));
+  });
+  var dato = new Date().toISOString().slice(0, 10);
+  // BOM foran, ellers roter Excel med æ ø å
+  lastNed("vinnere-" + dato + ".csv", "﻿" + rader.join("\r\n"), "text/csv;charset=utf-8");
+}
+
+function kopier(tekst, melding) {
+  function fallback() {
+    var ta = document.createElement("textarea");
+    ta.value = tekst;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (e) { }
+    document.body.removeChild(ta);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(tekst).then(function () { melding(); }, function () { fallback(); melding(); });
+  } else { fallback(); melding(); }
+}
+
+/* --------------------------------------------------------------------------
+   Import av fil
+   -------------------------------------------------------------------------- */
+
+function lesFil(fil) {
+  if (!fil) return;
+  if (fil.size > 2 * 1024 * 1024) { si($("varselDeltakere"), "Filen er for stor. Hold deg under 2 MB."); return; }
+  var leser = new FileReader();
+  leser.onload = function () {
+    var linjer = String(leser.result).split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean);
+    if (!linjer.length) { si($("varselDeltakere"), "Fant ingen linjer i filen."); return; }
+
+    var skille = null;
+    if (linjer[0].indexOf(";") > -1) skille = ";";
+    else if (linjer[0].indexOf("\t") > -1) skille = "\t";
+    else if (linjer[0].indexOf(",") > -1) skille = ",";
+
+    var ut = [];
+    linjer.forEach(function (l, i) {
+      var felt = skille ? l.split(skille) : [l];
+      var navn = String(felt[0]).replace(/^"|"$/g, "").trim();
+      if (!navn) return;
+      if (i === 0 && /^(navn|name|deltaker|deltakere|fornavn)$/i.test(navn)) return; // overskriftsrad
+      var lodd = felt.length > 1 ? parseInt(String(felt[1]).replace(/[^0-9]/g, ""), 10) : NaN;
+      ut.push(lodd > 1 ? navn + " *" + lodd : navn);
+    });
+
+    if (!ut.length) { si($("varselDeltakere"), "Fant ingen navn i filen."); return; }
+    var fra = stat.raatekst.trim();
+    stat.raatekst = fra ? fra + "\n" + ut.join("\n") : ut.join("\n");
+    $("navneliste").value = stat.raatekst;
+    lesDeltakere();
+    tegn();
+    oppdaterBanner();
+    lagre();
+    si($("varselDeltakere"), "La til " + ut.length + " navn fra " + fil.name + ".");
+  };
+  leser.readAsText(fil, "UTF-8");
+}
+
+/* --------------------------------------------------------------------------
+   Utseende
+   -------------------------------------------------------------------------- */
+
+function settBakgrunn(hex) {
+  if (!erGyldigHex(hex)) return;
+  stat.bakgrunn = hex.toLowerCase();
+  var rot = document.documentElement.style;
+  var lys = lyshet(stat.bakgrunn) > 0.45;
+  rot.setProperty("--bg", stat.bakgrunn);
+  rot.setProperty("--paa-bg", lys ? "#263d42" : "#f1e7d3");
+  rot.setProperty("--paa-bg-dus", lys ? "#6f6553" : "rgba(241,231,211,0.72)");
+  rot.setProperty("--panel-skygge", lys ? "rgba(38,61,66,0.10)" : "rgba(0,0,0,0.35)");
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute("content", stat.bakgrunn);
+  $("bakgrunn").value = stat.bakgrunn;
+  $("bakgrunnHex").value = stat.bakgrunn;
+  Array.prototype.forEach.call($("bakgrunnForvalg").children, function (b) {
+    b.setAttribute("aria-pressed", b.dataset.verdi === stat.bakgrunn ? "true" : "false");
+  });
+}
+
+function byggBakgrunnForvalg() {
+  var boks = $("bakgrunnForvalg");
+  boks.innerHTML = "";
+  BAKGRUNNER.forEach(function (b) {
+    var kn = document.createElement("button");
+    kn.type = "button";
+    kn.textContent = b.navn;
+    kn.dataset.verdi = b.verdi;
+    kn.setAttribute("aria-pressed", "false");
+    kn.onclick = function () { settBakgrunn(b.verdi); lagre(); };
+    boks.appendChild(kn);
+  });
+}
+
+function byggPalettForvalg() {
+  var boks = $("palettForvalg");
+  boks.innerHTML = "";
+  Object.keys(PALETTER).forEach(function (k) {
+    var kn = document.createElement("button");
+    kn.type = "button";
+    kn.textContent = PALETTER[k].navn;
+    kn.setAttribute("aria-pressed", stat.palettNavn === k ? "true" : "false");
+    kn.onclick = function () {
+      stat.palettNavn = k;
+      stat.palett = PALETTER[k].farger.slice();
+      byggPalettForvalg();
+      byggPalettRedigering();
+      tegn();
+      lagre();
+    };
+    boks.appendChild(kn);
+  });
+}
+
+function byggPalettRedigering() {
+  var boks = $("palettRedigering");
+  boks.innerHTML = "";
+  stat.palett.forEach(function (f, i) {
+    var inn = document.createElement("input");
+    inn.type = "color";
+    inn.value = f;
+    inn.setAttribute("aria-label", "Farge " + (i + 1) + " på hjulet");
+    inn.oninput = function () {
+      stat.palett[i] = inn.value;
+      stat.palettNavn = "egen";
+      byggPalettForvalg();
+      tegn();
+    };
+    inn.onchange = lagre;
+    boks.appendChild(inn);
+  });
+
+  if (stat.palett.length < 8) {
+    var pluss = document.createElement("button");
+    pluss.className = "kn kn-mini";
+    pluss.type = "button";
+    pluss.textContent = "+ farge";
+    pluss.onclick = function () {
+      stat.palett.push("#a8432a");
+      stat.palettNavn = "egen";
+      byggPalettForvalg();
+      byggPalettRedigering();
+      tegn();
+      lagre();
+    };
+    boks.appendChild(pluss);
+  }
+  if (stat.palett.length > 2) {
+    var minus = document.createElement("button");
+    minus.className = "kn kn-mini";
+    minus.type = "button";
+    minus.textContent = "− farge";
+    minus.onclick = function () {
+      stat.palett.pop();
+      stat.palettNavn = "egen";
+      byggPalettForvalg();
+      byggPalettRedigering();
+      tegn();
+      lagre();
+    };
+    boks.appendChild(minus);
+  }
+}
+
+function settLogo(dataUrl) {
+  stat.logo = dataUrl || "";
+  var boks = $("logoForhaand");
+  boks.innerHTML = "";
+  if (stat.logo) {
+    logoBilde = new Image();
+    logoBilde.onload = function () { tegn(); };
+    logoBilde.src = stat.logo;
+    var forh = new Image();
+    forh.src = stat.logo;
+    forh.alt = "Valgt logo";
+    boks.appendChild(forh);
+  } else {
+    logoBilde = null;
+    var sp = document.createElement("span");
+    sp.textContent = "Tomt";
+    boks.appendChild(sp);
+    tegn();
+  }
+}
+
+function settTitler() {
+  $("visTittel").textContent = stat.tittel || "Lykkehjulet";
+  $("visUndertittel").textContent = stat.undertittel || "Trekning";
+  document.title = (stat.tittel || "Lykkehjulet") + " - Christian Hermansen";
+}
+
+/* --------------------------------------------------------------------------
+   Konfetti
+   -------------------------------------------------------------------------- */
+
+var kc = $("konfetti"), kctx = kc.getContext("2d"), konfettiKjorer = false;
+
+function passKonfetti() { kc.width = innerWidth; kc.height = innerHeight; }
+
+function konfettiRegn() {
+  passKonfetti();
+  var farger = stat.palett.concat(["#d9923c", "#a8432a"]);
+  var biter = [];
+  for (var i = 0; i < 190; i++) {
+    biter.push({
+      x: Math.random() * kc.width,
+      y: -20 - Math.random() * kc.height * 0.6,
+      vx: (Math.random() - 0.5) * 2.6,
+      vy: 2.4 + Math.random() * 3.6,
+      rot: Math.random() * Math.PI,
+      vr: (Math.random() - 0.5) * 0.28,
+      b: 6 + Math.random() * 7,
+      h: 9 + Math.random() * 9,
+      rund: Math.random() < 0.25,
+      farge: farger[i % farger.length]
+    });
+  }
+  var t0 = performance.now();
+  konfettiKjorer = true;
+  function fall(ts) {
+    if (!konfettiKjorer) { kctx.clearRect(0, 0, kc.width, kc.height); return; }
+    kctx.clearRect(0, 0, kc.width, kc.height);
+    var alder = ts - t0;
+    biter.forEach(function (b) {
+      b.x += b.vx; b.y += b.vy; b.rot += b.vr; b.vy += 0.02;
+      kctx.save();
+      kctx.translate(b.x, b.y);
+      kctx.rotate(b.rot);
+      kctx.globalAlpha = alder > 3400 ? Math.max(0, 1 - (alder - 3400) / 1200) : 1;
+      kctx.fillStyle = b.farge;
+      if (b.rund) { kctx.beginPath(); kctx.arc(0, 0, b.b / 2, 0, Math.PI * 2); kctx.fill(); }
+      else kctx.fillRect(-b.b / 2, -b.h / 2, b.b, b.h);
+      kctx.restore();
+    });
+    if (alder < 4600) requestAnimationFrame(fall);
+    else { konfettiKjorer = false; kctx.clearRect(0, 0, kc.width, kc.height); }
+  }
+  requestAnimationFrame(fall);
+}
+
+/* --------------------------------------------------------------------------
+   Presentasjonsmodus
+   -------------------------------------------------------------------------- */
+
+function vekslePresentasjon() {
+  var paa = document.body.classList.toggle("presentasjon");
+  $("knPresentasjon").setAttribute("aria-pressed", paa ? "true" : "false");
+  $("knPresentasjon").textContent = paa ? "Avslutt" : "Presentasjon";
+  if (paa && document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen().catch(function () { });
+  } else if (!paa && document.fullscreenElement && document.exitFullscreen) {
+    document.exitFullscreen().catch(function () { });
+  }
+  setTimeout(passStorrelse, 120);
+}
+
+document.addEventListener("fullscreenchange", function () {
+  if (!document.fullscreenElement && document.body.classList.contains("presentasjon")) {
+    document.body.classList.remove("presentasjon");
+    $("knPresentasjon").setAttribute("aria-pressed", "false");
+    $("knPresentasjon").textContent = "Presentasjon";
+    setTimeout(passStorrelse, 120);
+  }
+});
+
+/* --------------------------------------------------------------------------
+   Faner
+   -------------------------------------------------------------------------- */
+
+Array.prototype.forEach.call(document.querySelectorAll(".fane"), function (fane) {
+  fane.addEventListener("click", function () {
+    Array.prototype.forEach.call(document.querySelectorAll(".fane"), function (f) {
+      var valgt = f === fane;
+      f.setAttribute("aria-selected", valgt ? "true" : "false");
+      $(f.getAttribute("aria-controls")).hidden = !valgt;
+    });
+  });
+});
+
+/* --------------------------------------------------------------------------
+   Hendelser
+   -------------------------------------------------------------------------- */
+
+var skrivePause;
+$("navneliste").addEventListener("input", function () {
+  stat.raatekst = this.value;
+  clearTimeout(skrivePause);
+  skrivePause = setTimeout(function () {
+    lesDeltakere();
+    fremhevet = -1;
+    tegn();
+    oppdaterBanner();
+    lagre();
+  }, 450);
+});
+
+$("knOppdater").onclick = function () {
+  stat.raatekst = $("navneliste").value;
+  if (stat.bland) stat.blandeFro = Date.now() % 100000;
+  lesDeltakere();
+  fremhevet = -1;
+  tegn();
+  oppdaterBanner();
+  lagre();
+};
+
+$("dedup").onchange = function () { stat.dedup = this.checked; lesDeltakere(); tegn(); oppdaterBanner(); lagre(); };
+$("blandNavn").onchange = function () {
+  stat.bland = this.checked;
+  stat.blandeFro = Date.now() % 100000;
+  lesDeltakere(); tegn(); lagre();
+};
+
+$("knVelgFil").onclick = function () { $("filvelger").click(); };
+$("filvelger").onchange = function () { lesFil(this.files[0]); this.value = ""; };
+
+var sone = $("slippsone");
+["dragenter", "dragover"].forEach(function (n) {
+  sone.addEventListener(n, function (e) { e.preventDefault(); sone.classList.add("over"); });
+});
+["dragleave", "drop"].forEach(function (n) {
+  sone.addEventListener(n, function (e) { e.preventDefault(); sone.classList.remove("over"); });
+});
+sone.addEventListener("drop", function (e) {
+  if (e.dataTransfer && e.dataTransfer.files.length) lesFil(e.dataTransfer.files[0]);
+});
+
+function leggTilPremie() {
+  var navn = $("premienavn").value.trim();
+  var antall = Math.max(1, Math.min(99, parseInt($("premieantall").value, 10) || 1));
+  if (!navn) { $("premienavn").focus(); return; }
+  stat.premier.push({ navn: navn, antall: antall, trukket: 0 });
+  $("premienavn").value = "";
+  $("premieantall").value = "1";
+  $("premienavn").focus();
+  tegnPremieliste();
+  lagre();
+}
+
+$("knLeggTilPremie").onclick = leggTilPremie;
+$("premienavn").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); leggTilPremie(); } });
+$("premieantall").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); leggTilPremie(); } });
+
+$("premieliste").addEventListener("click", function (e) {
+  var kn = e.target.closest("button");
+  if (!kn) return;
+  var i;
+  if (kn.dataset.slett !== undefined) {
+    i = +kn.dataset.slett;
+    stat.premier.splice(i, 1);
+  } else if (kn.dataset.opp !== undefined) {
+    i = +kn.dataset.opp;
+    if (i > 0) { var a = stat.premier[i]; stat.premier[i] = stat.premier[i - 1]; stat.premier[i - 1] = a; }
+  } else if (kn.dataset.ned !== undefined) {
+    i = +kn.dataset.ned;
+    if (i < stat.premier.length - 1) { var b = stat.premier[i]; stat.premier[i] = stat.premier[i + 1]; stat.premier[i + 1] = b; }
+  }
+  tegnPremieliste();
+  lagre();
+});
+
+$("knNullstillPremier").onclick = function () {
+  stat.premier.forEach(function (p) { p.trukket = 0; });
+  tegnPremieliste();
+  lagre();
+};
+
+$("knTomPremier").onclick = function () {
+  if (stat.premier.length && !confirm("Slette alle premiene i listen?")) return;
+  stat.premier = [];
+  tegnPremieliste();
+  lagre();
+};
+
+$("tittel").oninput = function () { stat.tittel = this.value; settTitler(); lagre(); };
+$("undertittel").oninput = function () { stat.undertittel = this.value; settTitler(); lagre(); };
+
+$("knVelgLogo").onclick = function () { $("logovelger").click(); };
+$("knFjernLogo").onclick = function () { settLogo(""); lagre(); };
+$("logovelger").onchange = function () {
+  var fil = this.files[0];
+  this.value = "";
+  if (!fil) return;
+  if (fil.size > 3 * 1024 * 1024) { si($("varselRegler"), "Bildet er over 3 MB. Ta et mindre et."); return; }
+  var leser = new FileReader();
+  leser.onload = function () { settLogo(String(leser.result)); lagre(); };
+  leser.readAsDataURL(fil);
+};
+
+$("logostorrelse").oninput = function () { stat.navStorrelse = +this.value; tegn(); };
+$("logostorrelse").onchange = lagre;
+
+$("bakgrunn").oninput = function () { settBakgrunn(this.value); };
+$("bakgrunn").onchange = lagre;
+$("bakgrunnHex").addEventListener("input", function () {
+  var v = this.value.trim();
+  if (v && v[0] !== "#") v = "#" + v;
+  if (erGyldigHex(v)) { settBakgrunn(v); lagre(); }
+});
+
+$("fjernVinner").onchange = function () { stat.fjernVinner = this.checked; lagre(); };
+$("brukLodd").onchange = function () { stat.brukLodd = this.checked; lesDeltakere(); tegn(); lagre(); };
+$("autoNeste").onchange = function () { stat.autoNeste = this.checked; lagre(); };
+$("visNavnAlltid").onchange = function () { stat.visNavnAlltid = this.checked; tegn(); lagre(); };
+
+$("varighet").oninput = function () {
+  stat.varighet = +this.value;
+  $("varighetTekst").textContent = String(stat.varighet).replace(".", ",") + " sekunder";
+};
+$("varighet").onchange = lagre;
+
+$("knLyd").onclick = function () {
+  stat.lyd = !stat.lyd;
+  this.setAttribute("aria-pressed", stat.lyd ? "true" : "false");
+  this.textContent = stat.lyd ? "Lyd på" : "Lyd av";
+  if (stat.lyd) tikk(0.5);
+  lagre();
+};
+
+$("knPresentasjon").onclick = vekslePresentasjon;
+
+$("knDelLenke").onclick = function () {
+  var d = lagDelLenke();
+  kopier(d.url, function () {
+    si($("varselRegler"), d.mistetLogo ? "Lenken er kopiert. Logoen var for stor til å bli med." : "Lenken er kopiert.");
+  });
+};
+
+$("knNullstillAlt").onclick = function () {
+  if (!confirm("Nullstille alt? Deltakere, premier, vinnere og farger forsvinner.")) return;
+  try { localStorage.removeItem(LAGERNOKKEL); } catch (e) { }
+  location.hash = "";
+  location.reload();
+};
+
+$("snurr").onclick = snurrHjulet;
+canvas.addEventListener("click", function () { if (!$("snurr").disabled) snurrHjulet(); });
+
+$("knLukk").onclick = lukkModal;
+$("knNeste").onclick = function () {
+  lukkModal();
+  if (stat.autoNeste && aktivPremie() && deltakere.length) setTimeout(function () { $("snurr").focus(); }, 60);
+};
+$("knOmIgjen").onclick = function () {
+  lukkModal();
+  angre();
+  setTimeout(snurrHjulet, 220);
+};
+
+$("knAngre").onclick = function () {
+  var siste = angre();
+  if (siste) si($("varselVinnere"), "Angret trekningen av " + siste.navn + ".");
+};
+
+$("knKopierVinnere").onclick = function () {
+  kopier(vinnereSomTekst(), function () { si($("varselVinnere"), "Vinnerlisten er kopiert."); });
+};
+
+$("knEksportCsv").onclick = eksporterCsv;
+
+document.addEventListener("keydown", function (e) {
+  var i = document.activeElement;
+  var skriver = i && (i.tagName === "INPUT" || i.tagName === "TEXTAREA" || i.isContentEditable);
+
+  if (e.key === "Escape") {
+    if ($("vinnerboks").classList.contains("vis")) { lukkModal(); return; }
+    if (document.body.classList.contains("presentasjon") && !document.fullscreenElement) { vekslePresentasjon(); return; }
+  }
+  if (skriver) return;
+  if (e.key === " " || e.key === "Spacebar") {
+    e.preventDefault();
+    if ($("vinnerboks").classList.contains("vis")) { lukkModal(); return; }
+    if (!$("snurr").disabled) snurrHjulet();
+  }
+});
+
+window.addEventListener("resize", function () { passStorrelse(); passKonfetti(); });
+
+if (window.ResizeObserver) {
+  new ResizeObserver(function () { passStorrelse(); }).observe(canvas.parentElement);
+}
+
+// Fonten laster etter siden. Tegn på nytt når den er på plass.
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(function () { tegn(); });
+}
+
+/* --------------------------------------------------------------------------
+   Oppstart
+   -------------------------------------------------------------------------- */
+
+function start() {
+  var fraLenke = lesFraLenke();
+  flett(hentLagret());
+  if (fraLenke) {
+    flett(fraLenke);
+    stat.vinnere = [];
+  }
+
+  $("navneliste").value = stat.raatekst;
+  $("dedup").checked = stat.dedup;
+  $("blandNavn").checked = stat.bland;
+  $("tittel").value = stat.tittel;
+  $("undertittel").value = stat.undertittel;
+  $("logostorrelse").value = stat.navStorrelse;
+  $("fjernVinner").checked = stat.fjernVinner;
+  $("brukLodd").checked = stat.brukLodd;
+  $("autoNeste").checked = stat.autoNeste;
+  $("visNavnAlltid").checked = stat.visNavnAlltid;
+  $("varighet").value = stat.varighet;
+  $("varighetTekst").textContent = String(stat.varighet).replace(".", ",") + " sekunder";
+  $("knLyd").setAttribute("aria-pressed", stat.lyd ? "true" : "false");
+  $("knLyd").textContent = stat.lyd ? "Lyd på" : "Lyd av";
+
+  byggBakgrunnForvalg();
+  byggPalettForvalg();
+  byggPalettRedigering();
+  settBakgrunn(stat.bakgrunn);
+  settLogo(stat.logo);
+  settTitler();
+
+  lesDeltakere();
+  tegnPremieliste();
+  tegnVinnere();
+  passStorrelse();
+  passKonfetti();
+
+  if (fraLenke) {
+    history.replaceState(null, "", location.pathname);
+    si($("varselDeltakere"), "Oppsettet ble hentet fra lenken.");
+  }
+}
+
+start();
+
+})();
+</script>
+</body>
+</html>
