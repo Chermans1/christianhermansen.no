@@ -1,4 +1,14 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Utleggshjelperen Øyane</title>
+<meta name="description" content="Riktig skjema, riktig utfylt, første gang: utlegg, reiseregning og kilometergodtgjørelse for ADHD Norge Øyane lokallag.">
+<meta name="theme-color" content="#1F3A5F">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <style>
   :root{
@@ -8,7 +18,7 @@
     --blekk:#22303F; --hvit:#FFFFFF;
   }
   *{box-sizing:border-box}
-  html{color-scheme:light}
+  html{color-scheme:light; -webkit-text-size-adjust:100%}
   body{margin:0; background:var(--papir); color:var(--blekk);
     font-family:"Atkinson Hyperlegible", Arial, sans-serif; font-size:16px; line-height:1.5}
   h1,h2,h3{font-family:"Bricolage Grotesque","Atkinson Hyperlegible",Arial,sans-serif; text-wrap:balance; margin:0}
@@ -79,13 +89,17 @@
   .kmhode,.kmlinje{display:grid; grid-template-columns:96px 1fr 1fr 74px 84px 1.1fr 30px; gap:6px; align-items:center; min-width:720px}
   .kmhode{font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--gra); margin-bottom:4px}
   .kmlinje{margin-bottom:6px}
-  .kmlinje input{padding:8px 8px; font-size:15px}
+  .kmlinje input{padding:9px 8px; font-size:16px}
   .kmlinje input.num{text-align:right}
   .phode,.plinje{display:grid; grid-template-columns:96px 1fr 1fr 74px 1.1fr 30px; gap:6px; align-items:center; min-width:640px}
   .phode{font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--gra); margin-bottom:4px}
   .plinje{margin-bottom:6px}
-  .plinje input{padding:8px 8px; font-size:15px}
+  .plinje input{padding:9px 8px; font-size:16px}
   .plinje input.num{text-align:right}
+  /* Cellen bærer sin egen etikett, skjult så lenge tabellhodet er synlig */
+  .kmfelt{display:block; min-width:0}
+  .kmfelt>span{display:none}
+  .slettord{display:none}
   .satslinje{display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin:4px 0 12px}
   .satslinje label{display:flex; gap:8px; align-items:center; font-size:14px; font-weight:700}
   .satslinje input{width:80px; text-align:right}
@@ -103,6 +117,42 @@
   .sjekkliste input[type="checkbox"]{width:20px; height:20px; margin-top:2px; accent-color:var(--gronn)}
   .eksportknapp{background:var(--navy); color:var(--hvit); border:none; padding:14px 22px; font-size:17px; font-weight:700; margin-top:16px}
   .eksportknapp:hover{background:#28497A}
+
+  /* Telefon. Kjøreturtabellen krevde sidescroll før: syv kolonner på 720 px
+     inne i en 390 px skjerm. Her blir hver tur et kort med etikett over hvert felt. */
+  @media (max-width:700px){
+    .kmwrap{overflow-x:visible}
+    .kmhode,.phode{display:none}
+    .kmhode,.kmlinje,.phode,.plinje{min-width:0}
+    .kmlinje,.plinje{display:block; background:#FCFDFE; border:1.5px solid var(--strek);
+      border-radius:12px; padding:14px; margin-bottom:12px}
+    .kmfelt{display:block; margin-bottom:12px}
+    .kmfelt>span{display:block; font-size:12px; font-weight:700; color:var(--gra);
+      text-transform:uppercase; letter-spacing:.05em; margin-bottom:4px}
+    .kmlinje input,.plinje input{padding:11px 12px; font-size:16px; min-height:46px}
+    .kmlinje input.num,.plinje input.num{text-align:left}
+    .kmlinje .slett,.plinje .slett{display:block; width:100%; min-height:44px; font-size:15px;
+      border:1px solid var(--strek); border-radius:8px; padding:10px; color:var(--gra); background:var(--hvit)}
+    .slettord{display:inline; margin-left:6px; font-weight:700}
+  }
+
+  @media (max-width:560px){
+    header{padding:16px 16px 18px}
+    header h1{font-size:26px}
+    main{padding:16px 12px calc(70px + env(safe-area-inset-bottom)); gap:14px}
+    .kort{padding:16px 14px}
+    .steghode h2{font-size:19px}
+    .stegnr{width:34px; height:34px; font-size:16px}
+    /* Utleggslinjene: vedleggsnummer og fjernknapp øverst, felt under i full bredde */
+    .ulinje{grid-template-columns:1fr auto; row-gap:8px; column-gap:8px;
+      background:#FCFDFE; border:1.5px solid var(--strek); border-radius:12px; padding:12px; margin-bottom:4px}
+    .ulinje .vedl{background:none; padding:0; text-align:left; align-self:center}
+    .ulinje .slett{grid-area:1 / 2; justify-self:end; align-self:center; font-size:24px; padding:0 6px}
+    .ulinje .tekst,.ulinje .belop{grid-column:1 / -1}
+    .ulinje input.belop{text-align:left}
+    .janei button{flex:1; min-height:46px}
+    .eksportknapp{width:100%}
+  }
 
   /* Print-ark */
   #trykk{display:none}
@@ -127,6 +177,8 @@
     #trykk .notat{font-size:11px; color:#5A6472; margin:6px 0 0}
   }
 </style>
+</head>
+<body>
 
 <header>
   <div class="hwrap">
@@ -591,9 +643,13 @@
     function kmRad(mount, rad, i, felt, liste, tegnOm){
       var d=document.createElement("div");
       d.className=felt.length===6?"kmlinje":"plinje";
+      // Etiketten ligger i hver celle, ikke bare i tabellhodet. På desktop er den
+      // skjult, på telefon stables cellene og etiketten er det eneste som forklarer feltet.
       d.innerHTML=felt.map(function(f){
-        return '<input type="text" class="'+(f.num?"num":"")+'" data-f="'+f.n+'"'+(f.num?' inputmode="decimal"':"")+(f.ph?' placeholder="'+f.ph+'"':"")+">";
-      }).join("")+'<button class="slett" aria-label="Fjern linjen">&times;</button>';
+        return '<label class="kmfelt"><span>'+f.e+'</span>'+
+          '<input type="text" class="'+(f.num?"num":"")+'" data-f="'+f.n+'"'+
+          (f.num?' inputmode="decimal"':"")+(f.ph?' placeholder="'+f.ph+'"':"")+"></label>";
+      }).join("")+'<button class="slett" aria-label="Fjern linjen">&times;<span class="slettord">Fjern turen</span></button>';
       felt.forEach(function(f){
         var inp=d.querySelector('input[data-f="'+f.n+'"]');
         inp.value=rad[f.n]||"";
@@ -602,8 +658,10 @@
       d.querySelector(".slett").addEventListener("click",function(){ liste.splice(i,1); tegnOm(); summer(); lagre(); });
       mount.appendChild(d);
     }
-    var KFELT=[{n:"dato",ph:"1.9."},{n:"fra"},{n:"til"},{n:"km",num:true},{n:"bom",num:true},{n:"formaal",ph:"F.eks. familietur i regi av laget"}];
-    var PFELT=[{n:"dato",ph:"1.9."},{n:"fra"},{n:"til"},{n:"km",num:true},{n:"navn"}];
+    var KFELT=[{n:"dato",e:"Dato",ph:"1.9."},{n:"fra",e:"Fra"},{n:"til",e:"Til"},{n:"km",e:"Km",num:true},
+               {n:"bom",e:"Bompenger",num:true},{n:"formaal",e:"Formålet med turen",ph:"F.eks. familietur i regi av laget"}];
+    var PFELT=[{n:"dato",e:"Dato",ph:"1.9."},{n:"fra",e:"Fra"},{n:"til",e:"Til"},{n:"km",e:"Km",num:true},
+               {n:"navn",e:"Passasjerens navn"}];
     function tegnK(){
       var m=document.getElementById("k-linjer"); m.innerHTML="";
       k.linjer.forEach(function(rad,i){ kmRad(m,rad,i,KFELT,k.linjer,tegnK); });
@@ -690,3 +748,6 @@
   visHjem();
 })();
 </script>
+
+</body>
+</html>

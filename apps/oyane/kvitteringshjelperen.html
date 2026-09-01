@@ -1,4 +1,14 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Kvitteringshjelperen Øyane</title>
+<meta name="description" content="Ta bilde av kvitteringen, fyll ut tre felt og send den ferdig merket til regnskapet i ADHD Norge Øyane lokallag.">
+<meta name="theme-color" content="#1F3A5F">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <style>
   :root{
@@ -8,7 +18,7 @@
     --blekk:#22303F; --hvit:#FFFFFF;
   }
   *{box-sizing:border-box}
-  html{color-scheme:light}
+  html{color-scheme:light; -webkit-text-size-adjust:100%}
   body{margin:0; background:var(--papir); color:var(--blekk);
     font-family:"Atkinson Hyperlegible", Arial, sans-serif; font-size:16px; line-height:1.5}
   h1,h2,h3{font-family:"Bricolage Grotesque","Atkinson Hyperlegible",Arial,sans-serif; text-wrap:balance; margin:0}
@@ -17,7 +27,9 @@
   .eyebrow{text-transform:uppercase; letter-spacing:.09em; font-size:12px; color:#BFD0E6; margin:0 0 6px}
   header h1{font-size:30px; line-height:1.1}
   header p.under{margin:8px 0 0; color:#D7E2F0; max-width:36em}
-  main{max-width:620px; margin:0 auto; padding:20px 16px 70px; display:flex; flex-direction:column; gap:18px}
+  /* Bunnpolstringen gir plass til den faste sendelinjen, pluss hjemindikatoren på iPhone */
+  main{max-width:620px; margin:0 auto; display:flex; flex-direction:column; gap:18px;
+    padding:20px 16px calc(120px + env(safe-area-inset-bottom))}
   button{font-family:inherit; font-size:16px; cursor:pointer; border-radius:10px}
   button:focus-visible, input:focus-visible{outline:3px solid #6FA8DC; outline-offset:2px}
   .kort{background:var(--hvit); border:1px solid var(--strek); border-radius:14px; padding:20px}
@@ -34,12 +46,14 @@
   #fil{display:none}
   .forh{margin-top:14px; display:none}
   .forh img{width:100%; border-radius:10px; border:1px solid var(--strek); display:block}
-  .byttknapp{margin-top:10px; background:var(--panel); border:1px solid var(--strek); color:var(--navy); padding:9px 14px; font-weight:700; font-size:14px}
+  .byttknapp{margin-top:10px; background:var(--panel); border:1px solid var(--strek); color:var(--navy);
+    padding:12px 18px; font-weight:700; font-size:15px; min-height:44px}
 
   label.felt{display:flex; flex-direction:column; gap:4px; font-weight:700; font-size:14px; margin-bottom:12px}
   label.felt .hint{font-weight:400; color:var(--gra); font-size:13px}
-  input[type="text"]{font-family:inherit; font-size:17px; padding:12px; border:1.5px solid var(--strek);
-    border-radius:10px; background:var(--hvit); color:var(--blekk); width:100%}
+  /* 17px er ikke tilfeldig: under 16px zoomer iOS inn på feltet når du trykker i det */
+  input[type="text"], input[type="email"]{font-family:inherit; font-size:17px; padding:12px; border:1.5px solid var(--strek);
+    border-radius:10px; background:var(--hvit); color:var(--blekk); width:100%; min-height:48px}
   .torad{display:grid; grid-template-columns:1fr 1fr; gap:12px}
 
   .mangler{border-radius:10px; padding:13px 15px; font-size:15px; margin-bottom:14px}
@@ -54,16 +68,50 @@
   .sekundaer{display:block; width:100%; background:var(--hvit); border:1.5px solid var(--navy); color:var(--navy);
     padding:13px 16px; font-weight:700; margin-bottom:10px}
   .sekundaer:disabled{border-color:#A9B6C6; color:#A9B6C6; cursor:not-allowed}
-  .epostboks{background:var(--panel); border-radius:10px; padding:13px 15px; font-size:14.5px; display:flex;
-    gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap}
-  .epost{font-family:"Courier New",monospace; font-size:13.5px; word-break:break-all}
-  .kopier{background:var(--hvit); border:1px solid var(--strek); color:var(--navy); padding:7px 12px; font-weight:700; font-size:13px}
   .gulboks{background:var(--gul); color:var(--gultekst); border-radius:10px; padding:12px 14px; font-size:14.5px; margin-top:12px}
   .gulboks b{color:var(--gultekst)}
   .kvittert{display:none; background:var(--gronnlys); color:#1E5238; border-radius:10px; padding:14px 16px; margin-top:12px}
-  .nesteknapp{margin-top:10px; background:var(--gronn); color:var(--hvit); border:none; padding:11px 16px; font-weight:700; font-size:15px}
+  .nesteknapp{margin-top:10px; background:var(--gronn); color:var(--hvit); border:none;
+    padding:13px 18px; font-weight:700; font-size:16px; min-height:44px}
   .person{color:var(--gra); font-size:13.5px; margin-top:10px}
+
+  /* Fast sendelinje. Kvitteringer fylles ut på telefon med kvitteringen i den
+     andre hånden, og da skal du aldri måtte lete etter hvor langt du er kommet. */
+  .sendebar{position:fixed; left:0; right:0; bottom:0; z-index:20;
+    background:var(--navy2); color:var(--hvit);
+    padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+    box-shadow:0 -4px 16px rgba(15,25,40,.28)}
+  .sendewrap{max-width:620px; margin:0 auto; display:flex; gap:12px; align-items:center}
+  .sendestatus{flex:1; min-width:0; background:none; border:none; padding:0; text-align:left;
+    font-family:inherit; font-size:13.5px; line-height:1.35; color:#B9C7D8; cursor:pointer}
+  .sendestatus b{display:block; color:var(--hvit); font-size:15.5px; font-weight:700}
+  .sendestatus.klar b{color:#93E2BC}
+  .barknapp{flex:0 0 auto; background:var(--gronn); color:var(--hvit); border:none;
+    padding:13px 24px; font-size:16px; font-weight:700; min-height:48px}
+  .barknapp:hover:not(:disabled){background:#256B45}
+  .barknapp:disabled{background:#3D5573; color:#8FA0B6; cursor:not-allowed}
+
+  /* Telefon */
+  @media (max-width:560px){
+    header{padding:16px 16px 18px}
+    header h1{font-size:25px}
+    header p.under{font-size:15px}
+    main{padding-left:12px; padding-right:12px; padding-top:16px; gap:14px}
+    .kort{padding:16px 14px}
+    .steghode h2{font-size:19px}
+    .stegnr{width:34px; height:34px; font-size:16px}
+    .fotoknapp{padding:22px 14px}
+  }
+  /* Under dette blir Beløp og Dato for trange ved siden av hverandre */
+  @media (max-width:400px){
+    .torad{grid-template-columns:1fr; gap:0}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{scroll-behavior:auto !important}
+  }
 </style>
+</head>
+<body>
 
 <header>
   <div class="hwrap">
@@ -88,29 +136,29 @@
   <section class="kort">
     <div class="steghode"><div class="stegnr">2</div><h2>Fyll ut</h2></div>
     <label class="felt">Prosjektnummer
-      <input type="text" id="f-prosjekt" placeholder="F.eks. 2026-04">
+      <input type="text" id="f-prosjekt" placeholder="F.eks. 2026-04" autocomplete="off" autocapitalize="characters" enterkeyhint="next">
       <span class="hint">Får du av aktivitetsansvarlig eller økonomiansvarlig. Dette er det viktigste feltet.</span>
     </label>
     <label class="felt">Hva gjelder kjøpet?
-      <input type="text" id="f-hva" placeholder="F.eks. pizza til medlemsmøtet">
+      <input type="text" id="f-hva" placeholder="F.eks. pizza til medlemsmøtet" autocapitalize="sentences" enterkeyhint="next">
     </label>
     <div class="torad">
       <label class="felt">Beløp
-        <input type="text" id="f-belop" inputmode="decimal" placeholder="0">
+        <input type="text" id="f-belop" inputmode="decimal" placeholder="0" autocomplete="off" enterkeyhint="next">
       </label>
       <label class="felt">Dato på kvitteringen
-        <input type="text" id="f-dato" placeholder="F.eks. 5.9.2026">
+        <input type="text" id="f-dato" inputmode="numeric" placeholder="F.eks. 5.9.2026" autocomplete="off" enterkeyhint="next">
       </label>
     </div>
     <label class="felt">Ditt navn
-      <input type="text" id="f-navn" placeholder="Huskes til neste gang">
+      <input type="text" id="f-navn" placeholder="Huskes til neste gang" autocomplete="name" enterkeyhint="next">
     </label>
   </section>
 
   <section class="kort">
     <div class="steghode"><div class="stegnr">3</div><h2>Send</h2></div>
     <label class="felt">Kvitteringsadressen (e-post til regnskapet)
-      <input type="text" id="f-epost" inputmode="email" placeholder="Limes inn én gang">
+      <input type="email" id="f-epost" inputmode="email" placeholder="Limes inn én gang" autocomplete="email" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done">
       <span class="hint">Får du av økonomiansvarlig. Huskes på denne enheten - av sikkerhetshensyn ligger den ikke i selve siden.</span>
     </label>
     <div class="mangler rod" id="mangler"></div>
@@ -123,6 +171,13 @@
     <p class="person">Alt skjer på din enhet - bildet og det du fyller ut sendes ingen steder før du selv trykker send i e-post- eller delingsvinduet.</p>
   </section>
 </main>
+
+<div class="sendebar">
+  <div class="sendewrap">
+    <button type="button" class="sendestatus" id="barstatus" aria-describedby="mangler"></button>
+    <button type="button" class="barknapp" id="barsend" disabled>Send</button>
+  </div>
+</div>
 
 <script>
 (function(){
@@ -233,6 +288,29 @@
     if(!gyldigEpost(felt.epost)) m.push("Kvitteringsadressen (får du av økonomiansvarlig)");
     return m;
   }
+  /* Den faste linjen nederst sier hvor langt du er kommet, og lar deg sende
+     uten å scrolle. Trykk på statusteksten for å hoppe til hva som mangler. */
+  function oppdaterBar(m){
+    var bs=document.getElementById("barstatus");
+    var bsend=document.getElementById("barsend");
+    if(!bs||!bsend) return;
+    if(m.length===0){
+      bs.className="sendestatus klar";
+      bs.innerHTML="<b>Klar til å sendes</b>Alt er fylt ut.";
+    } else {
+      bs.className="sendestatus";
+      bs.innerHTML="<b>"+m.length+" ting mangler</b>Trykk her for å se hva.";
+    }
+    bsend.disabled=m.length!==0;
+  }
+  document.getElementById("barstatus").addEventListener("click",function(){
+    var m=document.getElementById("mangler");
+    if(m && m.scrollIntoView) m.scrollIntoView({behavior:"smooth", block:"center"});
+  });
+  document.getElementById("barsend").addEventListener("click",function(){
+    document.getElementById("del").click();
+  });
+
   var travel=false;
   function oppdater(){
     var m=manglerListe();
@@ -243,6 +321,7 @@
     document.getElementById("del").disabled=!klar;
     document.getElementById("epostutkast").disabled=!klar;
     document.getElementById("lastned").disabled=!klar;
+    oppdaterBar(m);
     // forhåndsvisning
     var forh=document.getElementById("forh");
     if(bilde){
@@ -336,3 +415,6 @@
   oppdater();
 })();
 </script>
+
+</body>
+</html>

@@ -376,6 +376,77 @@
     ]
   },
   {
+    "slug": "lykkehjul",
+    "title": "Lykkehjulet",
+    "type": "Verktøy",
+    "status": "Live",
+    "year": "2026",
+    "featured": false,
+    "description": "Det begynte som en enkel side for premietrekning: lim inn navn, skriv én premie, snurr. Problemet var alt rundt. Du står foran et publikum med tolv premier og en navneliste du må rydde i mellom hver trekning. Denne versjonen tar hele premielisten på forhånd og går videre av seg selv, fører logg over hvem som vant hva, og lar deg sette din egen logo i navet og din egen farge bak. Alt kjører i nettleseren, uten konto, og uten at et eneste navn forlater maskinen.",
+    "tech": [
+      "HTML/CSS",
+      "JavaScript",
+      "Canvas",
+      "Web Audio"
+    ],
+    "links": {
+      "live": "https://christianhermansen.no/apps/lykkehjul/"
+    },
+    "monogram": "L",
+    "utfordringer": "Jeg er rød-grønn fargeblind, så feltene på hjulet kan ikke skilles på farge alene. De veksler på lyshet i stedet, og tekstfargen inne i hvert felt regnes ut fra hvor lyst feltet er, slik at navnet er lesbart uansett hvilken palett noen velger. Trekningen bruker crypto.getRandomValues med avvisning av de øverste verdiene, ellers ville de første navnene i listen fått et bittelite overtak. Og det finnes en angreknapp, fordi den verste feilen foran et publikum er å trekke feil premie uten vei tilbake.",
+    "omtale": [
+      "Legg inn deltakerne én per linje, eller slipp inn en CSV rett fra regnearket. Skriv «Kari Nordmann *3» hvis noen skal ha tre lodd, så blir feltet hennes tre ganger så bredt. Premiene legges inn i den rekkefølgen de skal trekkes, med antall hvis det er flere like, og hjulet plukker den øverste som ikke er tatt.",
+      "Vinneren havner i en logg med premie og klokkeslett, som kan kopieres eller lastes ned som CSV. Angreknappen ruller hele situasjonen tilbake, både navnelisten og premietelleren, ikke bare den siste raden.",
+      "Presentasjonsmodus skjuler panelene og fyller skjermen, laget for projektor. Mellomrom snurrer. Pekeren dulter borti hvert felt på vei rundt, med en liten tikkelyd, fordi et hjul som bare glir lydløst forbi ikke føles som en trekning.",
+      "Oppsettet lagres i din egen nettleser og overlever en refresh. Del-lenken pakker navn, premier og farger inn i URL-en, så du kan sende det ferdige hjulet til noen andre uten at noe er lagret på en server."
+    ],
+    "image": "/assets/img/lykkehjul.webp"
+  },
+  {
+    "slug": "oyane-verktoy",
+    "title": "Øyane-verktøyene",
+    "type": "Verktøy",
+    "status": "Live",
+    "year": "2026",
+    "featured": false,
+    "description": "Jeg er frivillig økonomiansvarlig i styret i ADHD Norge Øyane lokallag. Der så jeg det samme skje igjen og igjen: skjemaer fylt ut feil, budsjetter som aldri ble satt opp, kvitteringer som ble borte. I stedet for å mase laget jeg tre små verktøy som gjør det riktige til det enkleste. Prosjektlageret tar deg gjennom en aktivitet fra plan til budsjett, regnskap og rapport til styret. Utleggshjelperen peker på riktig skjema og sjekker at alt er med før du sender. Kvitteringshjelperen lar deg ta bilde av kvitteringen, fylle ut tre felt og sende den ferdig merket til regnskapet.",
+    "tech": [
+      "HTML/CSS",
+      "JavaScript",
+      "Canvas"
+    ],
+    "links": {
+      "live": "https://christianhermansen.no/apps/oyane/"
+    },
+    "monogram": "Ø",
+    "utfordringer": "Brukerne er frivillige med ADHD, så alt måtte være ett steg om gangen: regnestykkene gjøres for deg, kontonummeret sjekkes mens du skriver, og en liste viser nøyaktig hva som mangler før du kan sende. Alt kjører rett i nettleseren uten server, konto eller sporing, og det folk fyller ut blir bare liggende på deres egen enhet. Selv e-postadressen kvitteringene skal til holdes utenfor kildekoden og deles bare internt i laget.",
+    "image": "/assets/img/oyane-verktoy.webp",
+    "omtale": [
+      "Prosjektlageret er den største av de tre. Du skriver inn hva aktiviteten kommer til å koste, hva den drar inn, og hva som skal rapporteres tilbake til styret. Knappene under utgiftslinjene er postene som går igjen i et lokallag: transport, inngang, mat, leie av lokale, utstyr og en bufferlinje på ti prosent. Summen ligger i en stripe nederst på skjermen hele tiden, med penger ut, penger inn og differansen, så du ser hva laget faktisk må ut med mens du skriver.",
+      "Utleggshjelperen finnes fordi feil skjema er den vanligste grunnen til at penger blir liggende. Den spør hva du har lagt ut for, peker på skjemaet som gjelder, sjekker kontonummeret mens du taster, og viser en liste over det som mangler før du får sende.",
+      "Kvitteringshjelperen er den minste og den jeg bruker mest selv. Ta bilde, fyll ut tre felt, send. Kvitteringen kommer ferdig merket med aktivitet og dato, i stedet for at det blir min jobb å gjette hva en uleselig bongtape gjaldt tre måneder senere.",
+      "Ingen av dem er et system. Det er fire HTML-sider uten server, uten innlogging og uten database. Det folk fyller ut ligger på deres egen enhet til de selv sender det videre, og laget kan bruke verktøyene uten at noen må drifte noe når jeg en dag går ut av styret."
+    ],
+    "galleriTittel": "De tre verktøyene",
+    "galleri": [
+      {
+        "src": "/assets/img/oyane-prosjektlageret.webp",
+        "alt": "Budsjettfanen i Prosjektlageret med utgiftslinjer, hurtigknapper for vanlige poster og sum nederst på skjermen",
+        "tekst": "Prosjektlageret regner ut mens du skriver, og summen for penger ut og inn ligger fast nederst på skjermen."
+      },
+      {
+        "src": "/assets/img/oyane-utleggshjelperen.webp",
+        "alt": "Utleggshjelperen med tre skjematyper og to spørsmål som peker på riktig skjema",
+        "tekst": "Utleggshjelperen har tre skjemaer, og to spørsmål for deg som ikke vet hvilket av dem du skal ha."
+      },
+      {
+        "src": "/assets/img/oyane-kvitteringshjelperen.webp",
+        "alt": "Kvitteringshjelperen i tre steg: ta bilde, fyll ut prosjektnummer og beløp, send",
+        "tekst": "Kvitteringshjelperen er bygget for telefon, fordi det er der kvitteringen blir fotografert."
+      }
+    ]
+  },
+  {
     "slug": "denne-siden",
     "title": "Denne siden",
     "type": "Nettside",
@@ -391,8 +462,13 @@
     "links": {
       "github": "https://github.com/Chermans1"
     },
-    "image": null,
+    "image": "/assets/img/denne-siden.webp",
     "monogram": "C",
-    "utfordringer": "Å holde alt håndskrevet uten rammeverk, og likevel få retro-båndet til å flyte gjennom sidene uten å treffe innholdet. Geometrien i båndet er ren CSS og SVG, regnet ut for hånd."
+    "utfordringer": "Å holde alt håndskrevet uten rammeverk, og likevel få retro-båndet til å flyte gjennom sidene uten å treffe innholdet. Geometrien i båndet er ren CSS og SVG, regnet ut for hånd.",
+    "omtale": [
+      "Prosjektene ligger i en JSON-fil, ikke i HTML-en. Både kortene på forsiden og case-siden du leser nå bygges fra den samme filen, så et nytt prosjekt er én oppføring og ikke en ny side. Det var et bevisst valg tidlig i byggingen: den dagen innholdet skal ligge i en database, er det bare kilden som byttes ut.",
+      "Detaljene har tatt mest tid. Burgermenyen ligger eksplodert i hvilestand og stabler seg sammen når du trykker, fem lag med hvert sitt forsprang. Det tre-fargede båndet fra logoen går igjen i skillelinjer, i kickerne over overskriftene og langs toppen av panelene. Papiret har korn. 404-siden har fått lov til å være rar.",
+      "Statusfeltet på hvert prosjekt er ikke pynt. Det står «Under bygging» der noe er under bygging, og årstallene stopper der de faktisk stopper. En portefølje der alt er ferdig og vellykket er en portefølje jeg ikke ville trodd på selv."
+    ]
   }
 ]
