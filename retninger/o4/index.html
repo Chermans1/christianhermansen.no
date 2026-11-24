@@ -49,7 +49,8 @@ a { color: inherit; text-underline-offset: 0.2em; }
 
 /* ---------- Del 1: bildet ---------- */
 .helt { position: fixed; inset: 0; overflow: hidden; }
-.bilde { position: absolute; inset: 0; filter: blur(calc(var(--p, 0) * 26px)); transform: scale(calc(1 + var(--p, 0) * 0.06)); will-change: filter, transform; }
+/* Uskarpheten bak Arbeid er tatt ned fra 26 til 16 px (24.11), så stolen og navnet skimtes bak ringen */
+.bilde { position: absolute; inset: 0; filter: blur(calc(var(--p, 0) * 16px)); transform: scale(calc(1 + var(--p, 0) * 0.06)); will-change: filter, transform; }
 /* Glasset bak alt. Lerretet tones inn når første bilde er tegnet, så det ikke blinker grått. */
 .glass { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s; }
 .glass.klar { opacity: 1; }
@@ -116,11 +117,23 @@ a { color: inherit; text-underline-offset: 0.2em; }
 .kort.spiller video { opacity: 1; }
 .kort .flate::after { content: ""; position: absolute; inset: 0; background: var(--hvit); opacity: var(--mork, 0); pointer-events: none; }
 .sikte { position: absolute; inset: -16px; pointer-events: none; opacity: 0; transition: opacity 0.4s; }
-.kort.spiller .sikte { opacity: 1; }
+/* Fangsten: fire røde hjørner som står fast midt i ringen og holder på prosjektet foran. De glir ut og slipper når
+   kortet går, og klemmer inn igjen med et lite fjærende tak når det neste kommer (--aap settes fra skriptet).
+   Den ligger i ringen med samme 3D-plass som kortet foran, så den følger med når musen vrir ringen. */
+.fangst { --b: min(50vw, 820px); --t: 2px; position: absolute; width: var(--b); aspect-ratio: 16 / 10; left: calc(var(--b) / -2); top: calc(var(--b) * -0.3125); pointer-events: none;
+  transform: translateZ(var(--r)) rotateY(var(--v, 0deg)) translateZ(calc(var(--r) * -1)); transition: opacity 0.4s; }
+.fangst i { position: absolute; width: 18px; height: 18px; border: 0 solid var(--rod); --u: calc(var(--aap, 0px) * -1); }
+.fangst i:nth-child(1) { left: -16px; top: -16px; border-width: var(--t) 0 0 var(--t); transform: translate(var(--u), var(--u)); }
+.fangst i:nth-child(2) { right: -16px; top: -16px; border-width: var(--t) var(--t) 0 0; transform: translate(var(--aap, 0px), var(--u)); }
+.fangst i:nth-child(3) { left: -16px; bottom: -16px; border-width: 0 0 var(--t) var(--t); transform: translate(var(--u), var(--aap, 0px)); }
+.fangst i:nth-child(4) { right: -16px; bottom: -16px; border-width: 0 var(--t) var(--t) 0; transform: translate(var(--aap, 0px), var(--aap, 0px)); }
+/* Tastaturfokus på kortet foran: hjørnene blir tykkere */
+.kortring:has(.kort:focus-visible) .fangst { --t: 3.5px; }
+body.aapen .fangst { opacity: 0; }
 .sikte i { position: absolute; width: 16px; height: 16px; border: 0 solid var(--rod); }
 .sikte i:nth-child(1) { left: 0; top: 0; border-width: 2px 0 0 2px; } .sikte i:nth-child(2) { right: 0; top: 0; border-width: 2px 2px 0 0; }
 .sikte i:nth-child(3) { left: 0; bottom: 0; border-width: 0 0 2px 2px; } .sikte i:nth-child(4) { right: 0; bottom: 0; border-width: 0 2px 2px 0; }
-.kort:focus-visible { outline: none; } .kort:focus-visible .sikte { opacity: 1; }
+.kort:focus-visible { outline: none; }
 .over { position: absolute; left: 0; right: 0; top: clamp(5.4rem, 13vh, 8.5rem); text-align: center; padding: 0 var(--kant); pointer-events: none; transition: opacity 0.4s; }
 .over h2 { font: 900 clamp(1.6rem, 3vw, 2.8rem)/1 var(--f); font-variation-settings: "wdth" 118; text-transform: uppercase; letter-spacing: -0.01em; }
 .over h2 i { font-style: normal; color: var(--rod); }
@@ -145,12 +158,16 @@ body.aapen .kortring { transform: translateZ(-420px); opacity: 0.2; filter: blur
 .visning svg { fill: none; stroke: currentColor; stroke-width: 1.3; }
 
 /* Rutenettet: alle prosjektene på én gang, to i bredden */
-/* Toningen ligger på den ytre boksen og står stille. Rullingen skjer i .rull inni. */
+/* Toningen nederst ligger på rullefeltet (.rull) og står stille mens innholdet ruller. Den kan ikke ligge på den ytre
+   boksen, for da virker ikke uskarpheten i båndet.
+   Øverst er det ingen toning (den visket ut halve bilder): kortene ruller inn under et frostet bånd bak tittelen (.baand). */
 .rutenett { --rt: calc(clamp(5.4rem, 13vh, 8.5rem) + 8.6rem); position: absolute; inset: 0;
-  -webkit-mask-image: linear-gradient(transparent calc(var(--rt) - 2.6rem), #000 calc(var(--rt) - 0.6rem), #000 calc(100% - 4.5rem), transparent);
-  mask-image: linear-gradient(transparent calc(var(--rt) - 2.6rem), #000 calc(var(--rt) - 0.6rem), #000 calc(100% - 4.5rem), transparent);
   opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0s 0.5s, filter 0.6s; }
-.rutenett .rull { height: 100%; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; padding: var(--rt) var(--kant) 7rem; scrollbar-width: thin; scrollbar-color: var(--rod) transparent; }
+.rutenett .rull { -webkit-mask-image: linear-gradient(#000 calc(100% - 4.5rem), transparent); mask-image: linear-gradient(#000 calc(100% - 4.5rem), transparent); height: 100%; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; padding: var(--rt) var(--kant) 7rem; scrollbar-width: thin; scrollbar-color: var(--rod) transparent; }
+/* Frostet bånd bak tittelen og bryteren: kortene glir inn under det og blir uskarpe, med en tynn strek under.
+   Det ligger i rutenettet, så det kommer og går med rutenettvisningen. */
+.rutenett .baand { position: absolute; left: 0; right: 0; top: 0; height: calc(var(--rt) - 1.6rem); pointer-events: none;
+  background: rgba(255, 255, 255, 0.55); -webkit-backdrop-filter: blur(18px) saturate(1.15); backdrop-filter: blur(18px) saturate(1.15); border-bottom: 1px solid var(--linje); }
 .rutenett .rader { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(2.2rem, 4.5vw, 3.8rem) clamp(1.2rem, 2.4vw, 2.6rem); max-width: 1440px; margin: 0 auto; }
 .rkort { display: block; width: 100%; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer;
   opacity: 0; transform: translateY(2.6rem); transition: opacity 0.5s, transform 0.6s; }
@@ -251,7 +268,7 @@ body.aapen .panel > * { opacity: 1; transform: none; transition: opacity 0.6s 0.
   .hint::after { content: "↓"; width: auto; height: auto; background: none; font-size: 1.4rem; line-height: 1; animation: pil 1.8s ease-in-out infinite; }
   @keyframes pil { 50% { transform: translateY(0.25rem); } }
   .ingress .cta { padding: 0.95rem 1.05rem; letter-spacing: 0.1em; }
-  .kort { --b: 80vw; }
+  .kort, .fangst { --b: 80vw; }
   .under { top: calc(44% + 80vw * 0.3125 + 1.6rem); }
   .kortring { top: 44%; }
   .over { top: 5rem; }
@@ -317,7 +334,7 @@ body.aapen .panel > * { opacity: 1; transform: none; transition: opacity 0.6s 0.
         <button type="button" data-v="rutenett" aria-pressed="false" aria-label="Vis som rutenett" title="Rutenett"><svg width="20" height="14" viewBox="0 0 20 14" aria-hidden="true"><rect x="0.65" y="0.65" width="8" height="5.4"/><rect x="11.35" y="0.65" width="8" height="5.4"/><rect x="0.65" y="7.95" width="8" height="5.4"/><rect x="11.35" y="7.95" width="8" height="5.4"/></svg></button>
       </div>
     </div>
-    <div class="rutenett" inert><div class="rull"><div class="rader"></div></div></div>
+    <div class="rutenett" inert><div class="rull"><div class="rader"></div></div><div class="baand" aria-hidden="true"></div></div>
     <div class="kortring"></div>
     <div class="under" aria-live="polite"><h3></h3><p></p><p class="hint2">Klikk for å gå inn</p></div>
     <p class="teller etikett" aria-hidden="true"></p>
@@ -404,11 +421,17 @@ const kort = PROSJEKTER.map((pr, i) => {
   const k = document.createElement("button");
   k.className = "kort"; k.type = "button"; k.dataset.i = i; k.tabIndex = -1;
   k.setAttribute("aria-label", `${pr.navn}, ${pr.type.toLowerCase()}. Åpne prosjektet`);
-  k.innerHTML = `<span class="flate"><img src="${plakat(pr.id)}" alt="" draggable="false"><video muted playsinline loop preload="none" src="${film(pr.id)}"></video></span><span class="sikte" aria-hidden="true"><i></i><i></i><i></i><i></i></span>`;
+  k.innerHTML = `<span class="flate"><img src="${plakat(pr.id)}" alt="" draggable="false"><video muted playsinline loop preload="none" src="${film(pr.id)}"></video></span>`;
   k.addEventListener("click", (e) => { if (dro) { e.preventDefault(); return; } velg(i); });
   kortring.appendChild(k);
   return k;
 });
+// Hjørnene som holder på prosjektet foran (se .fangst i CSS)
+const fangst = document.createElement("div");
+fangst.className = "fangst"; fangst.setAttribute("aria-hidden", "true");
+fangst.innerHTML = "<i></i><i></i><i></i><i></i>";
+kortring.appendChild(fangst);
+let aap = 0, aapFart = 0;
 // Rutenettet: de samme prosjektene, to i bredden. Filmen spiller når pekeren ligger over.
 const rutenett = scene.querySelector(".rutenett"), rader = rutenett.querySelector(".rader");
 const ruter = PROSJEKTER.map((pr, i) => {
@@ -448,6 +471,7 @@ function maalKort() {
   steg = Math.atan((bredde * 1.13) / R);
   scene.style.setProperty("--persp", (R * 1.12).toFixed(0) + "px");
   kort.forEach((k) => k.style.setProperty("--r", R.toFixed(0) + "px"));
+  fangst.style.setProperty("--r", R.toFixed(0) + "px");
 }
 let maalPos = 0, vist = 0, aktiv = -1, spiller = -1, aapen = -1, travel = false;
 function settAktiv(i) {
@@ -482,6 +506,17 @@ function plasserKort(dt) {
     k.style.setProperty("--v", (v * 57.2958).toFixed(3) + "deg");
     k.style.setProperty("--mork", klem(Math.abs(d) * 0.38 - 0.05, 0, 0.62).toFixed(3));
   });
+  // Fangsten står der kortet foran står når ringen er i ro (musen vrir den litt), og åpner seg jo lenger ringen er fra et kort.
+  // Den åpner seg fort når kortet går, og er helt åpen halvveis mellom to kort.
+  fangst.style.setProperty("--v", (vmx * 0.18 * steg * 57.2958).toFixed(3) + "deg");
+  const f = klem(Math.abs(vist - Math.round(vist)) / 0.3), maal = f * f * (3 - 2 * f) * bredde * 0.07;
+  if (rolig) aap = maal;
+  else {
+    // fjær: den lukker seg litt for langt og klemmer kortet før den legger seg
+    aapFart += (maal - aap) * 260 * dt; aapFart *= Math.exp(-dt * 15); aap += aapFart * dt;
+    aap = Math.max(aap, -7);
+  }
+  fangst.style.setProperty("--aap", aap.toFixed(2) + "px");
   const naer = iRing(Math.round(vist));
   settAktiv(naer);
   if (aapen < 0) settSpiller(visning === "ring" && p > 0.6 && Math.abs(vist - Math.round(vist)) < 0.12 ? naer : -1);
@@ -581,10 +616,18 @@ function velg(i) {
   if (i !== iRing(Math.round(vist))) { maalPos = Math.round(vist) + naerSti(Math.round(vist), i); return; }
   aapne(i, true);
 }
+// Lange navn (BRANSJEKART) skal stå i hele ord: skriften krympes til det lengste ordet får plass i panelet
+function passTittel() {
+  const h = panel.querySelector("h2");
+  h.style.fontSize = "";
+  let str = parseFloat(getComputedStyle(h).fontSize);
+  while (h.scrollWidth > h.clientWidth + 1 && str > 20) { str *= 0.94; h.style.fontSize = str.toFixed(1) + "px"; }
+}
 function fyll(i) {
   const pr = PROSJEKTER[i];
   panel.querySelector(".teller-c").textContent = `${String(i + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
   panel.querySelector("h2").textContent = pr.navn;
+  passTittel();
   panel.querySelector(".ingress2").textContent = pr.ingress;
   panel.querySelector(".tekst").innerHTML = pr.tekst.map((t) => `<p>${t}</p>`).join("");
   panel.querySelector("dl").innerHTML = `<dt>Type</dt><dd>${pr.type}</dd><dt>Status</dt><dd>${pr.status}</dd>${pr.aar ? `<dt>År</dt><dd>${pr.aar}</dd>` : ""}<dt>Nettsted</dt><dd><a href="${pr.lenke}" target="_blank" rel="noopener">${pr.lenketekst} ↗</a></dd>`;
@@ -636,6 +679,7 @@ async function aapne(i, flytt, historikk = true) {
     forsteRamme.appendChild(v); fly.remove();
   } else { document.body.classList.add("aapen"); forsteRamme.appendChild(v); v.style.opacity = 1; }
   forsteRamme.classList.remove("venter");
+  passTittel(); // på nytt når panelet har fått rullefeltet sitt
   panel.querySelector(".tilbake").focus({ preventScroll: true, focusVisible: tastatur });
   travel = false;
 }
@@ -647,7 +691,11 @@ async function lukk(historikk = true) {
   document.title = "Christian Hermansen - Fullstack-utvikler (retning O4)";
   const fra = kase.scrollTop < 40 ? rute(forsteRamme, "6px") : null;
   kase.classList.add("lukker");
+  // Ringen hopper rett tilbake på plass (den toner bare inn), så bildet flyr til der kortet faktisk står.
+  // Før fløy det til kortet mens ringen ennå sto langt bak, ble for lite og poppet så inn i rekken.
+  kortring.style.transition = "opacity 0.6s, filter 0.6s";
   document.body.classList.remove("aapen");
+  setTimeout(() => { kortring.style.transition = ""; }, 700);
   if (fra && v && !rolig) {
     const fly = document.createElement("div"); fly.className = "fly";
     forsteRamme.classList.add("venter");
@@ -669,7 +717,7 @@ addEventListener("popstate", () => {
 });
 
 // ---------- Start ----------
-function maalAlt() { byggRing(); maalKort(); maalTittel(); }
+function maalAlt() { byggRing(); maalKort(); maalTittel(); if (aapen >= 0) passTittel(); }
 addEventListener("resize", maalAlt);
 document.fonts?.ready.then(maalTittel);
 maalAlt();
