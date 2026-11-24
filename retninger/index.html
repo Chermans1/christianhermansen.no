@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Tre retninger - christianhermansen.no</title>
+<style>
+/* Arbeidsside for fase 2. Viser de tre skissene ved siden av hverandre.
+   Nøytral med vilje, så den ikke blander seg i det som vises. */
+:root { --bunn: #1b1b1d; --flate: #26262a; --tekst: #ededee; --dus: #a9a9b0; --valgt: #ededee; }
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--bunn); color: var(--tekst); font: 400 0.95rem/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; min-height: 100vh; display: grid; grid-template-rows: auto 1fr; }
+header { display: flex; flex-wrap: wrap; gap: 0.8rem 2rem; align-items: center; justify-content: space-between; padding: 0.9rem 1.2rem; border-bottom: 1px solid #38383d; }
+h1 { font-size: 1.05rem; font-weight: 650; margin: 0; }
+header p { margin: 0.15rem 0 0; color: var(--dus); max-width: 44rem; }
+.valg { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; }
+.velger { display: flex; border: 1px solid #55555c; border-radius: 6px; overflow: hidden; }
+.velger button { font: inherit; font-weight: 600; color: var(--tekst); background: none; border: 0; padding: 0.55rem 0.95rem; cursor: pointer; }
+.velger button + button { border-left: 1px solid #55555c; }
+.velger button[aria-pressed="true"] { background: var(--valgt); color: var(--bunn); }
+.velger button:focus-visible, a:focus-visible { outline: 2px solid var(--tekst); outline-offset: 2px; }
+main { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; padding: 1rem 1.2rem 1.4rem; align-items: start; }
+figure { margin: 0; display: grid; gap: 0.6rem; justify-items: center; min-width: 0; }
+figcaption { width: 100%; display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+figcaption b { font-size: 1rem; }
+figcaption span { color: var(--dus); }
+figcaption a { color: var(--tekst); white-space: nowrap; }
+.ramme { width: 100%; overflow: hidden; background: var(--flate); border-radius: 8px; position: relative; }
+.ramme iframe { border: 0; display: block; transform-origin: 0 0; background: #000; }
+/* Telefon: ekte 390 px brede rammer, skalert ned bare hvis kolonnen er smalere */
+body[data-visning="telefon"] .ramme { width: min(100%, 390px); border-radius: 26px; border: 6px solid #0c0c0d; }
+@media (max-width: 60rem) { main { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body data-visning="telefon">
+<header>
+  <div>
+    <h1>Tre retninger for christianhermansen.no</h1>
+    <p class="om"></p>
+    <p>Nyest 24.11: <a href="o4/" style="color: inherit; font-weight: 650;">O4 Typografien</a>, hvitt, rødt og svart, stilisert portrett og ordring i 3D, med ringen fra O3 som del 2.</p>
+    <p>Ny 24.11: <a href="o3/" style="color: inherit; font-weight: 650;">O3 Båndet</a>, prosjektene på tvers av skjermen med zoom inn i prosjektsiden. Før det: <a href="o2/" style="color: inherit; font-weight: 650;">O2 Utstillingen, varm</a>. Åpne dem alene.</p>
+    <p>Runde 5 er åpen, og M er lagt til side inntil videre. Valgt 17.11: <a href="m/" style="color: inherit; font-weight: 650;">M Havet</a>, med starten fra K og fullskjermfilmen fra J. Åpne den alene.</p>
+  </div>
+  <div class="valg">
+    <div class="velger" role="group" aria-label="Runde">
+      <button type="button" data-runde="5" aria-pressed="true">Runde 5</button>
+      <button type="button" data-runde="4" aria-pressed="false">Runde 4</button>
+      <button type="button" data-runde="3" aria-pressed="false">Runde 3</button>
+      <button type="button" data-runde="2" aria-pressed="false">Runde 2</button>
+      <button type="button" data-runde="1" aria-pressed="false">Runde 1</button>
+    </div>
+    <div class="velger" role="group" aria-label="Skjermstørrelse">
+      <button type="button" data-visning="telefon" aria-pressed="true">Telefon</button>
+      <button type="button" data-visning="stor" aria-pressed="false">Stor skjerm</button>
+    </div>
+  </div>
+</header>
+<main>
+  <figure><figcaption><span></span><a>Åpne alene</a></figcaption><div class="ramme"><iframe></iframe></div></figure>
+  <figure><figcaption><span></span><a>Åpne alene</a></figcaption><div class="ramme"><iframe></iframe></div></figure>
+  <figure><figcaption><span></span><a>Åpne alene</a></figcaption><div class="ramme"><iframe></iframe></div></figure>
+</main>
+<script>
+// Hver ramme er en ekte nettleserflate i riktig størrelse (390 x 780 eller 1440 x 900),
+// skalert ned til å passe kolonnen. Da ser du oppsettet slik det blir, ikke en sammenpresset utgave.
+(() => {
+  const storrelser = { telefon: [390, 780], stor: [1440, 900] };
+  const rammer = [...document.querySelectorAll(".ramme")];
+  function tilpass() {
+    const [b, h] = storrelser[document.body.dataset.visning];
+    for (const ramme of rammer) {
+      const iframe = ramme.firstElementChild;
+      iframe.style.width = b + "px";
+      iframe.style.height = h + "px";
+      const skala = Math.min(1, ramme.clientWidth / b);
+      iframe.style.transform = `scale(${skala})`;
+      ramme.style.height = h * skala + "px";
+    }
+  }
+  // Tre runder. Runde 3 bruker bilder rendret i Blender, med de ekte prosjektene på skjermene.
+  const runder = {
+    5: { om: "Runde 5 (24.11): inntrykket av high end med en gang. N er Pulse-prinsippene i dine farger med portrettet foran ordet, O er arbeidet som skjermer i et mørkt galleri du går gjennom, P er en arbeidstegning der tegningen blir til bygg. Første skjerm og ett prosjekt i hver. Tekstene er utkast.",
+         sett: [["N", "Plakaten", "n/"], ["O", "Utstillingen", "o/"], ["P", "Plansjen", "p/"]] },
+    4: { om: "Runde 4: mørk og filmatisk, etter strukturen hos Black Flag. J viser arbeidet som film, K et sted, L deg. Filmen er ekte opptak av sidene dine. Rull inne i hver ramme. Tekstene er utkast.",
+         sett: [["J", "Filmen", "j/"], ["K", "Stedet", "k/"], ["L", "Mannen", "l/"]] },
+    3: { om: "Runde 3: bilder rendret i Blender, med de ekte prosjektene på skjermene. Ikke valgt.",
+         sett: [["G", "Visningsrommet", "g/"], ["H", "Arbeidsboken", "h/"], ["I", "Tre flater", "i/"]] },
+    2: { om: "Runde 2: 3D i nettleseren med fargene, stripene og logoen brukt på nye måter. Ikke valgt.",
+         sett: [["D", "Under paraplyen", "d/"], ["E", "Lagene", "e/"], ["F", "Floken", "f/"]] },
+    1: { om: "Runde 1: første skjerm, tjenestene og Fanatastisk som rullesekvens. Ikke valgt.",
+         sett: [["A", "Sprengskissen", "a/"], ["B", "Plakatveggen", "b/"], ["C", "Kjelleren", "c/"]] },
+  };
+  function visRunde(nr) {
+    document.querySelector(".om").textContent = runder[nr].om;
+    document.querySelectorAll("figure").forEach((fig, i) => {
+      const [bokstav, navn, sti] = runder[nr].sett[i];
+      fig.querySelector("figcaption span").innerHTML = `<b>${bokstav}</b> ${navn}`;
+      fig.querySelector("a").href = sti;
+      const iframe = fig.querySelector("iframe"); iframe.title = `Retning ${bokstav}, ${navn}`; iframe.src = sti;
+    });
+  }
+  for (const knapp of document.querySelectorAll(".velger button")) {
+    knapp.addEventListener("click", () => {
+      if (knapp.dataset.runde) visRunde(knapp.dataset.runde); else document.body.dataset.visning = knapp.dataset.visning;
+      for (const k of knapp.parentElement.children) k.setAttribute("aria-pressed", String(k === knapp));
+      tilpass();
+      requestAnimationFrame(tilpass);
+    });
+  }
+  visRunde(5);
+  addEventListener("resize", tilpass);
+  tilpass();
+  requestAnimationFrame(tilpass);
+})();
+</script>
+</body>
+</html>

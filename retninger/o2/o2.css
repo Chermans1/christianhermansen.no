@@ -1,0 +1,46 @@
+/* O2. Utstillingen, varm. Felles for forsiden og prosjektsiden.
+   Hele siden er ett rom: et uskarpt, varmt bilde av naustet i kveldslys ligger bak alt, med korn og mørk kant,
+   som sett gjennom en gammel linse. Arbeidet henger i rommet. */
+:root {
+  --natt: #120d0a; --brun: #1f1611; --papir: #f1e7d3; --papir-dyp: #e6d8bd; --gull: #d9923c; --rust: #b5472b; --rust-dyp: #9a3a22;
+  --demp: #c4b6a0;            /* dempet tekst på mørkt, 9,6:1 mot --natt */
+  --demp-lys: #5c4d3f;        /* dempet tekst på papir, 7,4:1 mot --papir */
+  --linje: rgba(241, 231, 211, 0.16);
+  --f-tittel: "Instrument Serif", Georgia, serif; --f-tekst: "Instrument Sans", system-ui, sans-serif;
+  --kant: clamp(1.25rem, 3.2vw, 3rem);
+}
+* { box-sizing: border-box; margin: 0; }
+html { background: var(--natt); color: var(--papir); scrollbar-color: var(--gull) var(--natt); }
+body { font: 400 1rem/1.55 var(--f-tekst); -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-underline-offset: 0.22em; }
+::selection { background: var(--gull); color: var(--natt); }
+:focus-visible { outline: 2px solid var(--gull); outline-offset: 3px; }
+.etikett { font: 500 0.6875rem/1.4 var(--f-tekst); letter-spacing: 0.14em; text-transform: uppercase; color: var(--demp); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* Rommet */
+.rom { position: fixed; inset: 0; z-index: -2; overflow: hidden; background: var(--brun); }
+.rom video, .rom img { position: absolute; inset: -6%; width: 112%; height: 112%; object-fit: cover; }
+.rom::after { content: ""; position: absolute; inset: 0; background: linear-gradient(rgba(18, 13, 10, 0.4), rgba(18, 13, 10, 0.1) 42%, rgba(18, 13, 10, 0.55)); }
+.rom video, .rom img { filter: saturate(1.15) brightness(1.12); }
+/* Korn og linsekant ligger over alt, men tar ikke imot klikk */
+.korn { position: fixed; inset: 0; z-index: 60; pointer-events: none; opacity: 0.16; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='k'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23k)'/%3E%3C/svg%3E"); }
+.linse { position: fixed; inset: 0; z-index: 59; pointer-events: none; box-shadow: inset 0 0 14vmin 3vmin rgba(10, 7, 5, 0.82); border-radius: 18px; }
+
+/* Toppen */
+.topp { position: fixed; z-index: 50; inset: 0 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1.4rem var(--kant); }
+.topp img { height: 1.6rem; display: block; }
+.topp nav { display: flex; gap: clamp(1rem, 2.4vw, 2rem); font-size: 0.875rem; }
+.topp nav a { text-decoration: none; color: var(--demp); transition: color 0.2s; }
+.topp nav a:hover, .topp nav a[aria-current] { color: var(--papir); }
+.topp nav a:not(:last-child)::after { content: ","; }
+@media (max-width: 760px) { .topp nav a:not(:last-child) { display: none; } }
+/* Over papir bytter toppen til mørk logo og mørk meny */
+.topp .lys { display: none; }
+.topp.paa-lys .lys { display: block; } .topp.paa-lys .mork { display: none; }
+.topp { transition: background-color 0.3s, box-shadow 0.3s; }
+.topp.paa-lys { background: var(--papir); box-shadow: 0 1px 0 rgba(18, 13, 10, 0.12); }
+.topp.paa-lys nav a { color: var(--demp-lys); } .topp.paa-lys nav a:hover, .topp.paa-lys nav a[aria-current] { color: var(--natt); }
+
+@media (prefers-reduced-motion: reduce) { .rom video { display: none; } }

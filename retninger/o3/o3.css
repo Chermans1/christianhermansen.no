@@ -1,0 +1,7 @@
+/* O3: felles for båndet og prosjektsiden. Rommet, kornet, linsekanten og toppen kommer fra ../o2/o2.css. */
+
+/* Overgang mellom sidene: der nettleseren kan det, glir den ene siden over i den neste i stedet for å blinke.
+   Zoomen slutter på nøyaktig det bildet prosjektsiden starter med, så overgangen skal ikke synes. */
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.25s; }
+@media (prefers-reduced-motion: reduce) { ::view-transition-old(root), ::view-transition-new(root) { animation: none; } }

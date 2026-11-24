@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retning J - Filmen</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alumni+Sans:wght@500;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../felles/r4/felles.css">
+<style>
+/* J. Filmen: arbeidet er verdenen. Alt som beveger seg er opptak av ekte sider. */
+:root { --f-tittel: "Alumni Sans", "Arial Narrow", sans-serif; --f-tekst: "Instrument Sans", system-ui, sans-serif; --v-tittel: 800; --tt: uppercase; --spor: 0.005em; }
+.r4 h2 { font-size: clamp(2.8rem, 7.4vw, 6.6rem); line-height: 0.9; max-width: 14ch; }
+.r4-tre h3 { font-size: clamp(2.2rem, 3.8vw, 3.4rem); line-height: 0.95; }
+.r4-tilbud h3, .r4-liste summary, .r4-flere .n { font-weight: 700; font-size: clamp(1.5rem, 2.4vw, 2rem); line-height: 1.05; }
+.r4-lagetfor ul { font-size: clamp(2.4rem, 6vw, 5rem); line-height: 0.95; }
+
+/* Åpningen: filmen ligger bak navnet, og kommer frem når du ruller */
+.j-apning { height: 240vh; height: 240svh; position: relative; }
+.j-apning .scene { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; place-items: center; background: #0b1b1e; }
+.film { position: absolute; inset: -2%; width: 104%; height: 104%; object-fit: cover; object-position: 50% 0; filter: blur(calc((1 - var(--loft, 0)) * 9px)); }
+.slor { position: absolute; inset: 0; background: linear-gradient(rgba(16, 38, 42, 0.88), rgba(29, 60, 65, 0.8)); opacity: calc(1 - var(--loft, 0)); }
+.kanter { position: absolute; inset: 0; background: linear-gradient(rgba(16, 38, 42, 0.55), transparent 22%, transparent 68%, rgba(16, 38, 42, 0.9)); pointer-events: none; }
+.j-tittel { position: relative; text-align: center; padding: 0 var(--kant); display: grid; gap: clamp(0.8rem, 2vw, 1.4rem); justify-items: center; opacity: calc(1 - var(--loft, 0) * 1.6); transform: translateY(calc(var(--loft, 0) * -9vh)) scale(calc(1 + var(--loft, 0) * 0.06)); }
+.j-tittel .over { font-size: clamp(0.75rem, 1.1vw, 0.9rem); letter-spacing: 0.26em; text-transform: uppercase; }
+.j-tittel h1 { font: 800 clamp(4.6rem, 21vw, 17rem) / 0.8 var(--f-tittel); text-transform: uppercase; letter-spacing: 0.005em; }
+.j-tittel .under { max-width: 34ch; color: var(--demp); }
+.j-tittel .striper { display: grid; gap: 4px; width: clamp(4rem, 9vw, 7rem); margin-top: 0.4rem; }
+.j-tittel .striper i { height: 5px; } .j-tittel .striper i:nth-child(1) { background: var(--rust); } .j-tittel .striper i:nth-child(2) { background: var(--gull); } .j-tittel .striper i:nth-child(3) { background: var(--petrol); }
+.rullhint { position: absolute; left: 50%; bottom: 1.6rem; translate: -50% 0; font-size: 0.6875rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--demp); opacity: calc(1 - var(--loft, 0) * 4); }
+.filmtekst { position: absolute; left: var(--kant); bottom: clamp(1.4rem, 4vw, 3rem); display: grid; gap: 0.1rem; opacity: calc(var(--loft, 0) * 2 - 1); }
+.filmtekst .merke { font-size: 0.6875rem; letter-spacing: 0.26em; text-transform: uppercase; color: var(--gull); }
+.filmtekst .fn { font: 800 clamp(2.4rem, 6vw, 5.4rem) / 0.9 var(--f-tittel); text-transform: uppercase; }
+.filmtekst .ft { font-size: 0.8125rem; letter-spacing: 0.2em; text-transform: uppercase; }
+.pause { position: absolute; right: var(--kant); bottom: clamp(1.4rem, 4vw, 3rem); font: 500 0.75rem/1 var(--f-tekst); letter-spacing: 0.2em; text-transform: uppercase; color: var(--papir); background: rgba(16, 38, 42, 0.7); border: 1px solid var(--linje); padding: 0.8rem 1rem; cursor: pointer; }
+.pause:hover { border-color: var(--papir); }
+
+/* Utvalgte prosjekter: én helskjerm per prosjekt. Siden inne i rammen ruller mens du ruller. */
+.j-hode { padding: var(--luft) var(--kant) clamp(2rem, 5vw, 4rem); max-width: 1400px; margin-inline: auto; }
+.j-hode h2 { font: 800 clamp(2.8rem, 7.4vw, 6.6rem) / 0.9 var(--f-tittel); text-transform: uppercase; }
+.j-prosjekt { height: 300vh; height: 300svh; position: relative; }
+.j-prosjekt .scene { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; grid-template-columns: repeat(12, 1fr); align-items: center; padding: 5.5rem var(--kant) 2.5rem; gap: 0 1.5rem; }
+.skjerm { grid-column: 5 / -1; grid-row: 1; height: min(76vh, 46vw); position: relative; overflow: hidden; border: 1px solid var(--linje); border-radius: 10px; background: var(--dyp); box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.7); }
+.skjerm .side { width: 100%; height: auto; will-change: transform; }
+.skjerm::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(16, 38, 42, 0.86), rgba(16, 38, 42, 0) 42%); pointer-events: none; }
+.skjerm .fremdrift { position: absolute; left: 0; bottom: 0; height: 4px; width: 100%; z-index: 2; background: linear-gradient(90deg, var(--rust) 0 33.3%, var(--gull) 33.3% 66.6%, var(--petrol) 66.6%); transform-origin: 0 50%; transform: scaleX(var(--p, 0)); }
+.j-tekst { grid-column: 1 / 9; grid-row: 1; position: relative; z-index: 2; display: grid; gap: 0.9rem; align-content: center; }
+.j-tekst .nr { font-size: 0.75rem; letter-spacing: 0.24em; color: var(--demp); }
+.j-tekst h3 { font: 800 clamp(3.6rem, 11vw, 11.5rem) / 0.8 var(--f-tittel); text-transform: uppercase; text-wrap: balance; }
+.j-tekst .linje { font-size: clamp(0.75rem, 1vw, 0.875rem); letter-spacing: 0.24em; text-transform: uppercase; color: var(--gull); }
+.j-tekst .om { max-width: 30ch; }
+.j-tekst .status { font-size: 0.875rem; color: var(--demp); }
+.j-tekst a { justify-self: start; font-size: 0.8125rem; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; border: 1px solid var(--papir); padding: 0.85rem 1.2rem; margin-top: 0.4rem; }
+.j-tekst a:hover { background: var(--papir); color: var(--natt); }
+.j-prosjekt:nth-of-type(even) .skjerm { grid-column: 1 / 9; }
+.j-prosjekt:nth-of-type(even) .skjerm::after { background: linear-gradient(270deg, rgba(16, 38, 42, 0.86), rgba(16, 38, 42, 0) 42%); }
+.j-prosjekt:nth-of-type(even) .j-tekst { grid-column: 5 / -1; justify-items: end; text-align: right; }
+.j-prosjekt:nth-of-type(even) .j-tekst a { justify-self: end; }
+/* Fanatastisk har én skjerm som nettside. Appen kommer inn ved siden av. */
+.skjerm.stille .side { height: 100%; object-fit: cover; }
+.telefoner { position: absolute; inset: 0; z-index: 1; display: flex; justify-content: flex-end; align-items: flex-start; gap: 4%; padding: 0 5%; }
+.telefoner img { width: 21%; height: auto; border-radius: 14px; border: 1px solid rgba(241, 231, 211, 0.3); box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8); will-change: transform; }
+
+@media (max-width: 859px) {
+  .j-prosjekt { height: 260svh; }
+  .j-prosjekt .scene { display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 1.2rem; padding: 4.6rem var(--kant) 1.2rem; }
+  .skjerm, .j-prosjekt:nth-of-type(even) .skjerm { height: 50svh; flex: none; }
+  .skjerm::after, .j-prosjekt:nth-of-type(even) .skjerm::after { background: none; }
+  .j-tekst, .j-prosjekt:nth-of-type(even) .j-tekst { justify-items: start; text-align: left; gap: 0.6rem; }
+  .j-prosjekt:nth-of-type(even) .j-tekst a { justify-self: start; }
+  .j-tekst h3 { font-size: clamp(3rem, 17vw, 5rem); }
+  .rullhint { left: var(--kant); translate: none; bottom: 2.4rem; }
+  .telefoner { padding: 0 6%; gap: 5%; } .telefoner img { width: 27%; border-radius: 9px; }
+}
+</style>
+</head>
+<body>
+<div id="topp"></div>
+<main>
+  <section class="j-apning" aria-label="Åpning">
+    <div class="scene">
+      <video class="film" muted loop playsinline preload="auto" poster="../felles/r4/media/reel-plakat.webp?v=3" aria-label="Film med opptak av nettsider og verktøy Christian har laget">
+        <source src="../felles/r4/media/reel.mp4?v=3" type="video/mp4">
+      </video>
+      <div class="slor"></div>
+      <div class="kanter"></div>
+      <div class="j-tittel">
+        <p class="over">Nettsider, apper og digitale verktøy</p>
+        <h1>Christian<br>Hermansen</h1>
+        <p class="under">Laget i Bergen, for arrangører, lag, foreninger og små bedrifter.</p>
+        <div class="striper" aria-hidden="true"><i></i><i></i><i></i></div>
+      </div>
+      <p class="rullhint" aria-hidden="true">Rull for å se filmen</p>
+      <div class="filmtekst" aria-hidden="true"><span class="merke">Vises nå</span><span class="fn"></span><span class="ft"></span></div>
+      <button class="pause" type="button" aria-pressed="false">Pause filmen</button>
+    </div>
+  </section>
+
+  <section id="arbeid" aria-labelledby="a-tittel">
+    <header class="j-hode"><p class="r4-merke">Utvalgte prosjekter</p><h2 id="a-tittel">Fire prosjekter på nært hold.</h2></header>
+    <div id="prosjekter"></div>
+  </section>
+  <div id="flere"></div>
+  <div id="nedre"></div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script type="module">
+import { M, UTVALGTE, topp, flere, nedre, koble, filmtekst, rolig } from "../felles/r4/felles.js";
+
+document.getElementById("topp").outerHTML = topp();
+document.getElementById("flere").outerHTML = flere();
+document.getElementById("nedre").outerHTML = nedre();
+koble();
+
+document.getElementById("prosjekter").outerHTML = UTVALGTE.map((p, i) => `
+  <article class="j-prosjekt">
+    <div class="scene">
+      <div class="skjerm${p.id === "fanatastisk" ? " stille" : ""}">
+        <picture>
+          ${p.id === "fanatastisk" ? "" : `<source media="(max-width: 859px)" srcset="${M}${p.id}/mobil.webp">`}
+          <img class="side" src="${M}${p.id}/${p.id === "fanatastisk" ? "topp" : "hel"}.webp" alt="Skjermopptak av ${p.navn}" loading="lazy">
+        </picture>
+        ${p.id === "fanatastisk" ? `<div class="telefoner">${["hjem", "program", "kart"].map((a) => `<img src="${M}fanatastisk/app-${a}.webp" alt="Fanatastisk-appen, ${a}" loading="lazy">`).join("")}</div>` : ""}
+        <span class="fremdrift" aria-hidden="true"></span>
+      </div>
+      <div class="j-tekst">
+        <p class="nr">0${i + 1} / 0${UTVALGTE.length}</p>
+        <h3>${p.navn}</h3>
+        <p class="linje">${p.linje.join(" • ")}</p>
+        <p class="om">${p.tekst}</p>
+        <p class="status">Status: ${p.status}</p>
+        <a href="${p.lenke}">${p.lenketekst}</a>
+      </div>
+    </div>
+  </article>`).join("");
+
+// Filmen
+const video = document.querySelector(".film"), knapp = document.querySelector(".pause");
+filmtekst(video, document.querySelector(".filmtekst"));
+const sett = (spiller) => { knapp.setAttribute("aria-pressed", String(!spiller)); knapp.textContent = spiller ? "Pause filmen" : "Spill filmen"; };
+knapp.addEventListener("click", () => { if (video.paused) { video.play(); sett(true); } else { video.pause(); sett(false); } });
+if (rolig.matches) sett(false); else video.play().then(() => sett(true)).catch(() => sett(false));
+
+// Rulling
+gsap.registerPlugin(ScrollTrigger);
+const apning = document.querySelector(".j-apning");
+if (rolig.matches) {
+  apning.style.setProperty("--loft", "0");
+} else {
+  ScrollTrigger.create({ trigger: apning, start: "top top", end: "bottom bottom", scrub: true,
+    onUpdate: (s) => apning.style.setProperty("--loft", Math.min(1, s.progress / 0.55).toFixed(3)) });
+
+  document.querySelectorAll(".j-prosjekt").forEach((art) => {
+    const ramme = art.querySelector(".skjerm"), side = art.querySelector(".side");
+    const st = { trigger: art, start: "top top", end: "bottom bottom", scrub: 0.4, invalidateOnRefresh: true };
+    gsap.to(ramme, { "--p": 1, ease: "none", scrollTrigger: st });
+    if (ramme.classList.contains("stille")) {
+      art.querySelectorAll(".telefoner img").forEach((t, n) =>
+        gsap.fromTo(t, { yPercent: 70 + n * 34 }, { yPercent: -18 - n * 8, ease: "none", scrollTrigger: { ...st } }));
+    } else {
+      gsap.to(side, { y: () => -Math.max(0, side.offsetHeight - ramme.clientHeight), ease: "none", scrollTrigger: { ...st } });
+    }
+    gsap.from(art.querySelectorAll(".j-tekst > *"), { y: 40, opacity: 0, duration: 0.7, stagger: 0.06, ease: "power3.out",
+      scrollTrigger: { trigger: art, start: "top 45%", toggleActions: "play none none reverse" } });
+  });
+  addEventListener("load", () => ScrollTrigger.refresh());
+}
+</script>
+</body>
+</html>

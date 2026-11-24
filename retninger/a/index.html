@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Retning A - Sprengskissen</title>
+<meta name="theme-color" content="#16130f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&family=Big+Shoulders+Display:wght@800;900&display=swap" rel="stylesheet">
+<style>
+/* Retning A - Sprengskissen. Skisse, ikke ferdig design.
+   Tre farger, skilt på lyshet: kull, rav og lys. */
+:root {
+  --kull: #16130f;
+  --kull-2: #2a251e;
+  --rav: #d9923c;
+  --lys: #f2ead8;
+  --lys-dus: #b9ae97;   /* sekundærtekst på kull, 8,3:1 */
+  --kull-dus: #54493a;  /* sekundærtekst på lys og rav */
+  --display: "Big Shoulders Display", "Barlow Condensed", sans-serif;
+  --merke: "Barlow Condensed", "Barlow", sans-serif;
+  --tekst: "Barlow", system-ui, sans-serif;
+  --kant: clamp(1.25rem, 4vw, 3.5rem);
+  --strek: 2.5px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scrollbar-color: var(--rav) var(--kull); }
+body {
+  margin: 0;
+  background: var(--kull);
+  color: var(--lys);
+  font: 400 1.0625rem/1.55 var(--tekst);
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--rav); color: var(--kull); }
+a { color: inherit; text-underline-offset: 0.2em; text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--rav); outline-offset: 3px; }
+.sett :focus-visible { outline-color: var(--kull); }
+h1, h2, h3 { font-family: var(--display); font-weight: 900; text-transform: uppercase; line-height: 0.9; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.merke { font: 600 0.9rem/1.2 var(--merke); letter-spacing: 0.09em; text-transform: uppercase; }
+.hopp { position: absolute; left: -999px; }
+.hopp:focus { left: 1rem; top: 1rem; z-index: 100; background: var(--rav); color: var(--kull); padding: 0.6rem 1rem; }
+
+/* --- Fast meny: liten, alltid der --- */
+.topp {
+  position: fixed; z-index: 50; top: 0.9rem; left: var(--kant); right: calc(var(--kant) + 30px);
+  display: flex; justify-content: space-between; align-items: center; pointer-events: none;
+}
+.topp > * { pointer-events: auto; }
+.topp .logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; background: var(--kull); padding: 0.45rem 0.8rem 0.45rem 0.5rem; border: var(--strek) solid var(--lys); }
+.topp .logo svg { width: 1.7rem; height: auto; fill: var(--rav); }
+.topp .logo span { font: 700 0.95rem/1 var(--merke); letter-spacing: 0.1em; text-transform: uppercase; color: var(--lys); }
+.topp nav { display: flex; background: var(--kull); border: var(--strek) solid var(--lys); }
+.topp nav a { font: 600 0.9rem/1 var(--merke); letter-spacing: 0.09em; text-transform: uppercase; text-decoration: none; padding: 0.75rem 0.95rem; color: var(--lys); }
+.topp nav a:hover { background: var(--rav); color: var(--kull); }
+.topp nav a.viktig { background: var(--rav); color: var(--kull); }
+.topp nav a.viktig:hover { background: var(--lys); }
+@media (max-width: 46rem) {
+  .topp nav a:not(.viktig) { display: none; }
+  .topp .logo span { display: none; }
+}
+
+/* --- Tommestokken: rullingen målt i centimeter --- */
+.tommestokk {
+  position: fixed; z-index: 40; top: 0; right: 0; bottom: 0; width: 22px;
+  background:
+    repeating-linear-gradient(to bottom, var(--kull) 0 1.5px, transparent 1.5px 37.8px),
+    repeating-linear-gradient(to bottom, var(--kull) 0 1px, transparent 1px 7.56px) right / 9px 100% no-repeat,
+    var(--lys);
+  border-left: var(--strek) solid var(--kull);
+}
+.tommestokk b {
+  position: absolute; right: 100%; top: calc(var(--side, 0) * (100% - 2rem));
+  font: 700 0.8rem/1 var(--merke); letter-spacing: 0.08em; white-space: nowrap;
+  background: var(--rav); color: var(--kull); padding: 0.4rem 0.5rem; border: var(--strek) solid var(--kull); border-right: 0;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 46rem) { .tommestokk { width: 10px; } .tommestokk b { display: none; } }
+
+/* --- Åpningen: ordene ligger som løse deler og settes sammen --- */
+.apning { height: 230vh; }
+.laast { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+.apning .laast {
+  display: grid; grid-template-rows: 1fr auto; gap: 1.5rem;
+  padding: 5.5rem calc(var(--kant) + 22px) clamp(1.25rem, 3.5vh, 2.5rem) var(--kant);
+}
+.apning h1 {
+  --t: clamp(0, calc(var(--p, 0) / 0.6), 1);
+  font-size: min(23svh, 17vw); align-self: center;
+  display: grid; justify-items: start; gap: 0.06em;
+}
+.ord { position: relative; display: block; white-space: nowrap; }
+.bokstav {
+  display: inline-block;
+  --egen: clamp(0, calc((var(--t) - var(--i) * 0.035) / 0.5), 1);
+  --ute: calc(1 - var(--egen));
+  transform: translate(calc(var(--ute) * var(--dx) * 0.01em), calc(var(--ute) * var(--dy) * 0.01em)) rotate(calc(var(--ute) * var(--r) * 1deg));
+  color: color-mix(in srgb, var(--rav) calc(var(--egen) * 100%), transparent);
+  -webkit-text-stroke: 0.014em var(--rav);
+}
+.bokstav i { display: inline-block; font-style: normal; transform-origin: 50% 100%; animation: reis 0.75s cubic-bezier(0.2, 0.9, 0.25, 1.12) both; animation-delay: calc(var(--i) * 45ms + 120ms); }
+@keyframes reis { from { transform: scaleY(0.05); } }
+.henvis {
+  position: absolute; left: calc(100% + 3.2rem); top: 50%; translate: 0 -50%; width: min(19rem, 26vw);
+  font: 400 1rem/1.4 var(--tekst); text-transform: none; letter-spacing: 0; color: var(--lys); white-space: normal;
+  display: grid; grid-template-columns: auto 1fr; gap: 0.7rem; align-items: start;
+}
+.henvis::before { content: ""; position: absolute; right: calc(100% + 0.5rem); top: 0.85rem; width: 2.2rem; border-top: var(--strek) solid var(--lys); }
+.nr { display: inline-grid; place-items: center; width: 1.7rem; height: 1.7rem; border-radius: 50%; border: var(--strek) solid currentColor; font: 700 0.95rem/1 var(--merke); flex: none; }
+.apning .bunn { display: grid; grid-template-columns: minmax(0, 34rem) auto; gap: 1.5rem 3rem; align-items: end; justify-content: space-between; }
+.ingress { font-size: clamp(1.05rem, 1.5vw, 1.3rem); line-height: 1.45; }
+.knapper { display: flex; flex-wrap: wrap; gap: 0.8rem 1.4rem; align-items: center; }
+.knapp {
+  display: inline-flex; align-items: center; gap: 0.6rem; font: 700 1.05rem/1 var(--merke); letter-spacing: 0.09em; text-transform: uppercase; text-decoration: none;
+  background: var(--rav); color: var(--kull); padding: 1rem 1.3rem; border: var(--strek) solid var(--rav);
+  transition: background 0.2s, translate 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.knapp:hover { background: var(--lys); border-color: var(--lys); translate: 0 -2px; }
+.knapp svg, .lenke svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 2.5; }
+.lenke { display: inline-flex; align-items: center; gap: 0.5rem; font: 600 1rem/1 var(--merke); letter-spacing: 0.09em; text-transform: uppercase; }
+@media (max-width: 46rem) {
+  .apning .laast { padding-top: 4.6rem; gap: 1rem; }
+  .apning h1 { font-size: min(25vw, 12.5svh); gap: 0.1em; align-self: start; }
+  .henvis { position: static; translate: none; width: auto; max-width: 21rem; margin: 0.35rem 0 0.5rem; font-size: 0.95rem; }
+  .henvis::before { display: none; }
+  .apning .bunn { grid-template-columns: 1fr; }
+  .ingress { font-size: 1rem; }
+}
+
+/* --- Caset: sprengskissen av Fanatastisk-appen --- */
+.case { height: 560vh; background: var(--lys); color: var(--kull); }
+.case .laast {
+  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 2rem 4vw; align-items: center;
+  padding: 5.5rem calc(var(--kant) + 22px) 2rem var(--kant);
+  --t: clamp(0, calc((var(--p, 0) - 0.8) / 0.16), 1);
+  --iso: calc(1 - var(--t));
+}
+.case h2 { font-size: clamp(2.6rem, 6.2vw, 5.6rem); }
+.case .undertittel { margin-top: 0.9rem; color: var(--kull-dus); max-width: 30rem; }
+.stegene { position: relative; margin-top: clamp(1.2rem, 4vh, 2.5rem); min-height: 15rem; }
+.steg, .ferdig { position: absolute; inset: 0 0 auto 0; }
+.steg {
+  --w: clamp(0, min(calc((var(--p, 0) - var(--a)) / 0.03), calc((var(--a) + 0.16 - var(--p, 0)) / 0.03)), 1);
+  opacity: var(--w); translate: 0 calc((1 - var(--w)) * 14px);
+  display: grid; grid-template-columns: auto 1fr; gap: 0.2rem 0.9rem; max-width: 30rem;
+}
+.steg .nr { width: 2.3rem; height: 2.3rem; font-size: 1.25rem; grid-row: span 2; background: var(--kull); color: var(--lys); border-color: var(--kull); }
+.steg h3 { font-size: 1.9rem; align-self: center; }
+.steg p { grid-column: 2; font-size: 1.1rem; }
+.ferdig { opacity: var(--t); translate: 0 calc(var(--iso) * 14px); pointer-events: none; }
+.case[style*="--p: 1"] .ferdig, .case[style*="--p: 0.9"] .ferdig { pointer-events: auto; }
+.stykkliste { width: 100%; max-width: 34rem; border-collapse: collapse; font-size: 1rem; }
+.stykkliste caption { text-align: left; font: 900 1.9rem/1 var(--display); text-transform: uppercase; padding-bottom: 0.7rem; }
+.stykkliste th { text-align: left; font: 600 0.82rem/1.2 var(--merke); letter-spacing: 0.09em; text-transform: uppercase; color: var(--kull-dus); padding: 0.35rem 0.8rem 0.35rem 0; border-bottom: var(--strek) solid var(--kull); }
+.stykkliste td { padding: 0.5rem 0.8rem 0.5rem 0; border-bottom: 1px solid var(--kull); vertical-align: top; }
+.stykkliste td:first-child { font-weight: 600; white-space: nowrap; }
+.stykkliste td:last-child { padding-right: 0; }
+.ferdig .lenke { margin-top: 1.1rem; }
+
+.verksted { display: grid; place-items: center; height: 100%; min-height: 0; }
+.stabel {
+  position: relative; height: min(46svh, 62vw); aspect-ratio: 485 / 1031;
+  transform-style: preserve-3d;
+  transform: translateY(calc(var(--iso) * 11svh)) scale(calc(1 + var(--t) * 0.42)) rotateX(calc(var(--iso) * 60deg)) rotateZ(calc(var(--iso) * -40deg));
+}
+.lag {
+  position: absolute; inset: 0; border-radius: 12.4% / 5.8%;
+  --w: clamp(0, min(calc((var(--p, 0) - var(--a)) / 0.03), calc((var(--a) + 0.16 - var(--p, 0)) / 0.03)), 1);
+  transform: translateZ(calc(var(--n) * var(--iso) * 7.5svh + var(--w) * var(--iso) * 1.5svh));
+  opacity: calc(0.38 + 0.62 * max(var(--w), var(--t)));
+  background: var(--kull-2) var(--bilde) 50.07% 45.56% / 247.42% auto no-repeat;
+  outline: var(--strek) solid var(--kull);
+  box-shadow: 0 0 0 calc(var(--w) * 5px) var(--rav);
+}
+.lag .fane {
+  position: absolute; left: calc(100% + var(--strek)); top: calc(10% + var(--n) * 4%);
+  font: 700 0.85rem/1 var(--merke); letter-spacing: 0.09em; text-transform: uppercase; white-space: nowrap;
+  background: var(--kull); color: var(--lys); padding: 0.4rem 0.6rem; opacity: var(--iso);
+}
+.lag.kilde { background: var(--kull); color: var(--lys); display: grid; align-content: center; gap: 6%; padding: 14% 12%; }
+.lag.kilde strong { font: 900 clamp(1.2rem, 4.2svh, 2.4rem)/1 var(--display); letter-spacing: 0.04em; color: var(--rav); }
+.lag.kilde span { display: block; font: 600 clamp(0.6rem, 1.6svh, 0.95rem)/1 var(--merke); letter-spacing: 0.09em; text-transform: uppercase; padding-bottom: 6%; border-bottom: 2px solid var(--lys-dus); }
+@media (max-height: 46rem) and (min-width: 46.01rem) {
+  .case .undertittel { display: none; }
+  .stykkliste td { padding-block: 0.3rem; }
+}
+@media (max-width: 46rem) {
+  .case .laast { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr) auto; align-items: start; gap: 0.5rem; padding-top: 4.6rem; padding-bottom: 1rem; }
+  .case .tekst { display: contents; }
+  .case h2 { font-size: 2.5rem; }
+  .case .undertittel { display: none; }
+  .verksted { grid-row: 2; }
+  .stabel { height: min(33svh, 60vw); transform: translateY(calc(var(--iso) * 7svh)) scale(calc(1 + var(--t) * 0.25)) rotateX(calc(var(--iso) * 60deg)) rotateZ(calc(var(--iso) * -40deg)); }
+  .lag { transform: translateZ(calc(var(--n) * var(--iso) * 5svh + var(--w) * var(--iso) * 1svh)); }
+  .lag .fane { font-size: 0.7rem; }
+  .stegene { grid-row: 3; margin-top: 0; min-height: 15.5rem; }
+  .steg h3 { font-size: 1.5rem; }
+  .steg p { font-size: 1rem; }
+  .stykkliste { font-size: 0.9rem; }
+  .stykkliste caption { font-size: 1.5rem; padding-bottom: 0.4rem; }
+  .stykkliste td { padding-block: 0.32rem; }
+  .stykkliste .valgfri { display: none; }
+}
+
+/* --- Byggesettene: hele flaten i rav --- */
+.sett { background: var(--rav); color: var(--kull); padding: clamp(4rem, 12vh, 8rem) calc(var(--kant) + 22px) clamp(4rem, 10vh, 7rem) var(--kant); }
+.sett h2 { font-size: clamp(3.2rem, 11vw, 9rem); }
+.sett .inn { max-width: 36rem; margin-top: 1.2rem; font-size: 1.15rem; }
+.eskene { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(2.5rem, 7vh, 5rem); border-top: var(--strek) solid var(--kull); }
+.eske { padding: 1.6rem 2rem 0.5rem 0; }
+.eske + .eske { padding-left: 2rem; border-left: var(--strek) dashed var(--kull); }
+.eske h3 { font-size: clamp(2rem, 3.6vw, 3.1rem); min-height: 1.8em; }
+.eske h4 { font: 700 0.85rem/1.2 var(--merke); letter-spacing: 0.09em; text-transform: uppercase; margin: 1.6rem 0 0.5rem; }
+.eske ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.45rem; }
+.eske li { display: grid; grid-template-columns: 1.3rem 1fr; gap: 0.55rem; align-items: start; }
+.eske li svg { width: 1.3rem; height: 1.3rem; margin-top: 0.15rem; fill: none; stroke: var(--kull); stroke-width: 2.5; }
+.eske .ikke li { color: #3a3024; } /* 5,1:1 på rav */
+@media (max-width: 56rem) {
+  .eskene { grid-template-columns: 1fr; }
+  .eske { padding-right: 0; padding-bottom: 1.6rem; }
+  .eske + .eske { padding-left: 0; border-left: 0; border-top: var(--strek) dashed var(--kull); }
+  .eske h3 { min-height: 0; }
+}
+
+/* --- Slik foregår det --- */
+.gang { padding: clamp(4rem, 12vh, 8rem) calc(var(--kant) + 22px) clamp(4rem, 10vh, 7rem) var(--kant); }
+.gang h2 { font-size: clamp(2.8rem, 8vw, 6.5rem); color: var(--rav); }
+.trinn { list-style: none; margin: clamp(2.5rem, 6vh, 4rem) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2.5rem 2rem; counter-reset: trinn; }
+.trinn li { counter-increment: trinn; display: grid; gap: 0.6rem; align-content: start; border-top: var(--strek) solid var(--lys); padding-top: 1rem; }
+.trinn svg { width: 3.4rem; height: 3.4rem; fill: none; stroke: var(--rav); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.trinn h3 { font-size: 2rem; }
+.trinn h3::before { content: counter(trinn) ". "; color: var(--rav); }
+.trinn p { color: var(--lys-dus); }
+@media (max-width: 56rem) { .trinn { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 30rem) { .trinn { grid-template-columns: 1fr; } }
+
+/* --- Kontakt --- */
+.kontakt { background: var(--lys); color: var(--kull); padding: clamp(4rem, 14vh, 9rem) calc(var(--kant) + 22px) clamp(3rem, 8vh, 5rem) var(--kant); }
+.kontakt h2 { font-size: clamp(3.2rem, 12vw, 10rem); }
+.kontakt p { max-width: 32rem; margin-top: 1.3rem; font-size: 1.15rem; }
+.kontakt .epost { display: inline-block; margin-top: 1.6rem; font: 900 clamp(1.5rem, 4.6vw, 3.4rem)/1.1 var(--display); text-transform: uppercase; text-decoration-color: var(--rav); text-decoration-thickness: 0.12em; overflow-wrap: anywhere; }
+.kontakt .epost:hover { background: var(--kull); color: var(--lys); }
+footer { padding: 1.5rem calc(var(--kant) + 22px) 2rem var(--kant); display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; justify-content: space-between; color: var(--lys-dus); font-size: 0.95rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .apning, .case { height: auto; }
+  .laast { position: static; height: auto; min-height: 100svh; overflow: visible; }
+  .bokstav i { animation: none; }
+  .steg, .ferdig { position: static; opacity: 1; translate: none; margin-bottom: 1.5rem; }
+  .stegene { min-height: 0; }
+  .knapp { transition: none; }
+}
+</style>
+</head>
+<body>
+<a class="hopp" href="#innhold">Hopp til innholdet</a>
+
+<header class="topp">
+  <a class="logo" href="#" aria-label="Christian Hermansen, til toppen">
+    <svg viewBox="0 0 320.91 361.3" aria-hidden="true"><path d="M238.76,289.09c-17.31,9.29-37.09,14.57-58.11,14.57-67.94,0-123.01-55.08-123.01-123.01s55.08-123.01,123.01-123.01c21.02,0,40.81,5.28,58.11,14.57V9.55C220.53,3.36,200.98,0,180.65,0,80.88,0,0,80.88,0,180.65s80.88,180.65,180.65,180.65c20.33,0,39.88-3.36,58.11-9.55v-62.65Z"/><path d="M320.91,67.7v223.94c-15.26,19.03-34.32,35.35-56.15,48.03v-132.52h-92.6l.04,63.93c-19.34,1.48-41.01-5.29-52.82-24.99V116.97c7.48-18.74,32.7-29.07,52.7-26.57l.04,63.75h92.64V19.67c21.83,12.68,40.89,29,56.15,48.03Z"/></svg>
+    <span>Christian Hermansen</span>
+  </a>
+  <nav aria-label="Hovedmeny">
+    <a href="#arbeid">Arbeid</a>
+    <a href="#tjenester">Byggesett</a>
+    <a href="#slik">Slik foregår det</a>
+    <a class="viktig" href="#kontakt">Kontakt</a>
+  </nav>
+</header>
+
+<div class="tommestokk" aria-hidden="true"><b>0 cm</b></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="pil" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+  <symbol id="ned" viewBox="0 0 24 24"><path d="M12 4v15M6 13l6 6 6-6"/></symbol>
+  <symbol id="med" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></symbol>
+  <symbol id="uten" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+</svg>
+
+<main id="innhold">
+
+  <section class="apning" data-scene>
+    <div class="laast">
+      <h1 aria-label="Jeg bygger ting.">
+        <span class="ord" data-ord="JEG"><span class="henvis"><span class="nr">1</span><span>Christian Hermansen. Tømrer i femten år, utvikler nå.</span></span></span>
+        <span class="ord" data-ord="BYGGER"><span class="henvis"><span class="nr">2</span><span>Nettsider, apper og små verktøy. Tegnet og kodet for hånd.</span></span></span>
+        <span class="ord" data-ord="TING."><span class="henvis"><span class="nr">3</span><span>Også de du kan ta på: skilt, kabinetter og en TV fra 1960.</span></span></span>
+      </h1>
+      <div class="bunn">
+        <p class="ingress">For arrangører, lag, foreninger og små bedrifter som trenger noe som virker, og som de kan drive selv etterpå.</p>
+        <div class="knapper">
+          <a class="knapp" href="#kontakt">Fortell hva du trenger <svg aria-hidden="true"><use href="#pil"/></svg></a>
+          <a class="lenke" href="#arbeid">Se en festival bli satt sammen <svg aria-hidden="true"><use href="#ned"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="case" data-scene id="arbeid">
+    <div class="laast">
+      <div class="tekst">
+        <div>
+          <h2>Fanatastisk, satt sammen</h2>
+          <p class="undertittel">Musikkfestivalen i Fana trengte en app. Her er delene, i den rekkefølgen de ligger.</p>
+        </div>
+        <div class="stegene">
+          <article class="steg" style="--a: 0.02">
+            <span class="nr">1</span><h3>Innholdet</h3>
+            <p>Alt bor i Sanity, det samme som driver nettsiden. Legger noen i festivalen inn en ny artist, dukker den opp i appen uten at jeg rører noe.</p>
+          </article>
+          <article class="steg" style="--a: 0.175">
+            <span class="nr">2</span><h3>Kartet</h3>
+            <p>Scener, barer, mat og toaletter. Punktene ligger i Sanity, ikke i koden, så festivalen flytter dem selv.</p>
+          </article>
+          <article class="steg" style="--a: 0.33">
+            <span class="nr">3</span><h3>Programmet</h3>
+            <p>Dag for dag, med favoritter og varsel før konsertstart.</p>
+          </article>
+          <article class="steg" style="--a: 0.485">
+            <span class="nr">4</span><h3>Artistene</h3>
+            <p>Bilde og omtale hentes fra samme sted som alt det andre. Én kilde, to flater.</p>
+          </article>
+          <article class="steg" style="--a: 0.64">
+            <span class="nr">5</span><h3>Forsiden</h3>
+            <p>Nedtelling til første artist. Alt siste svar ligger lagret på telefonen, så appen virker når mobilnettet gir opp midt på festivalområdet.</p>
+          </article>
+          <div class="ferdig">
+            <table class="stykkliste">
+              <caption>Stykkliste</caption>
+              <thead><tr><th>Del</th><th class="valgfri">Hva</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Nettside</td><td class="valgfri">Next.js og Sanity</td><td>Live. 5 558 besøkende i festivaluken</td></tr>
+                <tr><td>iOS-app</td><td class="valgfri">SwiftUI</td><td>I App Store. Godkjent på under et døgn</td></tr>
+                <tr><td>Android-app</td><td class="valgfri">Ferdig bygget</td><td>Lukket testing</td></tr>
+                <tr><td>Trykksaker</td><td class="valgfri">Plakat, infoskriv, flyere</td><td>Levert</td></tr>
+                <tr><td>Zempel</td><td class="valgfri">System for driften</td><td>Pilot hos styret</td></tr>
+              </tbody>
+            </table>
+            <a class="lenke" href="https://fanatastisk.no" target="_blank" rel="noopener">Åpne fanatastisk.no <svg aria-hidden="true"><use href="#pil"/></svg></a>
+          </div>
+        </div>
+      </div>
+      <div class="verksted" aria-hidden="true">
+        <div class="stabel">
+          <div class="lag kilde" style="--n: 0; --a: 0.02"><strong>SANITY</strong><span>Artister</span><span>Program</span><span>Kart</span><span>Nyheter</span><b class="fane">1 Innholdet</b></div>
+          <div class="lag" style="--n: 1; --a: 0.175; --bilde: url(/assets/img/fanatastisk-app-kart.webp)"><b class="fane">2 Kartet</b></div>
+          <div class="lag" style="--n: 2; --a: 0.33; --bilde: url(/assets/img/fanatastisk-app-program.webp)"><b class="fane">3 Programmet</b></div>
+          <div class="lag" style="--n: 3; --a: 0.485; --bilde: url(/assets/img/fanatastisk-app-artist.webp)"><b class="fane">4 Artistene</b></div>
+          <div class="lag" style="--n: 4; --a: 0.64; --bilde: url(/assets/img/fanatastisk-app-hjem.webp)"><b class="fane">5 Forsiden</b></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sett" id="tjenester">
+    <h2>Tre byggesett</h2>
+    <p class="inn">Alle begynner med en prat og ender med at du har nøklene selv. Her står det hva som ligger i esken, og hva som ikke gjør det.</p>
+    <div class="eskene">
+      <article class="eske">
+        <h3>Nettside</h3>
+        <h4>I esken</h4>
+        <ul>
+          <li><svg aria-hidden="true"><use href="#med"/></svg>Design tegnet for deg, ikke en mal</li>
+          <li><svg aria-hidden="true"><use href="#med"/></svg>Innhold du redigerer selv</li>
+          <li><svg aria-hidden="true"><use href="#med"/></svg>Laget for telefon først</li>
+          <li><svg aria-hidden="true"><use href="#med"/></svg>Lesbar for alle, også med skjermleser</li>
+          <li><svg aria-hidden="true"><use href="#med"/></svg>Opplæring når du tar over</li>
+        </ul>
+        <h4>Ikke i esken</h4>
+        <ul class="ikke"><li><svg aria-hidden="true"><use href="#uten"/></svg>Annonsekampanjer og SEO-pakker</li></ul>
+      </article>
+      <article class="eske">
+        <h3>App eller verktøy</h3>
+        <h4>I esken</h4>
+        <ul>
+          <li><svg aria-hidden="true"><use href="#med"/></svg>Én ting som løser ett problem godt</li>
+          <li><svg aria-hidden="true"><use href="#med"/></svg>iPhone-app, eller verktøy rett i nettleseren</li>
+          <li><svg aria-hidden="true"><use href="#med"/></svg>Virker uten nett der det trengs</li>
+          <li><svg aria-hidden="true"><use href="#med"/></svg>Ingen konto og ingen sporing hvis du ikke må ha det</li>
+        </ul>
+        <h4>Ikke i esken</h4>
+        <ul class="ikke"><li><svg aria-hidden="true"><use href="#uten"/></svg>Store systemer med ti integrasjoner</li></ul>
+      </article>
+      <article class="eske">
+        <h3>Identitet og trykk</h3>
+        <h4>I esken</h4>
+        <ul>
+          <li><svg aria-hidden="true"><use href="#med"/></svg>Logo som tåler både favicon og skiltvegg</li>
+          <li><svg aria-hidden="true"><use href="#med"/></svg>Farger som også fargeblinde skiller</li>
+          <li><svg aria-hidden="true"><use href="#med"/></svg>Plakater, flyere og infoskriv</li>
+          <li><svg aria-hidden="true"><use href="#med"/></svg>Skilt frest i tre, hvis du vil</li>
+        </ul>
+        <h4>Ikke i esken</h4>
+        <ul class="ikke"><li><svg aria-hidden="true"><use href="#uten"/></svg>Merkevarestrategi på førti sider</li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="gang" id="slik">
+    <h2>Mål to ganger, kutt én gang</h2>
+    <ol class="trinn">
+      <li>
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M5 38L17 12l8 20 8-20 10 26"/><path d="M9.5 30.5l3 1.4M21 23.5l3-1.2M29.5 21.5l3 1.3M38.5 28.5l3-1.4"/></svg>
+        <h3>Befaring</h3>
+        <p>Vi tar en prat. Jeg spør mer enn jeg selger, for jeg må vite hvordan dagen din faktisk ser ut.</p>
+      </li>
+      <li>
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 40l4-12L32 8l8 8-20 20-12 4z"/><path d="M27 13l8 8M12 28l8 8"/></svg>
+        <h3>Tegning</h3>
+        <p>Du får se tre retninger før noe bygges. Du velger, jeg bygger den du valgte.</p>
+      </li>
+      <li>
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 10h18l6 6v6H28l-4-4H10z"/><path d="M19 18v24"/></svg>
+        <h3>Bygging</h3>
+        <p>Du følger med underveis. Står det «under bygging», er det under bygging.</p>
+      </li>
+      <li>
+        <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="15" cy="24" r="8"/><path d="M23 24h20M35 24v7M41 24v5"/></svg>
+        <h3>Overtakelse</h3>
+        <p>Du får nøklene: opplæring, og noe du kan drive videre uten meg.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="kontakt" id="kontakt">
+    <h2>Mangler det en del?</h2>
+    <p>Send en e-post og si hva du trenger. Jeg svarer selv.</p>
+    <a class="epost" href="mailto:epost@christianhermansen.no">epost@christianhermansen.no</a>
+  </section>
+</main>
+
+<footer>
+  <span>© 2026 Christian Hermansen. Bygd for hånd i Bergen.</span>
+  <span>Skisse av retning A. Tekstene er utkast.</span>
+</footer>
+
+<script src="../felles/rull.js"></script>
+<script>
+// Del ordene i bokstaver. Hver bokstav får sin egen forskyvning,
+// så overskriften ligger som løse deler til den er rullet sammen.
+(() => {
+  // [loddrett forskyvning, vridning]. Små nok til at ordet kan leses mens delene ligger løse.
+  const ut = [[7, -3], [-6, 2.5], [5, -2], [-8, 3], [6, 2], [-5, -3], [8, 2.5], [-7, -2]];
+  let i = 0;
+  for (const ord of document.querySelectorAll(".ord")) {
+    const henvis = ord.querySelector(".henvis");
+    const tegnene = [...ord.dataset.ord];
+    for (const [k, tegn] of tegnene.entries()) {
+      const [dy, r] = ut[i % ut.length];
+      const dx = (k - (tegnene.length - 1) / 2) * 5; // delene ligger spredt ut fra midten av ordet
+      const b = document.createElement("span");
+      b.className = "bokstav";
+      b.setAttribute("aria-hidden", "true");
+      b.style.cssText = `--i:${i};--dx:${dx};--dy:${dy};--r:${r}`;
+      b.innerHTML = `<i style="--i:${i}">${tegn}</i>`;
+      ord.insertBefore(b, henvis);
+      i++;
+    }
+  }
+  const tall = document.querySelector(".tommestokk b");
+  document.addEventListener("rull", (e) => { tall.textContent = Math.round(e.detail.y / 37.8) + " cm"; });
+})();
+</script>
+</body>
+</html>

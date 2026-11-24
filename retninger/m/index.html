@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retning M - Havet</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Unbounded:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../felles/r4/felles.css">
+<link rel="preload" as="image" href="../felles/r4/media/kyst/vid.webp">
+<style>
+/* M. Havet: den valgte retningen. Den rolige starten fra K og fullskjermfilmen fra J, i én historie:
+   kysten, inn mot naustet, ned gjennom vannflaten, og så nedover i sjøen til bunnen.
+   Havet, vannlinjen, boblene og morilden ligger i felles/r4/hav.js. */
+:root { --f-tittel: "Unbounded", system-ui, sans-serif; --f-tekst: "Figtree", system-ui, sans-serif; --v-tittel: 400; --tt: uppercase; --spor: 0.04em; --morild: #7fe9ff; }
+::selection { background: var(--gull); color: var(--natt); }
+body { background: none; }
+.r4 h2, .m-tittel { font: 400 clamp(1.5rem, 3.6vw, 3.1rem) / 1.16 var(--f-tittel); text-transform: uppercase; letter-spacing: 0.04em; text-wrap: balance; max-width: 20ch; }
+.r4-tre h3 { font-size: clamp(1.25rem, 1.9vw, 1.7rem); line-height: 1.2; }
+.r4-tilbud h3, .r4-liste summary, .r4-flere .n { font-size: clamp(0.95rem, 1.3vw, 1.15rem); line-height: 1.35; }
+.r4-lagetfor ul { font-size: clamp(1.2rem, 3vw, 2.4rem); line-height: 1.25; }
+/* Overskriftene bærer seg selv. Den lille merkelappen over dem er tatt bort her. */
+.r4-hode .r4-merke, .r4-hvem .r4-merke { display: none; }
+.r4-tilbud article { background: rgba(12, 30, 34, 0.78); }
+
+/* Havet: tre bilder under hverandre i et fast lag bak alt innhold. De går over i hverandre uten skjøt,
+   og laget skyves sakte oppover mens en ruller. --ned går fra 0 (rett under flaten) til 1 (bunnen). */
+.m-hav { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: #050d10; }
+.m-hav-strimmel { position: absolute; inset: 0 0 auto 0; height: 272vh; height: 272lvh; will-change: transform;
+  transform: translate3d(0, calc(var(--ned, 0) * -172vh + var(--inn, 0) * 14vh), 0); }
+@supports (height: 1lvh) { .m-hav-strimmel { transform: translate3d(0, calc(var(--ned, 0) * -172lvh + var(--inn, 0) * 14lvh), 0); } }
+.m-hav img { position: absolute; left: 0; width: 100%; height: 100vh; height: 100lvh; object-fit: cover; }
+.m-hav img:nth-child(1) { top: 0; }
+.m-hav img:nth-child(2) { top: 86vh; top: 86lvh; object-position: 72% 50%; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 26%); mask-image: linear-gradient(to bottom, transparent, #000 26%); }
+.m-hav img:nth-child(3) { top: 172vh; top: 172lvh; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 26%); mask-image: linear-gradient(to bottom, transparent, #000 26%); }
+.m-hav-strimmel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(9, 22, 26, 0.18), rgba(9, 22, 26, 0.42) 24%, rgba(7, 18, 22, 0.5) 60%, rgba(5, 13, 16, 0.44)); }
+.m-vann { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
+
+/* Åpningen: stille kyst, kamerakjøring inn mot naustet, og til slutt ned gjennom vannflaten */
+.m-sted { height: 560vh; height: 560svh; position: relative; }
+.m-sted .scene { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.m-lag { position: absolute; inset: 0; overflow: hidden; background: #0c1f23; will-change: transform; }
+.m-kamera { position: absolute; inset: 0; }
+.m-kamera canvas, .m-kamera video, .m-kamera .plakat { position: absolute; inset: 0; width: 100%; height: 100%; }
+.m-kamera video, .m-kamera .plakat { object-fit: cover; object-position: 78% 50%; }
+.m-vid { opacity: calc(1 - var(--bytt, 0)); }
+.m-kamera video { transition: opacity 0.9s linear; }
+.m-morke { position: absolute; inset: 0; background: #0c1f23; opacity: var(--morke, 0); pointer-events: none; }
+.m-skygge { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(rgba(12, 31, 35, 0.55), rgba(12, 31, 35, 0) 28%), linear-gradient(90deg, rgba(12, 31, 35, 0.72), rgba(12, 31, 35, 0) 58%); }
+.m-linje { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.m-apning { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; text-align: center; gap: clamp(1rem, 2.2vw, 1.8rem); padding: 0 var(--kant) 12vh; opacity: calc(1 - var(--ut, 0)); transform: translateY(calc(var(--ut, 0) * -6vh)); }
+.m-apning .over { font-size: clamp(0.6875rem, 1vw, 0.8125rem); letter-spacing: 0.3em; text-transform: uppercase; }
+.m-apning h1 { font: 300 clamp(2rem, 4.6vw, 4.6rem) / 1.12 var(--f-tittel); letter-spacing: 0.1em; text-transform: uppercase; }
+.m-apning .striper { display: flex; gap: 6px; }
+.m-apning .striper i { width: clamp(1.6rem, 3vw, 2.6rem); height: 4px; } .m-apning .striper i:nth-child(1) { background: var(--rust); } .m-apning .striper i:nth-child(2) { background: var(--gull); } .m-apning .striper i:nth-child(3) { background: var(--papir); }
+.m-apning .under { font-size: 0.875rem; letter-spacing: 0.18em; text-transform: uppercase; }
+.m-rull { position: absolute; left: 50%; bottom: 1.8rem; translate: -50% 0; font-size: 0.6875rem; letter-spacing: 0.3em; text-transform: uppercase; opacity: calc(1 - var(--ut, 0) * 2); display: grid; justify-items: center; gap: 0.7rem; }
+.m-rull::after { content: ""; width: 1px; height: 2.6rem; background: var(--papir); transform-origin: 50% 0; animation: drypp 2.4s ease-in-out infinite; }
+@keyframes drypp { 0% { transform: scaleY(0); } 55% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+.m-takter { position: absolute; inset: 0; pointer-events: none; }
+.m-takt { position: absolute; left: var(--kant); top: 50%; translate: 0 -50%; max-width: min(40rem, 46vw); opacity: 0; transform: translateY(1.5rem); transition: opacity 0.6s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.m-takt.aktiv { opacity: 1; transform: none; }
+.m-takt p { font: 300 clamp(1.5rem, 3.3vw, 3.2rem) / 1.22 var(--f-tittel); letter-spacing: 0.02em; text-wrap: balance; }
+.m-pause { position: absolute; right: var(--kant); bottom: 1.6rem; font: 500 0.6875rem/1 var(--f-tekst); letter-spacing: 0.2em; text-transform: uppercase; color: var(--papir); background: rgba(12, 31, 35, 0.6); border: 1px solid var(--linje); padding: 0.75rem 0.9rem; cursor: pointer; opacity: calc(1 - var(--ut, 0) * 2); }
+.m-pause:hover, .m-film button:hover { border-color: var(--papir); }
+@media (max-width: 859px) {
+  .m-apning h1 { font-size: clamp(1.9rem, 9.4vw, 3.2rem); }
+  .m-takt { top: 16%; translate: none; max-width: none; right: var(--kant); }
+  .m-skygge { background: linear-gradient(rgba(12, 31, 35, 0.82), rgba(12, 31, 35, 0) 55%); }
+}
+@media (min-width: 860px) { .m-apning h1 br { display: none; } }
+
+/* Filmen: henger først som et vindu i vannet, og vokser til den fyller hele skjermen */
+/* Seksjonen ligger ett vindu oppå slutten av åpningen. Da kommer overskriften opp rett under vannflaten mens
+   en dykker, og står på plass i det flaten går ut av bildet, i stedet for et helt vindu lenger nede. */
+.m-film { height: 250vh; height: 250svh; position: relative; margin-top: -100vh; margin-top: -100svh; pointer-events: none; }
+.m-film button { pointer-events: auto; }
+.m-film .scene { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.m-film h2 { position: absolute; inset: clamp(5.2rem, 12vh, 7.5rem) var(--kant) auto; margin-inline: auto; text-align: center; opacity: calc(1 - var(--full, 0) * 2.4); transform: translateY(calc(var(--full, 0) * -5vh)); }
+.m-film .ramme { position: absolute; left: 50%; top: 50%; width: max(100vw, 160vh); width: max(100vw, 160svh); aspect-ratio: 16 / 10; translate: -50% calc(-50% + (1 - var(--full, 0)) * 5vh); transform: scale(var(--s, 0.6)); overflow: hidden; background: var(--dyp);
+  border-radius: calc((1 - var(--full, 0)) * 22px); box-shadow: 0 60px 120px -40px rgba(0, 0, 0, calc((1 - var(--full, 0)) * 0.8)); }
+.m-film video { width: 100%; height: 100%; object-fit: cover; }
+.m-film .kanter { position: absolute; inset: 0; pointer-events: none; opacity: var(--full, 0); background: linear-gradient(rgba(16, 38, 42, 0.5), transparent 20%, transparent 66%, rgba(16, 38, 42, 0.88)); }
+.m-film .filmtekst { position: absolute; left: var(--kant); bottom: clamp(1.4rem, 4vw, 3rem); display: grid; gap: 0.35rem; opacity: calc(var(--full, 0) * 3 - 2); }
+.m-film .merke { font-size: 0.6875rem; letter-spacing: 0.26em; text-transform: uppercase; color: var(--gull); }
+.m-film .fn { font: 400 clamp(1.3rem, 3vw, 2.6rem) / 1.12 var(--f-tittel); text-transform: uppercase; letter-spacing: 0.05em; }
+.m-film .ft { font-size: 0.8125rem; letter-spacing: 0.2em; text-transform: uppercase; }
+.m-film button { position: absolute; right: var(--kant); bottom: clamp(1.4rem, 4vw, 3rem); font: 500 0.6875rem/1 var(--f-tekst); letter-spacing: 0.2em; text-transform: uppercase; color: var(--papir); background: rgba(12, 31, 35, 0.7); border: 1px solid var(--linje); padding: 0.8rem 1rem; cursor: pointer; opacity: calc(var(--full, 0) * 3 - 2); }
+
+/* Utvalgte prosjekter: én helskjerm per prosjekt, med sjøen bak. Siden inne i rammen ruller mens du ruller. */
+.m-hode { padding: var(--luft) var(--kant) clamp(2rem, 5vw, 4rem); max-width: 1400px; margin-inline: auto; }
+.m-prosjekt { height: 300vh; height: 300svh; position: relative; }
+.m-prosjekt .scene { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; grid-template-columns: repeat(12, 1fr); align-items: center; padding: 5.5rem var(--kant) 2.5rem; gap: 0 1.5rem; }
+.skjerm { grid-column: 5 / -1; grid-row: 1; height: min(76vh, 46vw); position: relative; overflow: hidden; border: 1px solid var(--linje); border-radius: 10px; background: var(--dyp); box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.7); }
+.skjerm .side { width: 100%; height: auto; will-change: transform; }
+.skjerm::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(12, 30, 34, 0.9), rgba(12, 30, 34, 0) 46%); pointer-events: none; }
+.skjerm .fremdrift { position: absolute; left: 0; bottom: 0; height: 4px; width: 100%; z-index: 2; background: linear-gradient(90deg, var(--rust) 0 33.3%, var(--gull) 33.3% 66.6%, var(--papir) 66.6%); transform-origin: 0 50%; transform: scaleX(var(--p, 0)); }
+.m-tekst { grid-column: 1 / 8; grid-row: 1; position: relative; z-index: 2; display: grid; gap: 1rem; align-content: center; }
+.m-tekst h3 { font: 400 clamp(1.7rem, 4.3vw, 4.1rem) / 1.1 var(--f-tittel); text-transform: uppercase; letter-spacing: 0.05em; text-wrap: balance; }
+.m-tekst .linje { font-size: clamp(0.6875rem, 0.95vw, 0.8125rem); letter-spacing: 0.28em; text-transform: uppercase; color: var(--gull); }
+.m-tekst .om { max-width: 32ch; }
+.m-tekst .status { font-size: 0.875rem; color: var(--demp); }
+.m-tekst a { justify-self: start; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; border: 1px solid var(--papir); padding: 0.9rem 1.2rem; margin-top: 0.4rem; transition: background 0.2s, color 0.2s; }
+.m-tekst a:hover { background: var(--papir); color: var(--natt); }
+.m-prosjekt:nth-of-type(even) .skjerm { grid-column: 1 / 9; }
+.m-prosjekt:nth-of-type(even) .skjerm::after { background: linear-gradient(270deg, rgba(12, 30, 34, 0.9), rgba(12, 30, 34, 0) 46%); }
+.m-prosjekt:nth-of-type(even) .m-tekst { grid-column: 6 / -1; justify-items: end; text-align: right; }
+.m-prosjekt:nth-of-type(even) .m-tekst a { justify-self: end; }
+/* Fanatastisk har én skjerm som nettside. Appen kommer inn ved siden av. */
+.skjerm.stille .side { height: 100%; object-fit: cover; }
+.telefoner { position: absolute; inset: 0; z-index: 1; display: flex; justify-content: flex-end; align-items: flex-start; gap: 4%; padding: 0 5%; }
+.telefoner img { width: 21%; height: auto; border-radius: 14px; border: 1px solid rgba(241, 231, 211, 0.3); box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8); will-change: transform; }
+@media (max-width: 859px) {
+  .m-prosjekt { height: 260svh; }
+  .m-prosjekt .scene { display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 1.2rem; padding: 4.6rem var(--kant) 1.2rem; }
+  .skjerm, .m-prosjekt:nth-of-type(even) .skjerm { height: 48svh; flex: none; }
+  .skjerm::after, .m-prosjekt:nth-of-type(even) .skjerm::after { background: none; }
+  .m-tekst, .m-prosjekt:nth-of-type(even) .m-tekst { justify-items: start; text-align: left; gap: 0.6rem; }
+  .m-prosjekt:nth-of-type(even) .m-tekst a { justify-self: start; }
+  .m-tekst h3 { font-size: clamp(1.4rem, 7vw, 2.2rem); }
+  .telefoner { padding: 0 6%; gap: 5%; } .telefoner img { width: 27%; border-radius: 9px; }
+  .m-film .filmtekst { right: var(--kant); bottom: 5rem; }   /* over pauseknappen, så de ikke ligger oppå hverandre */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .m-sted { height: auto; } .m-sted .scene { position: relative; height: auto; overflow: visible; }
+  .m-lag { position: relative; display: grid; } .m-kamera canvas, .m-kamera video, .m-rull, .m-pause, .m-linje { display: none; }
+  .m-apning { position: relative; min-height: 100svh; }
+  .m-takter { position: relative; display: grid; gap: 2.5rem; padding: var(--luft) var(--kant); }
+  .m-takt { position: static; opacity: 1; transform: none; translate: none; max-width: 40rem; }
+  .m-film { height: auto; padding: var(--luft) var(--kant); margin-top: 0; pointer-events: auto; } .m-film .scene { position: relative; height: auto; overflow: visible; display: grid; gap: 1.5rem; }
+  .m-film h2 { position: static; text-align: left; margin: 0; opacity: 1; transform: none; }
+  .m-film .ramme { position: relative; left: 0; top: 0; width: 100%; translate: none; transform: none; border-radius: 10px; }
+  .m-film .kanter { display: none; } .m-film .filmtekst, .m-film button { position: static; opacity: 1; justify-self: start; }
+  .m-prosjekt { height: auto; } .m-prosjekt .scene { position: relative; height: auto; }
+}
+</style>
+</head>
+<body>
+<div class="m-hav" aria-hidden="true"><div class="m-hav-strimmel"><img src="../felles/r4/media/dyp/flate.webp" alt="" width="1920" height="1072" decoding="async"><img src="../felles/r4/media/dyp/tare.webp" alt="" width="1920" height="1072" decoding="async"><img src="../felles/r4/media/dyp/bunn.webp" alt="" width="1920" height="1072" decoding="async"></div></div>
+<div id="topp"></div>
+<main>
+  <section class="m-sted" aria-label="Åpning">
+    <div class="scene">
+      <div class="m-lag">
+        <div class="m-kamera">
+          <canvas aria-hidden="true"></canvas>
+          <div class="m-vid">
+            <img class="plakat" src="../felles/r4/media/kyst/vid.webp" alt="Vestlandskyst i blåtimen, med et rødt naust og lys i vinduet. Bildet er laget med KI.">
+            <video muted loop playsinline preload="auto" aria-hidden="true"><source src="../felles/r4/media/kyst/stille.mp4" type="video/mp4"></video>
+          </div>
+        </div>
+        <div class="m-morke"></div>
+        <div class="m-skygge"></div>
+        <div class="m-apning">
+          <p class="over">Nettsider, apper og digitale verktøy</p>
+          <h1>Christian <br>Hermansen</h1>
+          <div class="striper" aria-hidden="true"><i></i><i></i><i></i></div>
+          <p class="under">Bergen</p>
+        </div>
+        <div class="m-takter">
+          <div class="m-takt" data-fra="0.15" data-til="0.3"><p>Jeg lager nettsider, apper og digitale verktøy.</p></div>
+          <div class="m-takt" data-fra="0.34" data-til="0.49"><p>For arrangører, lag, foreninger og små bedrifter.</p></div>
+          <div class="m-takt" data-fra="0.53" data-til="0.69"><p>Tegnet for deg, og bygget for hånd i Bergen.</p></div>
+        </div>
+        <p class="m-rull" aria-hidden="true">Rull</p>
+        <button class="m-pause" type="button" aria-pressed="false">Pause bildet</button>
+      </div>
+      <canvas class="m-linje" aria-hidden="true"></canvas>
+    </div>
+  </section>
+
+  <section class="m-film" aria-labelledby="f-tittel">
+    <div class="scene">
+      <h2 class="m-tittel" id="f-tittel">Arbeidet i bevegelse.</h2>
+      <div class="ramme">
+        <video class="reel" muted loop playsinline preload="metadata" poster="../felles/r4/media/reel-plakat.webp?v=3" aria-label="Film med opptak av nettsider og verktøy Christian har laget"><source src="../felles/r4/media/reel.mp4?v=3" type="video/mp4"></video>
+        <div class="kanter"></div>
+      </div>
+      <div class="filmtekst"><span class="merke">Vises nå</span><span class="fn"></span><span class="ft"></span></div>
+      <button type="button" class="reelknapp" aria-pressed="false">Pause filmen</button>
+    </div>
+  </section>
+
+  <section id="arbeid" aria-labelledby="a-tittel">
+    <header class="m-hode"><h2 class="m-tittel" id="a-tittel">Fire prosjekter på nært hold.</h2></header>
+    <div id="prosjekter"></div>
+  </section>
+  <div id="flere"></div>
+  <div id="nedre"></div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script type="module">
+import { M, UTVALGTE, topp, flere, nedre, koble, filmtekst, rolig } from "../felles/r4/felles.js";
+import { hav } from "../felles/r4/hav.js";
+
+document.getElementById("topp").outerHTML = topp();
+document.getElementById("flere").outerHTML = flere();
+document.getElementById("nedre").outerHTML = nedre();
+koble();
+
+document.getElementById("prosjekter").outerHTML = UTVALGTE.map((p) => `
+  <article class="m-prosjekt">
+    <div class="scene">
+      <div class="skjerm${p.id === "fanatastisk" ? " stille" : ""}">
+        <picture>
+          ${p.id === "fanatastisk" ? "" : `<source media="(max-width: 859px)" srcset="${M}${p.id}/mobil.webp">`}
+          <img class="side" src="${M}${p.id}/${p.id === "fanatastisk" ? "topp" : "hel"}.webp" alt="Skjermopptak av ${p.navn}" loading="lazy">
+        </picture>
+        ${p.id === "fanatastisk" ? `<div class="telefoner">${["hjem", "program", "kart"].map((a) => `<img src="${M}fanatastisk/app-${a}.webp" alt="Fanatastisk-appen, ${a}" loading="lazy">`).join("")}</div>` : ""}
+        <span class="fremdrift" aria-hidden="true"></span>
+      </div>
+      <div class="m-tekst">
+        <h3>${p.navn}</h3>
+        <p class="linje">${p.linje.join(" • ")}</p>
+        <p class="om">${p.tekst}</p>
+        <p class="status">Status: ${p.status}</p>
+        <a href="${p.lenke}">${p.lenketekst}</a>
+      </div>
+    </div>
+  </article>`).join("");
+
+const sted = document.querySelector(".m-sted"), stille = sted.querySelector("video");
+const DYKK_FRA = 0.72;   // her begynner kameraet å synke
+
+// Havet: vannlinjen, boblene, morilden og nedstigningen
+hav({ sted, lag: sted.querySelector(".m-lag"), lerret: sted.querySelector(".m-linje"), bak: document.querySelector(".m-hav"), fra: DYKK_FRA,
+  skum: !new URLSearchParams(location.search).has("rent") });   // m/?rent viser dykket uten skum, til sammenligning
+
+// Film med pauseknapp
+function film(video, knapp, navnPaa, navnAv) {
+  const sett = (spiller) => { knapp.setAttribute("aria-pressed", String(!spiller)); knapp.textContent = spiller ? navnPaa : navnAv; };
+  knapp.addEventListener("click", () => { if (video.paused) { video.play(); sett(true); } else { video.pause(); sett(false); } });
+  if (rolig.matches) sett(false); else video.play().then(() => sett(true)).catch(() => sett(false));
+}
+const filmen = document.querySelector(".m-film"), reel = filmen.querySelector(".reel");
+filmtekst(reel, filmen.querySelector(".filmtekst"));
+film(reel, filmen.querySelector(".reelknapp"), "Pause filmen", "Spill filmen");
+
+// Første skjerm: rolig film som toner tilbake til start før den begynner på nytt
+stille.playbackRate = 0.7;
+stille.addEventListener("timeupdate", () => { stille.style.opacity = stille.duration - stille.currentTime < 1.3 || stille.currentTime < 0.05 ? 0 : 1; });
+film(stille, sted.querySelector(".m-pause"), "Pause bildet", "Spill bildet");
+
+if (!rolig.matches) {
+  gsap.registerPlugin(ScrollTrigger);
+  // Kamerakjøringen: 85 bilder tegnet på lerret, styrt av rullingen
+  const N = 85, cv = sted.querySelector(".m-kamera canvas"), ctx = cv.getContext("2d"), bilder = [];
+  let naa = 0;
+  const hent = (i) => { const b = new Image(); b.src = `${M}kyst/kjoring/k_${String(i + 1).padStart(3, "0")}.webp`; b.onload = () => { if (i === naa) tegn(); }; bilder[i] = b; };
+  function maal() { const d = Math.min(devicePixelRatio || 1, 1.5); cv.width = cv.clientWidth * d; cv.height = cv.clientHeight * d; tegn(); }
+  function tegn() {
+    let i = naa; while (i > 0 && !(bilder[i] && bilder[i].complete && bilder[i].naturalWidth)) i--;
+    const b = bilder[i]; if (!b || !b.naturalWidth) return;
+    const s = Math.max(cv.width / b.naturalWidth, cv.height / b.naturalHeight), w = b.naturalWidth * s, h = b.naturalHeight * s;
+    const fx = 0.7 + 0.14 * (naa / (N - 1));            // naustet flytter seg mot høyre i bildet
+    const x = Math.min(0, Math.max(cv.width - w, cv.width * 0.62 - fx * w));
+    ctx.drawImage(b, x, (cv.height - h) / 2, w, h);
+  }
+  hent(0);
+  addEventListener("load", () => { for (let i = 1; i < N; i++) hent(i); });
+  addEventListener("resize", maal); maal();
+
+  const takter = [...sted.querySelectorAll(".m-takt")];
+  ScrollTrigger.create({ trigger: sted, start: "top top", end: "bottom bottom", scrub: true, onUpdate: (st) => {
+    const p = st.progress, k = (a, b) => Math.min(1, Math.max(0, (p - a) / (b - a)));
+    sted.style.setProperty("--ut", k(0, 0.06).toFixed(3));
+    // klipp gjennom mørke: mørkt på 0,085, kjøringen fra 0,10
+    sted.style.setProperty("--morke", (p < 0.085 ? k(0.035, 0.085) : 1 - k(0.085, 0.145)).toFixed(3));
+    sted.style.setProperty("--bytt", p >= 0.085 ? "1" : "0");
+    const f = Math.round(k(0.085, 0.84) * (N - 1));     // kameraet glir videre inn mens det synker
+    if (f !== naa) { naa = f; tegn(); }
+    takter.forEach((t) => t.classList.toggle("aktiv", p >= +t.dataset.fra && p < +t.dataset.til));
+    if (p > 0.1 && !stille.paused) stille.pause(); else if (p < 0.07 && stille.paused && sted.querySelector(".m-pause").getAttribute("aria-pressed") === "false") stille.play().catch(() => {});
+  } });
+
+  // Filmen vokser fra et vindu i vannet til full skjerm
+  const ut = (x) => x * x * (3 - 2 * x);   // mykt inn og mykt ut
+  let s0 = 0.6;
+  const maalFilm = () => { const bredde = Math.max(innerWidth, innerHeight * 1.6); s0 = Math.min(0.6, (innerWidth * 0.9) / bredde); filmen.style.setProperty("--s", s0.toFixed(4)); };
+  maalFilm(); addEventListener("resize", maalFilm);
+  ScrollTrigger.create({ trigger: filmen, start: "top top", end: "bottom bottom", scrub: true, onUpdate: (st) => {
+    const full = ut(Math.min(1, st.progress / 0.62));
+    filmen.style.setProperty("--full", full.toFixed(4));
+    filmen.style.setProperty("--s", (s0 + (1 - s0) * full).toFixed(4));
+  } });
+
+  document.querySelectorAll(".m-prosjekt").forEach((art) => {
+    const ramme = art.querySelector(".skjerm"), side = art.querySelector(".side");
+    const st = { trigger: art, start: "top top", end: "bottom bottom", scrub: 0.4, invalidateOnRefresh: true };
+    gsap.to(ramme, { "--p": 1, ease: "none", scrollTrigger: st });
+    if (ramme.classList.contains("stille")) {
+      art.querySelectorAll(".telefoner img").forEach((t, n) =>
+        gsap.fromTo(t, { yPercent: 70 + n * 34 }, { yPercent: -18 - n * 8, ease: "none", scrollTrigger: { ...st } }));
+    } else {
+      gsap.to(side, { y: () => -Math.max(0, side.offsetHeight - ramme.clientHeight), ease: "none", scrollTrigger: { ...st } });
+    }
+    gsap.from(art.querySelectorAll(".m-tekst > *"), { y: 40, opacity: 0, duration: 0.7, stagger: 0.06, ease: "power3.out",
+      scrollTrigger: { trigger: art, start: "top 45%", toggleActions: "play none none reverse" } });
+  });
+  addEventListener("load", () => ScrollTrigger.refresh());
+}
+</script>
+</body>
+</html>

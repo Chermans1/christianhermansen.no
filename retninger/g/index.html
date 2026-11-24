@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Retning G - Visningsrommet</title>
+<meta name="theme-color" content="#10262a">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="../felles/studio/film/f_001.webp">
+<style>
+/* Retning G - Visningsrommet. Skisse, ikke ferdig design.
+   Én kamerakjøring gjennom et studio, rendret i Blender, styrt av rullingen.
+   Fargene fra christianhermansen.no, skilt på lyshet. */
+:root {
+  --natt: #10262a;
+  --dyp: #1d3c41;
+  --petrol: #24494e;
+  --rust: #a8432a;
+  --gull: #d9923c;
+  --papir: #f1e7d3;
+  --papir-dus: #b5c2bc;   /* sekundærtekst på natt, 8,7:1 */
+  --dyp-dus: #4d6266;     /* sekundærtekst på papir, 5,6:1 */
+  --skrift: "Archivo", system-ui, sans-serif;
+  --kant: clamp(1.1rem, 4vw, 3.5rem);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scrollbar-color: var(--gull) var(--natt); }
+body { margin: 0; background: var(--natt); color: var(--papir); font: 400 1.0625rem/1.55 var(--skrift); -webkit-font-smoothing: antialiased; }
+::selection { background: var(--gull); color: var(--natt); }
+a { color: inherit; text-underline-offset: 0.22em; text-decoration-thickness: 2px; text-decoration-color: var(--gull); }
+:focus-visible { outline: 3px solid var(--gull); outline-offset: 3px; }
+h1, h2, h3 { font-family: var(--skrift); font-weight: 700; font-stretch: 112%; line-height: 1.02; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+.liten { font: 600 0.78rem/1.3 var(--skrift); font-stretch: 105%; letter-spacing: 0.13em; text-transform: uppercase; }
+.hopp { position: absolute; left: -999px; }
+.hopp:focus { left: 1rem; top: 1rem; z-index: 100; background: var(--gull); color: var(--natt); padding: 0.6rem 1rem; }
+
+.topp { position: fixed; z-index: 60; top: 0.9rem; left: var(--kant); right: var(--kant); display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
+.topp > * { pointer-events: auto; }
+.topp .logo { background: var(--natt); padding: 0.55rem 0.8rem; }
+.topp .logo img { display: block; height: clamp(30px, 2.6vw, 40px); width: auto; }
+.topp nav { display: flex; background: var(--natt); }
+.topp nav a { text-decoration: none; padding: 0.85rem 1rem; }
+.topp nav a:hover { background: var(--papir); color: var(--natt); }
+.topp nav a.viktig { background: var(--gull); color: var(--natt); }
+@media (max-width: 46rem) { .topp nav a:not(.viktig) { display: none; } }
+
+/* --- Filmen --- */
+.film { height: 820vh; }
+.laast { position: sticky; top: 0; height: 100svh; overflow: hidden; background: var(--natt); }
+.lerret { position: absolute; inset: 0; }
+.lerret canvas, .lerret .plakat { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; }
+.lerret .plakat { object-position: 68% 50%; }
+.lerret::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgb(16 38 42 / 0.82), rgb(16 38 42 / 0.3) 42%, transparent 60%), linear-gradient(0deg, rgb(16 38 42 / 0.55), transparent 30%); opacity: var(--slor, 1); transition: opacity 0.5s; }
+.takt { position: absolute; inset: 0; pointer-events: none; display: grid; padding: 5.5rem var(--kant) clamp(1.5rem, 5svh, 3rem);
+  opacity: 0; visibility: hidden; translate: 0 16px; transition: opacity 0.45s, translate 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s 0.45s; }
+.takt.aktiv { opacity: 1; visibility: visible; translate: 0 0; transition-delay: 0s; }
+.takt a { pointer-events: auto; }
+.takt.apning { align-content: center; }
+.takt.apning .blokk { display: grid; gap: 1.2rem; justify-items: start; max-width: 31rem; }
+.takt.apning h1 { font-size: clamp(2.4rem, 4.7vw, 4.6rem); }
+.takt.apning p { font-size: clamp(1.05rem, 1.45vw, 1.3rem); max-width: 31rem; }
+.knapper { display: flex; flex-wrap: wrap; gap: 0.8rem 1.4rem; align-items: center; }
+.knapp { display: inline-flex; align-items: center; gap: 0.6rem; font: 600 1rem/1 var(--skrift); text-decoration: none; background: var(--gull); color: var(--natt); padding: 1.1rem 1.5rem; transition: background 0.2s, translate 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.knapp:hover { background: var(--papir); translate: 0 -2px; }
+.knapp svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 2.4; }
+.takt.sak { align-content: end; justify-content: start; }
+.kort { width: min(100%, 27rem); background: rgb(16 38 42 / 0.9); padding: 1.4rem 1.5rem 1.5rem; display: grid; gap: 0.8rem; border-top: 0.5rem solid var(--farge, var(--gull)); }
+.kort .hva { color: var(--gull); }
+.kort h2 { font-size: clamp(1.8rem, 3.2vw, 2.8rem); }
+.kort ul { display: grid; gap: 0.35rem; color: var(--papir-dus); }
+.kort li { padding-left: 1.1rem; position: relative; }
+.kort li::before { content: ""; position: absolute; left: 0; top: 0.68em; width: 0.5rem; height: 2px; background: var(--gull); }
+.kort .stillbilde { display: none; }
+/* Hvor du er i rekken */
+.rekke { position: absolute; z-index: 5; right: var(--kant); bottom: clamp(1.5rem, 5svh, 3rem); display: flex; gap: 1.4rem; background: rgb(16 38 42 / 0.9); padding: 0.7rem 1rem 0.55rem; }
+.rekke li { color: var(--papir-dus); padding-bottom: 0.35rem; border-bottom: 3px solid transparent; transition: color 0.3s, border-color 0.3s; }
+.rekke li.her { color: var(--papir); border-bottom-color: var(--gull); }
+@media (max-width: 46rem) {
+  /* Telefon: filmen øverst, teksten under på fast bunn */
+  .laast { display: grid; grid-template-rows: 46svh minmax(0, 1fr); }
+  .lerret { position: relative; inset: auto; }
+  .lerret::after { background: linear-gradient(0deg, var(--natt), transparent 22%); opacity: 1; }
+  .takt { inset: 46svh 0 0 0; padding: 1rem var(--kant) 1rem; align-content: start !important; }
+  .takt.apning h1 { font-size: 2.15rem; }
+  .takt.apning p { font-size: 1rem; }
+  .kort { background: none; padding: 0.9rem 0 0; width: 100%; }
+  .rekke { display: none; }
+}
+
+/* --- Tjenester --- */
+.tjenester { background: var(--papir); color: var(--dyp); padding: clamp(4rem, 12vh, 8rem) var(--kant); }
+.tjenester h2 { font-size: clamp(2.3rem, 6vw, 5rem); }
+.tjenester .inn { margin-top: 1.1rem; max-width: 34rem; font-size: 1.15rem; }
+.tre { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.4rem; margin-top: clamp(2.5rem, 7vh, 4.5rem); }
+.tre article { display: grid; gap: 0.7rem; align-content: start; padding-top: 1.2rem; border-top: 0.6rem solid; }
+.tre article:nth-child(1) { border-color: var(--rust); }
+.tre article:nth-child(2) { border-color: var(--gull); }
+.tre article:nth-child(3) { border-color: var(--petrol); }
+.tre h3 { font-size: clamp(1.5rem, 2.5vw, 2.1rem); }
+.tre ul { display: grid; gap: 0.3rem; color: var(--dyp-dus); }
+.ekstra { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 2.4rem; margin-top: clamp(2.5rem, 7vh, 4.5rem); padding-top: 2rem; border-top: 2px solid var(--dyp); }
+.ekstra h3 { font-size: clamp(1.4rem, 2.4vw, 2rem); margin-bottom: 0.7rem; }
+.ekstra p { max-width: 30rem; }
+.tjenester :focus-visible { outline-color: var(--dyp); }
+.gang { padding: clamp(4rem, 11vh, 7rem) var(--kant); background: var(--dyp); }
+.gang h2 { font-size: clamp(2rem, 4.6vw, 3.8rem); }
+.trinn { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem; margin-top: clamp(2rem, 6vh, 3.5rem); counter-reset: t; }
+.trinn li { counter-increment: t; display: grid; gap: 0.5rem; align-content: start; padding-top: 1rem; border-top: 2px solid var(--papir-dus); }
+.trinn h3 { font-size: 1.5rem; }
+.trinn h3::before { content: counter(t) ". "; color: var(--gull); }
+.trinn p { color: var(--papir-dus); }
+.kontakt { padding: clamp(4rem, 13vh, 9rem) var(--kant); }
+.kontakt h2 { font-size: clamp(2.4rem, 8vw, 7rem); }
+.kontakt p { margin-top: 1.2rem; font-size: 1.15rem; }
+.kontakt .epost { display: inline-block; margin-top: 1.4rem; font: 700 clamp(1.1rem, 3.2vw, 2.4rem)/1.2 var(--skrift); font-stretch: 110%; overflow-wrap: anywhere; }
+footer { padding: 1.5rem var(--kant) 2rem; display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; justify-content: space-between; color: var(--papir-dus); font-size: 0.95rem; }
+@media (max-width: 56rem) { .tre, .ekstra { grid-template-columns: 1fr; } .trinn { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 30rem) { .trinn { grid-template-columns: 1fr; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .film { height: auto; }
+  .laast { position: static; height: auto; display: block; }
+  .lerret { position: relative; height: 70svh; }
+  .lerret canvas, .rekke { display: none; }
+  .takt { position: static; opacity: 1; visibility: visible; translate: none; padding-block: 2rem; }
+  .kort { width: min(100%, 44rem); }
+  .kort .stillbilde { display: block; width: 100%; height: auto; }
+  .knapp { transition: none; }
+}
+</style>
+</head>
+<body>
+<a class="hopp" href="#tjenester">Hopp til tjenestene</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="pil" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+</svg>
+
+<header class="topp">
+  <a class="logo" href="#" aria-label="Til toppen"><img src="../felles/ch-logo-horisontal-krem.svg" alt="Christian Hermansen" width="214" height="42"></a>
+  <nav aria-label="Hovedmeny">
+    <a class="liten" href="#arbeid">Arbeid</a>
+    <a class="liten" href="#tjenester">Tjenester</a>
+    <a class="liten viktig" href="#kontakt">Kontakt</a>
+  </nav>
+</header>
+
+<main>
+  <section class="film" data-scene id="arbeid">
+    <div class="laast">
+      <div class="lerret" aria-hidden="true">
+        <img class="plakat" src="../felles/studio/film/f_001.webp" alt="">
+        <canvas></canvas>
+      </div>
+
+      <div class="takt apning aktiv" data-fra="0" data-til="0.115">
+        <div class="blokk">
+          <h1>Nettsider, apper og digitale verktøy.</h1>
+          <p>Jeg er Christian Hermansen. Jeg bygger det du trenger, og jeg bygger det sånn at du kan drive det selv etterpå.</p>
+          <div class="knapper">
+            <a class="knapp" href="#kontakt">Fortell hva du trenger <svg aria-hidden="true"><use href="#pil"/></svg></a>
+            <a href="#tjenester">Se hva jeg tilbyr</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="takt sak" data-fra="0.185" data-til="0.355" data-bilde="25">
+        <article class="kort" style="--farge: var(--rust)">
+          <span class="hva liten">Nettside og app</span>
+          <h2>Fanatastisk</h2>
+          <p>Musikkfestivalen i Fana fikk nettside og app, bygget på det samme innholdet. Festivalen redigerer alt selv.</p>
+          <ul><li>5 558 besøkende på nettsiden i festivaluken</li><li>Appen godkjent av Apple på under et døgn</li></ul>
+          <a href="https://fanatastisk.no" target="_blank" rel="noopener">Åpne fanatastisk.no</a>
+          <img class="stillbilde" src="../felles/studio/film/f_025.webp" alt="Fanatastisk vist på bærbar og telefon" loading="lazy">
+        </article>
+      </div>
+
+      <div class="takt sak" data-fra="0.425" data-til="0.595" data-bilde="49">
+        <article class="kort" style="--farge: var(--gull)">
+          <span class="hva liten">Digitalt verktøy</span>
+          <h2>Zempel</h2>
+          <p>Et system for festivaldrift. Artister, program, frivillige og budsjett på ett sted, i stedet for i fem regneark.</p>
+          <ul><li>Seks roller, fra frivillig til festivalsjef</li><li>I pilot hos styret i Fanatastisk. Skjermbildet viser demodata</li></ul>
+          <a href="https://zempel.no" target="_blank" rel="noopener">Åpne zempel.no</a>
+          <img class="stillbilde" src="../felles/studio/film/f_049.webp" alt="Zempel vist på bærbar" loading="lazy">
+        </article>
+      </div>
+
+      <div class="takt sak" data-fra="0.665" data-til="0.835" data-bilde="73">
+        <article class="kort" style="--farge: var(--petrol)">
+          <span class="hva liten">Digitalt verktøy</span>
+          <h2>Bransjekart Norge</h2>
+          <p>Et åpent kart over tech-selskaper i Norge. Det begynte med et regneark på 36 linjer.</p>
+          <ul><li>277 selskaper, sjekket mot Brønnøysundregistrene</li><li>Gratis, uten innlogging og uten annonser</li></ul>
+          <a href="https://bransjekart.christianhermansen.no" target="_blank" rel="noopener">Åpne bransjekartet</a>
+          <img class="stillbilde" src="../felles/studio/film/f_073.webp" alt="Bransjekart Norge vist på skjerm" loading="lazy">
+        </article>
+      </div>
+
+      <div class="takt sak" data-fra="0.9" data-til="1.01" data-bilde="97">
+        <article class="kort" style="--farge: var(--rust)">
+          <span class="hva liten">Nettside som forteller</span>
+          <h2>Turntable</h2>
+          <p>En platespiller bygget som nettside. Tonearmen følger låten, og spilleren bytter form etter skjermen du holder.</p>
+          <ul><li>Platespiller, kassettdekk eller CD, etter skjermbredden</li><li>Ingen fremdriftslinje, bare mekanikk som oppfører seg riktig</li></ul>
+          <a href="https://musikk.christianhermansen.no" target="_blank" rel="noopener">Sett på en plate</a>
+          <img class="stillbilde" src="../felles/studio/film/f_097.webp" alt="Turntable vist på skjerm" loading="lazy">
+        </article>
+      </div>
+
+      <ol class="rekke liten" aria-hidden="true">
+        <li data-ved="0">Start</li>
+        <li data-ved="0.27">Fanatastisk</li>
+        <li data-ved="0.51">Zempel</li>
+        <li data-ved="0.75">Bransjekart</li>
+        <li data-ved="0.96">Turntable</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="tjenester" id="tjenester">
+    <h2>Dette bygger jeg</h2>
+    <p class="inn">Tre ting, med samme håndverk i alle. Du får opplæring, og du eier det du har betalt for.</p>
+    <div class="tre">
+      <article>
+        <h3>Nettsider</h3>
+        <p>Tegnet for deg, og laget for telefon først.</p>
+        <ul><li>Design som ikke er en mal</li><li>Innhold du redigerer selv</li><li>Opplæring når du tar over</li></ul>
+      </article>
+      <article>
+        <h3>Apper</h3>
+        <p>For iPhone, eller rett i nettleseren.</p>
+        <ul><li>Én ting som løser ett problem godt</li><li>Virker uten nett der det trengs</li><li>Hele veien ut i App Store</li></ul>
+      </article>
+      <article>
+        <h3>Digitale verktøy</h3>
+        <p>Små verktøy som tar jobben ingen har tid til.</p>
+        <ul><li>Skjemaer som regner ut selv</li><li>Kart og oversikter du kan stole på</li><li>Ingen konto og ingen sporing hvis du ikke må ha det</li></ul>
+      </article>
+    </div>
+    <div class="ekstra">
+      <article>
+        <h3>Nettsider som forteller historier</h3>
+        <p>Som denne. Du ruller, og siden svarer. Historien din kan fortelles på samme måte, i den rekkefølgen du vil ha den.</p>
+      </article>
+      <article>
+        <h3>Gratis hjelp til dem som bidrar</h3>
+        <p>Driver du noe som gjør det bedre for andre, kan du søke om hjelp uten regning. Ett prosjekt om gangen. Det er måten jeg gir tilbake på.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="gang">
+    <h2>Slik foregår det</h2>
+    <ol class="trinn">
+      <li><h3>Samtale</h3><p>Du forteller hva som plager deg. Jeg spør mer enn jeg selger.</p></li>
+      <li><h3>Skisse</h3><p>Du får se tre retninger før noe bygges, og velger selv.</p></li>
+      <li><h3>Bygging</h3><p>Du følger med underveis og ser det vokse fram.</p></li>
+      <li><h3>Overlevering</h3><p>Du får opplæring og nøklene. Etterpå driver du det selv.</p></li>
+    </ol>
+  </section>
+
+  <section class="kontakt" id="kontakt">
+    <h2>Si hva du trenger.</h2>
+    <p>Send en e-post. Jeg svarer selv.</p>
+    <a class="epost" href="mailto:epost@christianhermansen.no">epost@christianhermansen.no</a>
+  </section>
+</main>
+
+<footer>
+  <span>© 2026 Christian Hermansen. Bygd for hånd i Bergen.</span>
+  <span>Skisse av retning G. Bildene er rendret i Blender. Tekstene er utkast.</span>
+</footer>
+
+<script src="../felles/rull.js"></script>
+<script>
+// Visningsrommet: 97 bilder av én kamerakjøring. Rullingen velger hvilket bilde som vises.
+// Flate strekk i ruten er stopp, der kameraet står stille foran ett prosjekt.
+(() => {
+  const scene = document.querySelector(".film");
+  const laast = scene.querySelector(".laast");
+  const flate = scene.querySelector(".lerret");
+  const lerret = scene.querySelector("canvas");
+  const plakat = scene.querySelector(".plakat");
+  const takter = [...scene.querySelectorAll(".takt")].map((el) => ({ el, fra: +el.dataset.fra, til: +el.dataset.til }));
+  const rekke = [...scene.querySelectorAll(".rekke li")].map((el) => ({ el, ved: +el.dataset.ved }));
+  const rolig = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (rolig) return;
+
+  const ANTALL = 97;
+  const smal = () => innerWidth < 740;
+  const mappe = smal() ? "../felles/studio/film-m/" : "../felles/studio/film/";
+  const sti = (n) => `${mappe}f_${String(n).padStart(3, "0")}.webp`;
+  const RUTE = [[0, 1], [0.07, 1], [0.22, 25], [0.32, 25], [0.46, 49], [0.56, 49], [0.7, 73], [0.8, 73], [0.93, 97], [1, 97]];
+
+  function bildeVed(p) {
+    for (let i = 1; i < RUTE.length; i++) {
+      const [p0, b0] = RUTE[i - 1], [p1, b1] = RUTE[i];
+      if (p <= p1) {
+        let t = p1 === p0 ? 1 : Math.min(1, Math.max(0, (p - p0) / (p1 - p0)));
+        t = t * t * (3 - 2 * t);
+        return b0 + (b1 - b0) * t;
+      }
+    }
+    return ANTALL;
+  }
+
+  // Last først bildet du ser, så stoppene, så resten i rekkefølge
+  const bilder = new Array(ANTALL + 1);
+  const rekkefolge = [1, 25, 49, 73, 97];
+  for (let n = 1; n <= ANTALL; n++) if (!rekkefolge.includes(n)) rekkefolge.push(n);
+  let neste = 0, aktive = 0;
+  function last() {
+    while (aktive < 4 && neste < rekkefolge.length) {
+      const n = rekkefolge[neste++]; const img = new Image(); aktive++;
+      img.onload = () => { bilder[n] = img; aktive--; trengerTegning = true; last(); };
+      img.onerror = () => { aktive--; last(); };
+      img.src = sti(n);
+    }
+  }
+
+  const ctx = lerret.getContext("2d");
+  let trengerTegning = true, vist = 1, p = 0;
+  function storrelse() {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    lerret.width = Math.round(flate.clientWidth * dpr); lerret.height = Math.round(flate.clientHeight * dpr);
+    trengerTegning = true;
+  }
+  function naermeste(n) {
+    for (let d = 0; d < ANTALL; d++) { if (bilder[n - d]) return bilder[n - d]; if (bilder[n + d]) return bilder[n + d]; }
+    return null;
+  }
+  function tegn(n) {
+    const img = naermeste(Math.round(n)); if (!img) return;
+    const b = lerret.width, h = lerret.height, bred = !smal();
+    // Stor skjerm: etter åpningen zoomes det litt inn og utsnittet legges til venstre i bildet,
+    // så prosjektet står til høyre for tekstkortet. Telefon: i åpningen flyttes utsnittet mot logoen.
+    const etter = Math.min(1, Math.max(0, (n - 5) / 14));
+    const skala = Math.max(b / img.width, h / img.height) * (bred ? 1 + 0.15 * etter : 1);
+    const bb = img.width * skala, hh = img.height * skala;
+    const fokus = bred ? 0.5 - 0.3 * etter : 0.5 + 0.19 * Math.max(0, 1 - (n - 1) / 16);
+    const x = Math.min(0, Math.max(b - bb, b / 2 - bb * fokus));
+    ctx.drawImage(img, x, (h - hh) * (bred ? 0.5 + 0.35 * etter : 0.5), bb, hh);
+    plakat.style.visibility = "hidden";
+  }
+
+  function ramme() {
+    requestAnimationFrame(ramme);
+    const maal = parseFloat(scene.style.getPropertyValue("--p")) || 0;
+    p += (maal - p) * 0.14;
+    const n = bildeVed(p);
+    if (trengerTegning || Math.abs(n - vist) > 0.01) { tegn(n); vist = n; trengerTegning = false; }
+    for (const t of takter) t.el.classList.toggle("aktiv", maal >= t.fra && maal < t.til);
+    let her = rekke[0];
+    for (const r of rekke) if (maal >= r.ved - 0.09) her = r;
+    for (const r of rekke) r.el.classList.toggle("her", r === her);
+    flate.style.setProperty("--slor", maal < 0.14 ? 1 : 0.55);
+  }
+
+  addEventListener("resize", storrelse);
+  storrelse(); last(); ramme();
+})();
+</script>
+</body>
+</html>

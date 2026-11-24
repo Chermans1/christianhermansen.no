@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retning L - Mannen</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../felles/r4/felles.css">
+<link rel="preload" as="image" href="/assets/img/portrett.webp">
+<style>
+/* L. Mannen: du er verdenen. Svart-hvitt, og arbeidet er det eneste som får farger. Stripene er eneste farge ellers. */
+:root { --natt: #0d1b1e; --f-tittel: "Bodoni Moda", "Didot", serif; --f-tekst: "Hanken Grotesk", system-ui, sans-serif; --v-tittel: 500; --tt: none; --spor: -0.01em; }
+body { font-variation-settings: "opsz" 20; }   /* tykkere hårstreker, så ø og N ikke forsvinner */
+.r4-merke, .r4-flere h3 { color: var(--demp); }
+.r4 h2 { font-size: clamp(2.4rem, 6vw, 5.4rem); line-height: 1; }
+.r4-tre h3 { font-size: clamp(2rem, 3.2vw, 2.9rem); }
+.r4-tre ul li::before { background: var(--papir); }
+.r4-liste summary::after { color: var(--papir); }
+.send button { background: var(--papir); } .send button:hover { background: #fff; }
+.r4-lagetfor ul { font-style: italic; font-weight: 400; }
+
+/* Åpningen */
+.l-apning { height: 340vh; height: 340svh; position: relative; }
+.l-apning .scene { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.l-portrett { position: absolute; right: 0; top: 0; height: 100%; width: 46vw; overflow: hidden; }
+.l-portrett img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; transform: scale(calc(1 + var(--p, 0) * 0.12)); transform-origin: 55% 35%; filter: grayscale(1) contrast(1.06) brightness(calc(0.82 + var(--p, 0) * 0.2)); }
+.l-portrett::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, var(--natt), rgba(13, 27, 30, 0) 34%), linear-gradient(0deg, rgba(13, 27, 30, 0.7), rgba(13, 27, 30, 0) 30%); }
+.l-striper { position: absolute; top: 0; bottom: 0; right: 46vw; display: flex; gap: 5px; translate: 50% 0; z-index: 1; transform-origin: 50% 0; transform: scaleY(calc(0.18 + var(--p, 0) * 0.82)); }
+.l-striper i { width: 5px; } .l-striper i:nth-child(1) { background: var(--rust); } .l-striper i:nth-child(2) { background: var(--gull); } .l-striper i:nth-child(3) { background: var(--petrol); }
+.l-navn { position: absolute; left: var(--kant); bottom: clamp(2.5rem, 9vh, 6rem); z-index: 2; display: grid; gap: clamp(1rem, 2.4vw, 2rem); }
+.l-navn h1 { font: 500 clamp(3.4rem, 12.5vw, 13rem) / 0.86 var(--f-tittel); letter-spacing: -0.02em; }
+.l-navn h1 em { font-style: italic; font-weight: 400; }
+.l-takter { position: relative; min-height: 5.2em; max-width: min(34rem, 44vw); font-size: clamp(1.1rem, 1.7vw, 1.45rem); line-height: 1.45; }
+.l-takt { position: absolute; inset: 0 0 auto 0; opacity: 0; transform: translateY(0.8rem); transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.l-takt.aktiv { opacity: 1; transform: none; }
+.l-takt .nr { display: block; font-size: 0.75rem; letter-spacing: 0.24em; color: var(--demp); margin-bottom: 0.5rem; }
+.l-rull { position: absolute; right: var(--kant); bottom: 1.6rem; z-index: 2; font-size: 0.6875rem; letter-spacing: 0.3em; text-transform: uppercase; opacity: calc(1 - var(--p, 0) * 5); }
+@media (max-width: 859px) {
+  .l-portrett { width: 100%; } .l-portrett img { object-position: 50% 12%; }
+  .l-portrett::after { background: linear-gradient(0deg, var(--natt) 8%, rgba(13, 27, 30, 0.78) 34%, rgba(13, 27, 30, 0) 62%); }
+  .l-striper { right: auto; left: var(--kant); translate: none; top: auto; bottom: auto; height: 5px; flex-direction: column; display: none; }
+  .l-navn { right: var(--kant); bottom: 3.6rem; }
+  .l-navn h1 { font-size: clamp(3.2rem, 17.5vw, 6rem); }
+  .l-takter { max-width: none; min-height: 6.4em; }
+  .l-rull { left: var(--kant); right: auto; bottom: 1.2rem; }
+}
+
+/* Filmen: grå til den er midt på skjermen */
+.l-film { padding: var(--luft) 0 0; display: grid; gap: clamp(1.5rem, 3vw, 2.5rem); }
+.l-film header, .l-film .filmtekst { padding-inline: var(--kant); max-width: 1400px; width: 100%; margin-inline: auto; }
+.l-film h2 { font: 500 clamp(2.4rem, 6vw, 5.4rem) / 1 var(--f-tittel); letter-spacing: -0.01em; max-width: 15ch; }
+.l-film h2 em { font-style: italic; font-weight: 400; }
+.l-film .ramme { aspect-ratio: 16 / 9; max-height: 92svh; width: 100%; overflow: hidden; background: #000; }
+.l-film video { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; filter: grayscale(var(--graa, 1)); }
+.l-film .filmtekst { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3rem 1.2rem; }
+.l-film .fn { font: 500 clamp(1.4rem, 2.6vw, 2.2rem) / 1.1 var(--f-tittel); }
+.l-film .ft { color: var(--demp); }
+.l-film button { margin-left: auto; font: 500 0.6875rem/1 var(--f-tekst); letter-spacing: 0.2em; text-transform: uppercase; color: var(--papir); background: none; border: 1px solid var(--linje); padding: 0.75rem 0.9rem; cursor: pointer; }
+
+/* Utvalgte prosjekter: en rekke som går sidelengs mens du ruller */
+.l-arbeid { overflow: hidden; }
+.l-arbeid > header { padding: var(--luft) var(--kant) 0; max-width: 1400px; margin-inline: auto; }
+.l-arbeid h2 { font: 500 clamp(2.4rem, 6vw, 5.4rem) / 1 var(--f-tittel); letter-spacing: -0.01em; max-width: 15ch; }
+.l-vindu { height: 100vh; height: 100svh; display: flex; align-items: center; }
+.l-rekke { display: flex; gap: clamp(1.5rem, 5vw, 5rem); padding-inline: var(--kant); width: max-content; will-change: transform; }
+.l-panel { width: min(74vw, 1040px); display: grid; gap: 1.2rem; flex: none; }
+.l-panel a.bilde { display: block; overflow: hidden; aspect-ratio: 16 / 10; background: #000; }
+.l-panel img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; filter: grayscale(var(--graa, 1)); }
+.l-panel .rad { display: grid; gap: 0.6rem 2.5rem; align-items: start; }
+.l-panel .nr { font: italic 400 clamp(1rem, 1.6vw, 1.4rem) / 1 var(--f-tittel); color: var(--demp); }
+.l-panel h3 { font: 500 clamp(2rem, 4.6vw, 4.2rem) / 0.98 var(--f-tittel); letter-spacing: -0.015em; }
+.l-panel .linje { font-size: 0.75rem; letter-spacing: 0.22em; text-transform: uppercase; margin-top: 0.5rem; }
+.l-panel .om { max-width: 40ch; }
+.l-panel .om + p { color: var(--demp); font-size: 0.875rem; margin-top: 0.4rem; }
+.l-panel .om ~ a { display: inline-block; margin-top: 0.7rem; font-size: 0.8125rem; letter-spacing: 0.16em; text-transform: uppercase; }
+@media (min-width: 860px) { .l-panel .rad { grid-template-columns: auto 5fr 4fr; } }
+@media (max-width: 859px) { .l-panel { width: 84vw; } .l-vindu { align-items: flex-start; padding-top: 5.5rem; } }
+
+/* Hvem jeg er: plass til bildene som skal tas */
+.r4-hvem { grid-template-columns: 1fr; }
+.l-kommer { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; max-width: 46rem; }
+.l-kommer div { aspect-ratio: 4 / 5; border: 1px dashed var(--demp); display: grid; place-content: center; text-align: center; padding: 1rem; gap: 0.4rem; color: var(--demp); font-size: 0.875rem; }
+.l-kommer strong { font: 500 1.25rem/1.3 var(--f-tittel); color: var(--papir); }
+@media (min-width: 860px) { .r4-hvem { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .l-apning { height: auto; } .l-apning .scene { position: relative; min-height: 100svh; }
+  .l-takter { min-height: 0; display: grid; gap: 1.2rem; } .l-takt { position: static; opacity: 1; transform: none; }
+  .l-film video, .l-panel img { filter: none; }
+  .l-vindu { height: auto; padding-block: 3rem; } .l-rekke { flex-direction: column; width: auto; } .l-panel { width: auto; }
+}
+</style>
+</head>
+<body>
+<div id="topp"></div>
+<main>
+  <section class="l-apning" aria-label="Åpning">
+    <div class="scene">
+      <div class="l-portrett"><img src="/assets/img/portrett.webp" alt="Christian Hermansen, portrett i svart-hvitt" width="900" height="1350"></div>
+      <div class="l-striper" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="l-navn">
+        <h1>Christian <br><em>Hermansen</em></h1>
+        <div class="l-takter">
+          <p class="l-takt aktiv" data-fra="-1" data-til="0.2"><span class="nr">Bergen</span>Nettsider, apper og digitale verktøy.</p>
+          <p class="l-takt" data-fra="0.2" data-til="0.47"><span class="nr">01</span>Du snakker med meg, fra den første samtalen til du har nøklene selv.</p>
+          <p class="l-takt" data-fra="0.47" data-til="0.74"><span class="nr">02</span>Jeg var tømrer i femten år. Mål to ganger, kutt én gang. Det gjelder kode også.</p>
+          <p class="l-takt" data-fra="0.74" data-til="1.01"><span class="nr">03</span>Jeg leverer ikke noe jeg ikke ville hatt i eget hus.</p>
+        </div>
+      </div>
+      <p class="l-rull" aria-hidden="true">Rull</p>
+    </div>
+  </section>
+
+  <section class="l-film" aria-labelledby="f-tittel">
+    <header><p class="r4-merke">Film</p><h2 id="f-tittel">Arbeidet er det eneste som er <em>i farger.</em></h2></header>
+    <div class="ramme">
+      <video class="reel" muted loop playsinline preload="metadata" poster="../felles/r4/media/reel-plakat.webp?v=3" aria-label="Film med opptak av nettsider og verktøy Christian har laget"><source src="../felles/r4/media/reel.mp4?v=3" type="video/mp4"></video>
+    </div>
+    <div class="filmtekst"><span class="fn"></span><span class="ft"></span><button type="button" class="reelknapp" aria-pressed="false">Pause filmen</button></div>
+  </section>
+
+  <section class="l-arbeid" id="arbeid" aria-labelledby="a-tittel">
+    <header><p class="r4-merke">Utvalgte prosjekter</p><h2 id="a-tittel">Fire prosjekter på nært hold.</h2></header>
+    <div class="l-vindu"><div class="l-rekke" id="prosjekter"></div></div>
+  </section>
+  <div id="flere"></div>
+  <div id="nedre"></div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script type="module">
+import { M, UTVALGTE, topp, flere, nedre, koble, filmtekst, rolig } from "../felles/r4/felles.js";
+
+document.getElementById("topp").outerHTML = topp();
+document.getElementById("flere").outerHTML = flere();
+document.getElementById("nedre").outerHTML = nedre({ portrett: false, hvemTittel: "Tømrer i femten år. Utvikler nå." });
+koble();
+// Bildene som må tas før denne retningen er ferdig. Ingen KI-bilder av deg.
+document.querySelector(".r4-hvem").insertAdjacentHTML("afterbegin", `
+  <div class="l-kommer" role="group" aria-label="Bilder som skal tas">
+    <div><strong>Bilde kommer</strong>Hendene på tastaturet</div>
+    <div><strong>Bilde kommer</strong>Du ved pulten, sett fra siden</div>
+  </div>`);
+
+document.getElementById("prosjekter").innerHTML = UTVALGTE.map((p, i) => `
+  <article class="l-panel">
+    <a class="bilde" href="${p.lenke}" aria-label="${p.lenketekst}"><img src="${M}${p.id}/topp.webp" alt="Første skjerm på ${p.navn}" loading="lazy" width="1280" height="800"></a>
+    <div class="rad">
+      <p class="nr">0${i + 1}</p>
+      <div><h3>${p.navn}</h3><p class="linje">${p.linje.join(" • ")}</p></div>
+      <div><p class="om">${p.tekst}</p><p>Status: ${p.status}</p><a href="${p.lenke}">${p.lenketekst}</a></div>
+    </div>
+  </article>`).join("");
+
+const reel = document.querySelector(".reel"), knapp = document.querySelector(".reelknapp");
+filmtekst(reel, document.querySelector(".l-film .filmtekst"));
+const sett = (spiller) => { knapp.setAttribute("aria-pressed", String(!spiller)); knapp.textContent = spiller ? "Pause filmen" : "Spill filmen"; };
+knapp.addEventListener("click", () => { if (reel.paused) { reel.play(); sett(true); } else { reel.pause(); sett(false); } });
+if (rolig.matches) sett(false); else reel.play().then(() => sett(true)).catch(() => sett(false));
+
+if (!rolig.matches) {
+  gsap.registerPlugin(ScrollTrigger);
+  const apning = document.querySelector(".l-apning"), takter = [...apning.querySelectorAll(".l-takt")];
+  ScrollTrigger.create({ trigger: apning, start: "top top", end: "bottom bottom", scrub: true, onUpdate: (st) => {
+    apning.style.setProperty("--p", st.progress.toFixed(3));
+    takter.forEach((t) => t.classList.toggle("aktiv", st.progress >= +t.dataset.fra && st.progress < +t.dataset.til));
+  } });
+
+  // Filmen får fargene når den er midt på skjermen
+  gsap.fromTo(reel, { "--graa": 1 }, { "--graa": 0, ease: "none", scrollTrigger: { trigger: ".l-film .ramme", start: "top 75%", end: "top 15%", scrub: true } });
+
+  // Rekken går sidelengs, og hvert bilde får farger når det kommer inn
+  const rekke = document.querySelector(".l-rekke"), vei = () => Math.max(0, rekke.scrollWidth - innerWidth);
+  const gang = gsap.to(rekke, { x: () => -vei(), ease: "none", scrollTrigger: { trigger: ".l-vindu", start: "top top", end: () => "+=" + vei(), pin: true, scrub: 0.5, invalidateOnRefresh: true, anticipatePin: 1 } });
+  rekke.querySelectorAll(".l-panel").forEach((panel, i) => {
+    const img = panel.querySelector("img");
+    if (i === 0) gsap.fromTo(img, { "--graa": 1 }, { "--graa": 0, ease: "none", scrollTrigger: { trigger: ".l-vindu", start: "top 70%", end: "top 10%", scrub: true } });
+    else gsap.fromTo(img, { "--graa": 1 }, { "--graa": 0, ease: "none", scrollTrigger: { trigger: panel, containerAnimation: gang, start: "left 88%", end: "left 45%", scrub: true } });
+  });
+  addEventListener("load", () => ScrollTrigger.refresh());
+}
+</script>
+</body>
+</html>

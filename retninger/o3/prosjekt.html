@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>Prosjekt - Retning O3</title>
+<script>
+// Prosjektene åpnes nå på samme side som ringen. Gamle lenker hit sendes videre dit.
+const p = new URLSearchParams(location.search).get("p");
+location.replace(p ? `./?p=${encodeURIComponent(p)}#${encodeURIComponent(p)}` : "./");
+</script>
+</head>
+<body><p><a href="./">Til alle prosjekter</a></p></body>
+</html>

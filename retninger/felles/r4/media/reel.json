@@ -1,0 +1,79 @@
+[
+ {
+  "id": "vegg",
+  "navn": "Nettsider, apper og verktøy",
+  "type": "Et utvalg",
+  "fra": 0,
+  "til": 1.8
+ },
+ {
+  "id": "app",
+  "navn": "Fanatastisk",
+  "type": "App",
+  "fra": 1.8,
+  "til": 2.95
+ },
+ {
+  "id": "adhd",
+  "navn": "ADHD Norge Øyane",
+  "type": "Nettside",
+  "fra": 2.95,
+  "til": 3.9
+ },
+ {
+  "id": "adhd2",
+  "navn": "ADHD Norge Øyane",
+  "type": "Nettside",
+  "fra": 3.9,
+  "til": 4.9
+ },
+ {
+  "id": "zempel",
+  "navn": "Zempel",
+  "type": "Digitalt verktøy",
+  "fra": 4.9,
+  "til": 6.15
+ },
+ {
+  "id": "mobil",
+  "navn": "På telefon",
+  "type": "De samme sidene, liten skjerm",
+  "fra": 6.15,
+  "til": 7.25
+ },
+ {
+  "id": "nordlys",
+  "navn": "Nordlys journal",
+  "type": "Nettside, skolearbeid",
+  "fra": 7.25,
+  "til": 8.75
+ },
+ {
+  "id": "kart",
+  "navn": "Bransjekart Norge",
+  "type": "Digitalt verktøy",
+  "fra": 8.75,
+  "til": 10.1
+ },
+ {
+  "id": "mobil2",
+  "navn": "På telefon",
+  "type": "De samme sidene, liten skjerm",
+  "fra": 10.1,
+  "til": 11.1
+ },
+ {
+  "id": "kodehode",
+  "navn": "Fra Kodehode",
+  "type": "Skolearbeid",
+  "fra": 11.1,
+  "til": 12.7
+ },
+ {
+  "id": "fanatastisk",
+  "navn": "Fanatastisk",
+  "type": "Nettside og app",
+  "fra": 12.7,
+  "til": 15
+ }
+]

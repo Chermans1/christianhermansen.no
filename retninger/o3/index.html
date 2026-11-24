@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retning O3 - Båndet</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../o2/o2.css">
+<link rel="stylesheet" href="o3.css">
+<link rel="preload" as="image" href="../o2/media/rom.webp">
+<style>
+/* Båndet: prosjektene står i en ring rundt den som ser på. Hjul, sveip, dra eller piltaster dreier ringen,
+   og den går rundt uten ende, så det aldri er tomt på noen side. Prosjektet i midten viser den ekte siden
+   som ruller sakte nedover. Musen flytter blikket litt.
+   Et klikk på prosjektet i midten åpner det på samme side: bildet glir ut til venstre og blir første bilde i en
+   stripe du kan rulle gjennom, og infoen kommer inn fra høyre. «Alle prosjekter» tar deg tilbake til ringen. */
+html, body { overflow: hidden; height: 100%; overscroll-behavior: none; }
+.scene { position: fixed; inset: 0; overflow: hidden; perspective: var(--persp, 1800px); perspective-origin: var(--px, 50%) var(--py, 46%); touch-action: none; user-select: none; -webkit-user-select: none; }
+.ring { position: absolute; left: 50%; top: 46%; transform-style: preserve-3d; transition: transform 0.9s cubic-bezier(0.7, 0, 0.2, 1), opacity 0.6s, filter 0.6s; }
+.kort { --b: min(50vw, 820px); position: absolute; width: var(--b); aspect-ratio: 16 / 10; left: calc(var(--b) / -2); top: calc(var(--b) * -0.3125);
+  border: 0; padding: 0; background: none; color: inherit; cursor: pointer; backface-visibility: hidden;
+  transform: translateZ(var(--r)) rotateY(var(--v, 0deg)) translateZ(calc(var(--r) * -1)); -webkit-user-drag: none; }
+.kort .flate { position: absolute; inset: 0; border-radius: 6px; overflow: hidden; background: #0b0807;
+  box-shadow: 0 0 0 1px rgba(241, 231, 211, 0.1), 0 40px 90px -30px rgba(8, 5, 3, 0.9); }
+.kort img, .kort video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; pointer-events: none; }
+.kort video { opacity: 0; transition: opacity 0.5s; }
+.kort.spiller video { opacity: 1; }
+.kort .flate::after { content: ""; position: absolute; inset: 0; background: #120d0a; opacity: var(--mork, 0); pointer-events: none; }
+.sikte { position: absolute; inset: -16px; pointer-events: none; opacity: 0; transition: opacity 0.4s; }
+.kort.spiller .sikte { opacity: 1; }
+.sikte i { position: absolute; width: 14px; height: 14px; border: 0 solid var(--gull); }
+.sikte i:nth-child(1) { left: 0; top: 0; border-width: 1px 0 0 1px; } .sikte i:nth-child(2) { right: 0; top: 0; border-width: 1px 1px 0 0; }
+.sikte i:nth-child(3) { left: 0; bottom: 0; border-width: 0 0 1px 1px; } .sikte i:nth-child(4) { right: 0; bottom: 0; border-width: 0 1px 1px 0; }
+.kort:focus-visible { outline: none; } .kort:focus-visible .sikte { opacity: 1; } .kort:focus-visible .sikte i { border-color: var(--papir); }
+
+.over { position: absolute; left: 0; right: 0; top: clamp(5.2rem, 13vh, 8.5rem); text-align: center; padding: 0 var(--kant); pointer-events: none; transition: opacity 0.4s; }
+.over h1 { font: 400 clamp(1.1rem, 1.6vw, 1.45rem)/1.3 var(--f-tekst); color: var(--demp); }
+.over h1 b { font-weight: 500; color: var(--papir); }
+.under { position: absolute; left: 0; right: 0; top: calc(46% + min(50vw, 820px) * 0.3125 + clamp(1.6rem, 4vh, 2.6rem)); text-align: center; padding: 0 var(--kant); pointer-events: none; transition: opacity 0.4s; }
+.under h2 { font: 400 clamp(1.8rem, 3vw, 2.8rem)/1 var(--f-tittel); transition: opacity 0.25s, transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.under p { margin-top: 0.5rem; color: var(--demp); transition: opacity 0.25s; }
+.under.bytter h2, .under.bytter p { opacity: 0; transform: translateY(0.4rem); }
+.under .hint { margin-top: 1rem; font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gull); }
+.teller, .rullhint { position: absolute; bottom: 2rem; transition: opacity 0.4s; }
+.teller { left: var(--kant); } .rullhint { right: var(--kant); }
+body.aapen .over, body.aapen .under, body.aapen .teller, body.aapen .rullhint { opacity: 0; }
+body.aapen .ring { transform: translateZ(-420px); opacity: 0.25; filter: blur(6px); }
+
+/* Prosjektvisningen */
+.case { position: fixed; inset: 0; z-index: 45; overflow-y: auto; overscroll-behavior: contain; display: grid; grid-template-columns: minmax(0, 1fr) var(--panel);
+  grid-template-rows: auto 1fr; visibility: hidden; --panel: clamp(22rem, 34vw, 36rem); --luft: clamp(0.8rem, 1.6vw, 1.6rem); scrollbar-color: var(--gull) transparent; }
+body.aapen .case, .case.lukker { visibility: visible; }
+.case::before { content: ""; position: fixed; inset: 0; background: rgba(18, 13, 10, 0.55); opacity: 0; transition: opacity 0.6s; pointer-events: none; }
+body.aapen .case::before { opacity: 1; }
+/* Mørk overgang under logoen, så bildene som ruller forbi ikke kolliderer med den */
+.case::after { content: ""; position: fixed; z-index: 3; left: 0; right: var(--panel); top: 0; height: 5.2rem; pointer-events: none; opacity: 0; transition: opacity 0.6s;
+  background: linear-gradient(rgba(18, 13, 10, 0.92), rgba(18, 13, 10, 0.6) 55%, rgba(18, 13, 10, 0)); }
+body.aapen .case::after { opacity: 1; }
+.forste, .resten { grid-column: 1; position: relative; padding: 0 var(--luft); }
+.forste { grid-row: 1; padding-top: 5.4rem; }
+.resten { grid-row: 2; display: grid; gap: var(--luft); padding-top: var(--luft); padding-bottom: 5rem; align-content: start; }
+.slot { margin: 0; position: relative; opacity: 0; transform: translateY(2rem); transition: opacity 0.7s, transform 0.9s cubic-bezier(0.2, 0.75, 0.15, 1); }
+body.aapen .slot.synlig { opacity: 1; transform: none; }
+.forste .slot { opacity: 1; transform: none; }
+.slot .ramme { position: relative; overflow: hidden; border-radius: 10px; background: #0b0807; box-shadow: 0 0 0 1px var(--linje), 0 40px 90px -30px rgba(8, 5, 3, 0.85); }
+.slot.film .ramme { aspect-ratio: 16 / 10; }
+.slot.film video, .slot.film img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.slot.film .ramme.venter { visibility: hidden; }
+.slot figcaption { margin-top: 0.6rem; font-size: 0.8125rem; color: var(--demp); }
+.slot.bilde img { display: block; width: 100%; height: auto; }
+.slot.telefon .ramme { display: grid; place-items: center; padding: clamp(2rem, 5vw, 4.5rem) 1rem; background: linear-gradient(160deg, #2a1d15, #120d0a); }
+.mobil { width: min(19rem, 62vw); aspect-ratio: 9 / 19.5; border-radius: 2.4rem; padding: 0.6rem; background: #0b0807; box-shadow: 0 0 0 1px rgba(241, 231, 211, 0.18), 0 40px 70px -24px rgba(0, 0, 0, 0.8); }
+.mobil div { width: 100%; height: 100%; border-radius: 1.9rem; overflow: hidden; position: relative; background: #fff; }
+.mobil img { position: absolute; left: 0; top: 0; width: 100%; height: auto; animation: rull var(--tid, 30s) cubic-bezier(0.45, 0, 0.55, 1) 1s infinite alternate; }
+@keyframes rull { to { transform: translateY(var(--slutt, 0px)); } }
+.slot.apper .ramme { display: grid; grid-template-columns: repeat(3, 1fr); background: #efe3cc; }
+.slot.apper img { width: 100%; height: auto; display: block; }
+
+.panel { grid-column: 2; grid-row: 1 / span 2; position: sticky; top: 0; height: 100svh; overflow-y: auto; background: var(--papir); color: var(--natt);
+  padding: 5.4rem clamp(1.5rem, 2.6vw, 2.6rem) 2.4rem; display: flex; flex-direction: column; gap: 1.3rem;
+  transform: translateX(100%); transition: transform 0.85s cubic-bezier(0.7, 0, 0.2, 1); box-shadow: -30px 0 80px rgba(8, 5, 3, 0.35); }
+body.aapen .panel { transform: none; transition-timing-function: cubic-bezier(0.2, 0.7, 0.15, 1); }
+.panel .rad { display: flex; justify-content: space-between; align-items: center; }
+.panel .tilbake { font: 500 0.9375rem/1 var(--f-tekst); color: var(--natt); background: none; border: 0; padding: 0.4rem 0; cursor: pointer; display: inline-flex; gap: 0.55rem; align-items: center; }
+.panel .tilbake:hover { color: var(--rust-dyp); }
+.panel .tilbake span { transition: transform 0.25s; } .panel .tilbake:hover span { transform: translateX(-0.25rem); }
+.panel .etikett { color: var(--demp-lys); }
+.panel h2 { font: 400 clamp(3rem, 4.6vw, 5rem)/0.9 var(--f-tittel); color: var(--rust-dyp); letter-spacing: -0.015em; }
+.panel .ingress { font: 400 clamp(1.5rem, 2vw, 2rem)/1.1 var(--f-tittel); color: var(--natt); }
+.panel p { color: var(--demp-lys); }
+.panel .tekst { display: grid; gap: 0.8rem; }
+/* Menyen står over papiret når et prosjekt er åpent */
+@media (min-width: 861px) { body.aapen .topp nav a { color: var(--demp-lys); } body.aapen .topp nav a:hover { color: var(--natt); } }
+.panel dl { display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1.4rem; padding-top: 1.1rem; border-top: 1px solid rgba(18, 13, 10, 0.16); font-size: 0.9375rem; }
+.panel dt { color: var(--demp-lys); } .panel dd { margin: 0; }
+.panel h3 { font: 400 1.4rem/1 var(--f-tittel); color: var(--rust-dyp); margin-top: 0.4rem; }
+.panel ul { list-style: none; padding: 0; border-top: 1px solid rgba(18, 13, 10, 0.16); }
+.panel li { padding: 0.55rem 0; border-bottom: 1px solid rgba(18, 13, 10, 0.16); }
+.panel .gaa { align-self: flex-start; margin-top: auto; font: 600 0.75rem/1 var(--f-tekst); letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; background: var(--natt); color: var(--papir); border-radius: 99px; padding: 1rem 1.4rem; transition: background 0.2s; }
+.panel .gaa:hover { background: var(--rust-dyp); }
+.panel > * { opacity: 0; transform: translateX(1.5rem); transition: opacity 0.4s, transform 0.5s; }
+body.aapen .panel > * { opacity: 1; transform: none; transition: opacity 0.6s 0.35s, transform 0.8s 0.35s cubic-bezier(0.2, 0.7, 0.15, 1); }
+
+/* Bildet som flyr fra ringen og inn i stripen, og tilbake */
+.fly { position: fixed; z-index: 48; overflow: hidden; background: #0b0807; pointer-events: none; }
+.fly video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+
+@media (max-width: 860px) {
+  .kort { --b: 80vw; }
+  .under { top: calc(44% + 80vw * 0.3125 + 1.6rem); }
+  .ring { top: 44%; }
+  .over { top: 5.4rem; }
+  .rullhint { display: none; }
+  .case { display: block; }
+  .case::after { right: 0; }
+  .forste { padding-top: 5rem; }
+  .panel { position: relative; height: auto; overflow: visible; transform: translateY(2rem); opacity: 0; transition: transform 0.7s, opacity 0.5s; box-shadow: none; margin: var(--luft); border-radius: 12px; }
+  body.aapen .panel { transform: none; opacity: 1; transition-delay: 0.3s; }
+  .panel .gaa { margin-top: 0.6rem; }
+  .resten { padding-top: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ring, .panel, .panel > *, .slot, .case::before { transition: none !important; }
+  .mobil img { animation: none; }
+}
+</style>
+</head>
+<body>
+<div class="rom" aria-hidden="true">
+  <img src="../o2/media/rom.webp" alt="">
+  <video src="../o2/media/rom.mp4" muted loop playsinline autoplay preload="auto"></video>
+</div>
+<div class="linse" aria-hidden="true"></div>
+<div class="korn" aria-hidden="true"></div>
+
+<header class="topp">
+  <a href="./" class="hjem"><img class="mork" src="../felles/ch-logo-horisontal-krem.svg" alt="Christian Hermansen, alle prosjekter" width="168" height="40"><img class="lys" src="/assets/img/ch-logo-horisontal-petrol.svg" alt="Christian Hermansen, alle prosjekter" width="168" height="40"></a>
+  <nav aria-label="Hovedmeny"><a href="./" class="hjem" aria-current="page">Arbeid</a><a href="../o2/#om">Om meg</a><a href="../o2/#kontakt">Kontakt</a></nav>
+</header>
+
+<main>
+  <section class="scene" aria-label="Utvalgt arbeid. Bruk piltastene for å bla.">
+    <div class="over"><h1><b>Christian Hermansen</b> lager nettsider, apper og digitale verktøy i Bergen.</h1></div>
+    <div class="ring"></div>
+    <div class="under" aria-live="polite"><h2></h2><p></p><p class="hint">Klikk for å gå inn</p></div>
+    <p class="teller etikett" aria-hidden="true"></p>
+    <p class="rullhint etikett" aria-hidden="true">Rull eller dra</p>
+  </section>
+
+  <section class="case" aria-labelledby="c-tittel" aria-hidden="true">
+    <div class="forste"><figure class="slot film"><div class="ramme venter"></div></figure></div>
+    <aside class="panel">
+      <div class="rad"><button class="tilbake" type="button"><span aria-hidden="true">←</span> Alle prosjekter</button><span class="etikett teller-c"></span></div>
+      <h2 id="c-tittel"></h2>
+      <p class="ingress"></p>
+      <div class="tekst"></div>
+      <dl></dl>
+      <h3>Omfang</h3>
+      <ul class="omfang"></ul>
+      <a class="gaa" target="_blank" rel="noopener"></a>
+    </aside>
+    <div class="resten"></div>
+  </section>
+</main>
+
+<script type="module">
+import { PROSJEKTER, GALLERI, film, plakat } from "./data.js";
+
+const scene = document.querySelector(".scene"), ring = scene.querySelector(".ring");
+const under = scene.querySelector(".under"), teller = scene.querySelector(".teller");
+const kase = document.querySelector(".case"), panel = kase.querySelector(".panel"), resten = kase.querySelector(".resten"), forsteRamme = kase.querySelector(".forste .ramme");
+const rolig = matchMedia("(prefers-reduced-motion: reduce)").matches, mus = matchMedia("(hover: hover) and (pointer: fine)").matches;
+const N = PROSJEKTER.length;
+const iRing = (x) => ((x % N) + N) % N;                     // indeks i ringen, alltid 0 til N-1
+const naerSti = (fra, til) => { let d = iRing(til - fra); if (d > N / 2) d -= N; return d; };   // korteste vei rundt ringen
+const klem = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+
+const kort = PROSJEKTER.map((p, i) => {
+  const k = document.createElement("button");
+  k.className = "kort"; k.type = "button"; k.dataset.i = i;
+  k.setAttribute("aria-label", `${p.navn}, ${p.type.toLowerCase()}. Åpne prosjektet`);
+  k.innerHTML = `<span class="flate"><img src="${plakat(p.id)}" alt="" draggable="false"><video muted playsinline loop preload="none" src="${film(p.id)}"></video></span><span class="sikte" aria-hidden="true"><i></i><i></i><i></i><i></i></span>`;
+  k.addEventListener("click", (e) => { if (dro) { e.preventDefault(); return; } velg(i); });
+  ring.appendChild(k);
+  return k;
+});
+
+// Sylinderen: kortene står på innsiden av en ring rundt den som ser på
+let R = 1000, steg = 0.5, bredde = 800;
+function maal() {
+  bredde = kort[0].offsetWidth;
+  R = Math.max(innerWidth * (innerWidth < 860 ? 1.2 : 1.05), 700);
+  steg = Math.atan((bredde * 1.13) / R);
+  scene.style.setProperty("--persp", (R * 1.12).toFixed(0) + "px");
+  kort.forEach((k) => k.style.setProperty("--r", R.toFixed(0) + "px"));
+}
+
+// Posisjonen i ringen er et tall uten ende. Kort j står i avstand d = j - pos, tatt den korteste veien rundt.
+let maalPos = 0, vist = 0, aktiv = -1, spiller = -1, aapen = -1, travel = false;
+let mx = 0, my = 0, vmx = 0, vmy = 0, sist = performance.now();
+if (mus) addEventListener("pointermove", (e) => { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; }, { passive: true });
+
+function settAktiv(i) {
+  if (i === aktiv) return;
+  aktiv = i;
+  under.classList.add("bytter");
+  clearTimeout(settAktiv.t);
+  settAktiv.t = setTimeout(() => { const q = PROSJEKTER[aktiv]; under.querySelector("h2").textContent = q.navn; under.querySelector("p").textContent = `${q.type} · ${q.status}`; under.classList.remove("bytter"); }, 140);
+  teller.textContent = `${String(i + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
+  kort.forEach((kk, j) => kk.tabIndex = j === i ? 0 : -1);
+  if (aapen < 0 && history.replaceState) history.replaceState(history.state, "", "#" + PROSJEKTER[i].id);
+}
+function settSpiller(i) {
+  if (i === spiller) return;
+  const forrige = kort[spiller];
+  if (forrige) { forrige.classList.remove("spiller"); forrige.querySelector("video")?.pause(); }
+  spiller = i;
+  if (i < 0) return;
+  const v = kort[i].querySelector("video");
+  kort[i].classList.add("spiller");
+  if (v) { if (v.preload === "none") v.preload = "auto"; v.play().catch(() => {}); }
+}
+function plasserRing(dt) {
+  vist += (maalPos - vist) * (1 - Math.exp(-dt * 9));
+  if (Math.abs(maalPos - vist) < 0.0005) vist = maalPos;
+  vmx += (mx - vmx) * (1 - Math.exp(-dt * 4)); vmy += (my - vmy) * (1 - Math.exp(-dt * 4));
+  scene.style.setProperty("--px", (50 + vmx * 14).toFixed(2) + "%");
+  scene.style.setProperty("--py", (46 + vmy * 10).toFixed(2) + "%");
+  const pos = vist + vmx * 0.18;
+  kort.forEach((k, j) => {
+    const d = naerSti(pos, j), v = -d * steg;
+    const synlig = Math.abs(v) < 1.4;
+    k.style.visibility = synlig ? "visible" : "hidden";
+    if (!synlig) return;
+    k.style.setProperty("--v", (v * 57.2958).toFixed(3) + "deg");
+    k.style.setProperty("--mork", klem(Math.abs(d) * 0.42 - 0.05, 0, 0.72).toFixed(3));
+  });
+  const naer = iRing(Math.round(vist));
+  settAktiv(naer);
+  if (aapen < 0) settSpiller(Math.abs(vist - Math.round(vist)) < 0.12 ? naer : -1);
+}
+function tegn(naa) {
+  const dt = Math.min(0.05, (naa - sist) / 1000); sist = naa;
+  if (aapen < 0 && !travel) plasserRing(dt);
+  requestAnimationFrame(tegn);
+}
+
+// Styring: hjul og styreflate, dra eller sveip, og piltaster. Ringen smekker inn på nærmeste prosjekt.
+let hvileTid = 0, laastTil = 0;
+const smekk = () => { clearTimeout(hvileTid); hvileTid = setTimeout(() => { maalPos = Math.round(maalPos); }, 150); };
+addEventListener("wheel", (e) => {
+  if (aapen >= 0 || travel) return;
+  e.preventDefault();
+  let d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+  if (e.deltaMode === 1) d *= 40;
+  // Et vanlig musehjul gir store, jevne hakk: ett hakk er ett prosjekt. Styreflaten gir små steg og glir.
+  if (Math.abs(d) >= 60 && Number.isInteger(e.deltaY)) {
+    const naa = performance.now();
+    if (naa < laastTil) return;
+    laastTil = naa + 320;
+    maalPos = Math.round(maalPos) + Math.sign(d);
+  } else { maalPos += d / 650; smekk(); }
+}, { passive: false });
+
+// Fokusrammen vises bare når en bruker tastaturet
+let tastatur = false;
+addEventListener("keydown", () => { tastatur = true; }, true);
+addEventListener("pointerdown", () => { tastatur = false; }, true);
+
+let dra = null, dro = false;
+scene.addEventListener("pointerdown", (e) => {
+  if (aapen >= 0 || travel || e.button !== 0) return;
+  dra = { x: e.clientX, y: e.clientY, fra: maalPos, id: e.pointerId }; dro = false;
+});
+addEventListener("pointermove", (e) => {
+  if (!dra || e.pointerId !== dra.id) return;
+  const dx = e.clientX - dra.x, dy = e.clientY - dra.y, d = Math.abs(dx) > Math.abs(dy) ? dx : dy;
+  if (Math.abs(d) > 8) dro = true;
+  if (dro) maalPos = dra.fra - d / (bredde * 1.1);
+});
+addEventListener("pointerup", () => { if (!dra) return; dra = null; maalPos = Math.round(maalPos); setTimeout(() => { dro = false; }, 0); });
+addEventListener("pointercancel", () => { dra = null; dro = false; maalPos = Math.round(maalPos); });
+addEventListener("keydown", (e) => {
+  if (aapen >= 0) { if (e.key === "Escape") lukk(); return; }
+  if (travel) return;
+  if (e.key === "ArrowRight" || e.key === "ArrowDown") { e.preventDefault(); maalPos = Math.round(maalPos) + 1; kort[iRing(Math.round(maalPos))].focus({ preventScroll: true }); }
+  if (e.key === "ArrowLeft" || e.key === "ArrowUp") { e.preventDefault(); maalPos = Math.round(maalPos) - 1; kort[iRing(Math.round(maalPos))].focus({ preventScroll: true }); }
+});
+
+// Klikk: et kort ved siden av dreies inn i midten. Kortet i midten åpnes.
+function velg(i) {
+  if (aapen >= 0 || travel) return;
+  if (i !== iRing(Math.round(vist))) { maalPos = Math.round(vist) + naerSti(Math.round(vist), i); return; }
+  aapne(i, true);
+}
+
+// Prosjektvisningen
+function fyll(i) {
+  const p = PROSJEKTER[i];
+  panel.querySelector(".teller-c").textContent = `${String(i + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
+  panel.querySelector("h2").textContent = p.navn;
+  panel.querySelector(".ingress").textContent = p.ingress;
+  panel.querySelector(".tekst").innerHTML = p.tekst.map((t) => `<p>${t}</p>`).join("");
+  panel.querySelector("dl").innerHTML = `<dt>Type</dt><dd>${p.type}</dd><dt>Status</dt><dd>${p.status}</dd>${p.aar ? `<dt>År</dt><dd>${p.aar}</dd>` : ""}<dt>Nettsted</dt><dd><a href="${p.lenke}" target="_blank" rel="noopener">${p.lenketekst} ↗</a></dd>`;
+  panel.querySelector(".omfang").innerHTML = p.omfang.map((o) => `<li>${o}</li>`).join("");
+  const gaa = panel.querySelector(".gaa"); gaa.href = p.lenke; gaa.textContent = "Åpne siden ↗";
+  resten.innerHTML = (GALLERI[p.id] || []).slice(1).map((g) => {
+    const tekst = g.tekst ? `<figcaption>${g.tekst}</figcaption>` : "";
+    if (g.t === "telefon") return `<figure class="slot telefon"><div class="ramme"><div class="mobil"><div><img src="${g.src}" alt="${g.tekst || ""}" loading="lazy"></div></div></div>${tekst}</figure>`;
+    if (g.t === "apper") return `<figure class="slot apper"><div class="ramme">${g.src.map((s) => `<img src="${s}" alt="" loading="lazy">`).join("")}</div>${tekst}</figure>`;
+    return `<figure class="slot bilde"><div class="ramme"><img src="${g.src}" alt="${g.tekst || ""}" loading="lazy"></div>${tekst}</figure>`;
+  }).join("");
+  // Telefonene ruller hele opptaket sakte, ned og opp igjen
+  resten.querySelectorAll(".mobil img").forEach((img) => img.addEventListener("load", () => {
+    const lengde = Math.max(0, img.offsetHeight - img.parentElement.clientHeight);
+    img.style.setProperty("--slutt", -lengde + "px"); img.style.setProperty("--tid", Math.max(8, lengde / 70).toFixed(1) + "s");
+  }, { once: true }));
+  // Bildene i stripen glir frem når de kommer inn i synet
+  const io = new IntersectionObserver((r) => r.forEach((x) => { if (x.isIntersecting) { x.target.classList.add("synlig"); io.unobserve(x.target); } }), { root: kase, rootMargin: "0px 0px -6% 0px" });
+  resten.querySelectorAll(".slot").forEach((s) => io.observe(s));
+}
+
+const glid = (el, fra, til, ms) => el.animate([
+  { left: fra.left + "px", top: fra.top + "px", width: fra.width + "px", height: fra.height + "px", borderRadius: fra.r },
+  { left: til.left + "px", top: til.top + "px", width: til.width + "px", height: til.height + "px", borderRadius: til.r },
+], { duration: rolig ? 1 : ms, easing: "cubic-bezier(0.7, 0, 0.2, 1)", fill: "forwards" }).finished;
+const rute = (el, r) => { const b = el.getBoundingClientRect(); return { left: b.left, top: b.top, width: b.width, height: b.height, r }; };
+
+async function aapne(i, flytt, historikk = true) {
+  if (travel || aapen >= 0) return;
+  travel = true; aapen = i;
+  const p = PROSJEKTER[i];
+  // Ringen stilles på prosjektet, så «Alle prosjekter» kommer tilbake til samme sted
+  maalPos = vist = Math.round(vist) + naerSti(Math.round(vist), i); plasserRing(1);
+  fyll(i);
+  if (historikk) history.pushState({ p: p.id }, "", `?p=${p.id}#${p.id}`);
+  kase.scrollTop = 0;
+  kase.setAttribute("aria-hidden", "false"); scene.setAttribute("aria-hidden", "true");
+  document.title = `${p.navn} - Retning O3`;
+  const k = kort[i], v = k.querySelector("video");
+  if (v.preload === "none") v.preload = "auto";
+  v.play().catch(() => {});
+  if (flytt && !rolig) {
+    const fra = rute(k.querySelector(".flate"), "6px");
+    document.body.classList.add("aapen");
+    const til = rute(forsteRamme, "10px");
+    const fly = document.createElement("div"); fly.className = "fly";
+    fly.appendChild(v); v.style.opacity = 1;
+    document.body.appendChild(fly);
+    await glid(fly, fra, til, 900);
+    forsteRamme.appendChild(v); fly.remove();
+  } else {
+    document.body.classList.add("aapen");
+    forsteRamme.appendChild(v); v.style.opacity = 1;
+  }
+  forsteRamme.classList.remove("venter");
+  panel.querySelector(".tilbake").focus({ preventScroll: true, focusVisible: tastatur });
+  travel = false;
+}
+
+async function lukk(historikk = true) {
+  if (travel || aapen < 0) return;
+  travel = true;
+  const i = aapen, k = kort[i], v = forsteRamme.querySelector("video");
+  if (historikk) history.pushState({}, "", `./#${PROSJEKTER[i].id}`);
+  document.title = "Retning O3 - Båndet";
+  const fra = kase.scrollTop < 40 ? rute(forsteRamme, "10px") : null;
+  kase.classList.add("lukker");
+  document.body.classList.remove("aapen");
+  if (fra && v && !rolig) {
+    const fly = document.createElement("div"); fly.className = "fly";
+    forsteRamme.classList.add("venter");
+    fly.appendChild(v); document.body.appendChild(fly);
+    await glid(fly, fra, rute(k.querySelector(".flate"), "6px"), 800);
+    k.querySelector(".flate").appendChild(v); fly.remove();
+  } else {
+    if (v) k.querySelector(".flate").appendChild(v);
+    forsteRamme.classList.add("venter");
+    await new Promise((r) => setTimeout(r, rolig ? 0 : 700));
+  }
+  if (v) v.style.opacity = "";
+  kase.classList.remove("lukker");
+  kase.setAttribute("aria-hidden", "true"); scene.removeAttribute("aria-hidden");
+  aapen = -1; travel = false; spiller = -1; settSpiller(i);
+  k.focus({ preventScroll: true, focusVisible: tastatur });
+}
+
+panel.querySelector(".tilbake").addEventListener("click", () => lukk());
+document.querySelectorAll(".hjem").forEach((a) => a.addEventListener("click", (e) => { if (aapen >= 0) { e.preventDefault(); lukk(); } }));
+addEventListener("popstate", () => {
+  const id = new URLSearchParams(location.search).get("p"), i = PROSJEKTER.findIndex((p) => p.id === id);
+  if (i >= 0 && aapen < 0) aapne(i, true, false);
+  else if (i < 0 && aapen >= 0) lukk(false);
+});
+
+addEventListener("resize", maal);
+maal();
+// Start: på prosjektet i adressen, eller på det første
+const iAdressen = new URLSearchParams(location.search).get("p");
+const start = Math.max(0, PROSJEKTER.findIndex((p) => p.id === (iAdressen || location.hash.slice(1))));
+maalPos = vist = start; plasserRing(1);
+if (iAdressen) aapne(start, false, false);
+requestAnimationFrame(tegn);
+</script>
+</body>
+</html>

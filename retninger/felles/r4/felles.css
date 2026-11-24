@@ -1,0 +1,124 @@
+/* Runde 4: felles grunnmur for J, K og L.
+   Hver side setter sine egne skrifter og detaljer oppå dette.
+   Fargene er de samme som i dag, lagt på mørk bunn. Rust brukes bare i striper og store flater,
+   fordi den er for mørk til tekst på natt. Gull er fargen for det som skal leses som utheving. */
+:root {
+  --natt: #10262a; --dyp: #1d3c41; --petrol: #24494e; --rust: #a8432a; --gull: #d9923c; --papir: #f1e7d3;
+  --demp: #b9bdb0;            /* dempet tekst, 8,6:1 mot natt */
+  --linje: rgba(241, 231, 211, 0.16);
+  --f-tittel: system-ui, sans-serif; --f-tekst: system-ui, sans-serif;
+  --v-tittel: 700; --tt: none; --spor: 0;
+  --kant: clamp(1.25rem, 5vw, 5rem);
+  --luft: clamp(4.5rem, 11vw, 9.5rem);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--natt); color-scheme: dark; scroll-behavior: smooth; }
+body { margin: 0; background: var(--natt); color: var(--papir); font: 400 1.0625rem/1.6 var(--f-tekst); -webkit-font-smoothing: antialiased; overflow-x: clip; }
+img, video, canvas { display: block; max-width: 100%; }
+a { color: inherit; text-underline-offset: 0.2em; }
+h1, h2, h3, p, ul, ol, figure, fieldset { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+fieldset { border: 0; min-width: 0; }
+:focus-visible { outline: 2px solid var(--gull); outline-offset: 3px; }
+.hopp { position: fixed; left: 1rem; top: -4rem; z-index: 100; background: var(--papir); color: var(--natt); padding: 0.6rem 1rem; }
+.hopp:focus { top: 1rem; }
+.skjult { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* Toppen */
+.r4-topp { position: fixed; inset: 0 0 auto 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem var(--kant); background: linear-gradient(rgba(16, 38, 42, 0.82), rgba(16, 38, 42, 0)); }
+.r4-logo img { width: clamp(132px, 14vw, 168px); height: auto; }
+.r4-topp nav { display: flex; align-items: center; gap: clamp(1rem, 2.4vw, 2.2rem); font-size: 0.8125rem; letter-spacing: 0.14em; text-transform: uppercase; }
+.r4-topp nav a { text-decoration: none; padding: 0.5rem 0; }
+.r4-topp nav a:hover { text-decoration: underline; }
+.r4-topp nav a.r4-knapp { border: 1px solid var(--papir); padding: 0.55rem 1rem; }
+.r4-topp nav a.r4-knapp:hover { background: var(--papir); color: var(--natt); text-decoration: none; }
+@media (max-width: 700px) { .r4-topp nav a:not(.r4-knapp) { display: none; } }
+
+/* Felles seksjoner */
+.r4 { padding: var(--luft) var(--kant); max-width: 1400px; margin-inline: auto; position: relative; }
+.r4-merke { font-size: 0.75rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gull); margin-bottom: 1.1rem; }
+.r4 h2 { font: var(--v-tittel) clamp(2.1rem, 5.4vw, 4.6rem) / 1.02 var(--f-tittel); text-transform: var(--tt); letter-spacing: var(--spor); text-wrap: balance; max-width: 16ch; }
+.r4-hode { margin-bottom: clamp(2.5rem, 6vw, 5rem); }
+.r4-liten { font-size: 0.875rem; color: var(--demp); }
+
+/* Det jeg gjør */
+.r4-tre { display: grid; gap: 0 clamp(1.5rem, 4vw, 4rem); }
+.r4-tre > li { border-top: 1px solid var(--linje); padding: 1.6rem 0 2.4rem; display: grid; gap: 0.7rem; align-content: start; }
+.r4-tre .nr { font-size: 0.75rem; letter-spacing: 0.2em; color: var(--demp); }
+.r4-tre h3 { font: var(--v-tittel) clamp(1.7rem, 3vw, 2.5rem) / 1.05 var(--f-tittel); text-transform: var(--tt); letter-spacing: var(--spor); }
+.r4-tre p { max-width: 34ch; }
+.r4-tre ul { margin-top: 0.6rem; display: grid; gap: 0.4rem; color: var(--demp); font-size: 0.9375rem; }
+.r4-tre ul li { padding-left: 1.3rem; position: relative; }
+.r4-tre ul li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 0.7rem; height: 1px; background: var(--gull); }
+.r4-tilbud { display: grid; gap: 1px; background: var(--linje); border: 1px solid var(--linje); margin-top: clamp(1.5rem, 4vw, 3.5rem); }
+.r4-tilbud article { background: var(--natt); padding: clamp(1.4rem, 3vw, 2.4rem); display: grid; gap: 0.6rem; align-content: start; }
+.r4-tilbud h3 { font: var(--v-tittel) clamp(1.25rem, 2vw, 1.6rem) / 1.15 var(--f-tittel); text-transform: var(--tt); letter-spacing: var(--spor); }
+.r4-tilbud p { color: var(--demp); max-width: 48ch; }
+@media (min-width: 860px) { .r4-tre { grid-template-columns: repeat(3, 1fr); } .r4-tilbud { grid-template-columns: 1fr 1fr; } }
+
+/* Hvem jeg er */
+.r4-hvem { display: grid; gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+.r4-hvem figure { max-width: 30rem; }
+.r4-hvem img { width: 100%; height: auto; }
+.r4-hvem div { display: grid; gap: 1.1rem; }
+.r4-hvem div p:not(.r4-merke) { max-width: 54ch; color: var(--demp); }
+.r4-hvem div p:first-of-type:not(.r4-merke), .r4-hvem h2 + p { color: var(--papir); }
+.r4-hvem .r4-merke { margin-bottom: 0; }
+@media (min-width: 860px) { .r4-hvem { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); } }
+
+/* Laget for */
+.r4-lagetfor { padding-block: clamp(2.5rem, 6vw, 4.5rem); border-block: 1px solid var(--linje); display: grid; gap: 1rem; }
+.r4-lagetfor .r4-merke { margin: 0; }
+.r4-lagetfor ul { display: flex; flex-wrap: wrap; gap: 0.4rem clamp(1.5rem, 5vw, 4rem); font: var(--v-tittel) clamp(1.6rem, 4vw, 3.2rem) / 1.1 var(--f-tittel); text-transform: var(--tt); letter-spacing: var(--spor); }
+
+/* Spørsmål og svar */
+.r4-liste { border-top: 1px solid var(--linje); max-width: 60rem; }
+.r4-liste details { border-bottom: 1px solid var(--linje); }
+.r4-liste summary { cursor: pointer; list-style: none; padding: 1.25rem 2.5rem 1.25rem 0; position: relative; font: var(--v-tittel) clamp(1.15rem, 2vw, 1.5rem) / 1.25 var(--f-tittel); text-transform: var(--tt); letter-spacing: var(--spor); }
+.r4-liste summary::-webkit-details-marker { display: none; }
+.r4-liste summary::after { content: "+"; position: absolute; right: 0.25rem; top: 50%; translate: 0 -50%; font: 300 1.6rem/1 var(--f-tekst); color: var(--gull); }
+.r4-liste details[open] summary::after { content: "\2212"; }
+.r4-liste details p { padding: 0 0 1.5rem; max-width: 56ch; color: var(--demp); }
+
+/* Kontakt */
+.r4-skjema { display: grid; gap: 1.6rem 1.5rem; max-width: 60rem; }
+.r4-skjema legend { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--demp); margin-bottom: 0.8rem; padding: 0; }
+.r4-skjema fieldset { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.r4-skjema fieldset legend { flex-basis: 100%; }
+.brikke { position: relative; display: inline-flex; }
+.brikke input { position: absolute; inset: 0; opacity: 0; cursor: pointer; margin: 0; }
+.brikke span { border: 1px solid var(--linje); padding: 0.7rem 1.1rem; font-size: 0.9375rem; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+.brikke input:hover + span { border-color: var(--papir); }
+.brikke input:checked + span { background: var(--papir); color: var(--natt); border-color: var(--papir); }
+.brikke input:checked + span::before { content: "\2713\00a0"; }
+.brikke input:focus-visible + span { outline: 2px solid var(--gull); outline-offset: 3px; }
+.felt { display: grid; gap: 0.45rem; }
+.felt label { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--demp); }
+.felt input, .felt textarea { font: inherit; color: var(--papir); background: transparent; border: 0; border-bottom: 1px solid var(--demp); padding: 0.6rem 0; border-radius: 0; width: 100%; resize: vertical; }
+.felt input:focus-visible, .felt textarea:focus-visible { outline: 0; border-bottom-color: var(--gull); box-shadow: 0 1px 0 var(--gull); }
+.send { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
+.send button { font: 600 0.875rem/1 var(--f-tekst); letter-spacing: 0.16em; text-transform: uppercase; background: var(--gull); color: var(--natt); border: 0; padding: 1.1rem 2.2rem; cursor: pointer; }
+.send button:hover { background: var(--papir); }
+@media (min-width: 760px) { .r4-skjema { grid-template-columns: 1fr 1fr; } .r4-skjema fieldset, .felt.bred, .send { grid-column: 1 / -1; } }
+
+/* Flere prosjekter */
+.r4-flere { padding: 0 var(--kant) var(--luft); max-width: 1400px; margin-inline: auto; }
+.r4-flere h3 { font-size: 0.75rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gull); font-weight: 400; margin-bottom: 1rem; }
+.r4-flere ul { border-top: 1px solid var(--linje); }
+.r4-flere li { display: grid; grid-template-columns: 1fr; gap: 0.1rem 1.5rem; padding: 0.9rem 0; border-bottom: 1px solid var(--linje); }
+.r4-flere .n { font: var(--v-tittel) clamp(1.15rem, 2vw, 1.5rem) / 1.2 var(--f-tittel); text-transform: var(--tt); letter-spacing: var(--spor); }
+.r4-flere .t, .r4-flere .s { color: var(--demp); font-size: 0.9375rem; }
+@media (min-width: 760px) { .r4-flere li { grid-template-columns: 5fr 4fr 3fr; align-items: baseline; } .r4-flere .s { text-align: right; } }
+
+/* Bunnen */
+.r4-bunn { padding: var(--luft) var(--kant) 0; display: grid; gap: 1.5rem; justify-items: center; text-align: center; border-top: 1px solid var(--linje); }
+.r4-bunn img { width: 120px; height: auto; }
+.r4-bunn a { text-decoration: underline; }
+.r4-striper { width: calc(100% + 2 * var(--kant)); margin-inline: calc(-1 * var(--kant)); margin-top: 2rem; display: grid; }
+.r4-striper i { height: 10px; display: block; }
+.r4-striper i:nth-child(1) { background: var(--rust); } .r4-striper i:nth-child(2) { background: var(--gull); } .r4-striper i:nth-child(3) { background: var(--petrol); }
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; animation: none !important; } }
+
+/* Gnister over hele siden (slås på per side med gnister() i felles.js) */
+.r4-gnister { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 40; }

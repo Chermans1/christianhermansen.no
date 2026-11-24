@@ -1,0 +1,40 @@
+{
+ "ramme": 32,
+ "rekkefølge": {
+  "idle": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "gå": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "hopp": [
+   10,
+   11,
+   12
+  ],
+  "fall": [
+   13,
+   14
+  ],
+  "land": [
+   15,
+   16,
+   17
+  ],
+  "duk": [
+   18,
+   19,
+   20,
+   21
+  ]
+ },
+ "merknad": "Utkast trukket ut av AI-arket. Rammene 13-21 bør sjekkes og ryddes i Aseprite. Løp, slag, skade og død er ikke tatt med (overlappet i kildebildet)."
+}

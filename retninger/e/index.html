@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Retning E - Lagene</title>
+<meta name="theme-color" content="#f1e7d3">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;500;800&display=swap" rel="stylesheet">
+<style>
+/* Retning E - Lagene. Skisse, ikke ferdig design.
+   Fargene fra christianhermansen.no, skilt på lyshet:
+   dyp (mørkest), petrol, rust, gull, papir (lysest). */
+:root {
+  --dyp: #1d3c41;
+  --petrol: #24494e;
+  --rust: #a8432a;
+  --gull: #d9923c;
+  --papir: #f1e7d3;
+  --dyp-dus: #4d6266;   /* sekundærtekst på papir, 5,6:1 */
+  --skrift: "Geologica", system-ui, sans-serif;
+  --kant: clamp(1.1rem, 4vw, 3.5rem);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scrollbar-color: var(--rust) var(--papir); }
+body { margin: 0; background: var(--papir); color: var(--dyp); font: 300 1.0625rem/1.55 var(--skrift); -webkit-font-smoothing: antialiased; }
+::selection { background: var(--dyp); color: var(--papir); }
+a { color: inherit; text-underline-offset: 0.22em; text-decoration-thickness: 2px; text-decoration-color: var(--rust); }
+:focus-visible { outline: 3px solid var(--rust); outline-offset: 3px; }
+h1, h2, h3 { font-family: var(--skrift); font-weight: 800; line-height: 0.98; letter-spacing: -0.035em; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.liten { font: 500 0.78rem/1.3 var(--skrift); letter-spacing: 0.13em; text-transform: uppercase; }
+.hopp { position: absolute; left: -999px; }
+.hopp:focus { left: 1rem; top: 1rem; z-index: 100; background: var(--dyp); color: var(--papir); padding: 0.6rem 1rem; }
+
+.topp { position: fixed; z-index: 60; top: 0.9rem; left: var(--kant); right: var(--kant); display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
+.topp > * { pointer-events: auto; }
+.topp .logo { background: var(--papir); padding: 0.55rem 0.8rem; }   /* plate bak logoen, så navnet kan leses på alle flater */
+.topp .logo img { display: block; height: clamp(32px, 2.8vw, 42px); width: auto; }
+.topp nav { display: flex; gap: 0.3rem; }
+.topp nav a { text-decoration: none; padding: 0.7rem 1rem; background: rgb(241 231 211 / 0.8); }
+.topp nav a:hover { background: var(--dyp); color: var(--papir); }
+.topp nav a.viktig { background: var(--dyp); color: var(--papir); }
+.topp nav a.viktig:hover { background: var(--rust); }
+@media (max-width: 46rem) { .topp nav a:not(.viktig) { display: none; } }
+
+.verksted { height: 620vh; }
+.laast { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.takt { position: absolute; inset: 0; pointer-events: none; display: grid; padding: 5.5rem var(--kant) clamp(1.5rem, 5svh, 3rem);
+  opacity: 0; visibility: hidden; translate: 0 14px; transition: opacity 0.45s, translate 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s 0.45s; }
+.takt.aktiv { opacity: 1; visibility: visible; translate: 0 0; transition-delay: 0s; }
+.takt a { pointer-events: auto; }
+.takt .blokk { display: grid; gap: 1.1rem; justify-items: start; max-width: 33rem; }
+.takt.apning { align-content: center; }
+.takt.apning h1 { font-size: clamp(2.8rem, 7.4vw, 7.2rem); }
+.takt h2 { font-size: clamp(2rem, 4.6vw, 4.2rem); }
+.takt p { font-size: clamp(1.05rem, 1.45vw, 1.28rem); max-width: 29rem; }
+.takt.nede { align-content: end; }
+.takt.nede .blokk { background: var(--papir); padding: 1.3rem 1.5rem 1.4rem; }  /* tekstplate, så teksten kan leses oppå blokken */
+.knapp { display: inline-flex; align-items: center; gap: 0.6rem; font: 500 1rem/1 var(--skrift); text-decoration: none; background: var(--dyp); color: var(--papir); padding: 1.1rem 1.5rem; transition: background 0.2s, translate 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.knapp:hover { background: var(--rust); translate: 0 -2px; }
+.knapp svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 2.4; }
+.hint { color: var(--dyp-dus); }
+.navn { position: absolute; left: 0; top: 0; pointer-events: none; translate: -50% -130%; opacity: 0; transition: opacity 0.4s; font: 800 clamp(0.8rem, 1.5vw, 1.2rem)/1.1 var(--skrift); letter-spacing: -0.02em; white-space: nowrap; background: var(--papir); color: var(--dyp); padding: 0.4rem 0.65rem; }
+.navn::after { content: ""; position: absolute; left: 50%; top: 100%; width: 2px; height: 1.1rem; background: var(--dyp); }
+.navn.synlig { opacity: 1; }
+@media (max-width: 46rem) {
+  .takt { padding-top: 4.8rem; }
+  .takt.apning { align-content: start; }
+}
+
+.tak { background: var(--dyp); color: var(--papir); padding: clamp(4rem, 12vh, 8rem) var(--kant); }
+.tak h2 { font-size: clamp(2.4rem, 7vw, 6rem); }
+.tak .inn { margin-top: 1.2rem; max-width: 34rem; font-size: 1.15rem; }
+.tre { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin-top: clamp(2.5rem, 7vh, 5rem); }
+.tre article { padding: 1.5rem 1.6rem 0 0; display: grid; gap: 0.7rem; align-content: start; border-top: 0.9rem solid; }
+.tre article + article { padding-left: 1.6rem; }
+.tre article:nth-child(1) { border-color: var(--rust); }
+.tre article:nth-child(2) { border-color: var(--gull); }
+.tre article:nth-child(3) { border-color: var(--papir); }
+.tre h3 { font-size: clamp(1.4rem, 2.4vw, 2.1rem); }
+.tre ul { margin: 0.3rem 0 0; padding: 0; list-style: none; display: grid; gap: 0.3rem; }
+.tak :focus-visible { outline-color: var(--gull); }
+.ekstra { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 2.4rem; margin-top: clamp(2.5rem, 7vh, 4.5rem); padding-top: 2rem; border-top: 2px solid currentColor; }
+.ekstra h3 { font-size: clamp(1.4rem, 2.6vw, 2.2rem); margin-bottom: 0.7rem; }
+.ekstra p { max-width: 30rem; }
+@media (max-width: 56rem) { .ekstra { grid-template-columns: 1fr; } }
+.bevis { margin-top: 2.5rem; max-width: 40rem; font-size: 1.1rem; }
+@media (max-width: 56rem) { .tre { grid-template-columns: 1fr; gap: 2rem; } .tre article + article { padding-left: 0; } }
+.kontakt { padding: clamp(4rem, 13vh, 9rem) var(--kant); }
+.kontakt h2 { font-size: clamp(2.6rem, 9vw, 8rem); }
+.kontakt p { margin-top: 1.2rem; font-size: 1.15rem; }
+.kontakt .epost { display: inline-block; margin-top: 1.4rem; font: 800 clamp(1.1rem, 3.4vw, 2.6rem)/1.2 var(--skrift); letter-spacing: -0.03em; overflow-wrap: anywhere; }
+footer { padding: 1.5rem var(--kant) 2rem; display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; justify-content: space-between; color: var(--dyp-dus); font-size: 0.95rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .verksted { height: auto; }
+  .laast { position: relative; height: auto; min-height: 100svh; }
+  canvas { height: 100svh; }
+  .takt { position: relative; inset: auto; opacity: 1; visibility: visible; translate: none; min-height: 55svh; }
+  .navn { display: none; }
+  .knapp { transition: none; }
+}
+</style>
+</head>
+<body>
+<a class="hopp" href="#tak">Hopp til innholdet</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="pil" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+</svg>
+
+<header class="topp">
+  <a class="logo" href="#" aria-label="Til toppen"><img src="/assets/img/ch-logo-horisontal-petrol.svg" alt="Christian Hermansen" width="214" height="42"></a>
+  <nav aria-label="Hovedmeny">
+    <a class="liten" href="#tak">Tjenester</a>
+    <a class="liten viktig" href="#kontakt">Kontakt</a>
+  </nav>
+</header>
+
+<main>
+  <section class="verksted" data-scene>
+    <div class="laast">
+      <canvas aria-hidden="true"></canvas>
+
+      <div class="takt apning aktiv" data-fra="0" data-til="0.22">
+        <div class="blokk">
+          <h1>Bygget lag for lag.</h1>
+          <p>Jeg er Christian Hermansen. Jeg bygger nettsider, apper og digitale verktøy i Bergen. Tømrer først, utvikler nå, og fresen står fortsatt i kjelleren.</p>
+          <a class="knapp" href="#kontakt">Fortell hva du trenger <svg aria-hidden="true"><use href="#pil"/></svg></a>
+          <span class="hint liten">Rull, så freser vi videre</span>
+        </div>
+      </div>
+
+      <div class="takt nede" data-fra="0.3" data-til="0.58">
+        <div class="blokk">
+          <h2>Stripene er ikke malt på.</h2>
+          <p>De er lagene i materialet. Hva du ser på overflaten, kommer an på hvor dypt det er skåret. Sånn er det med en nettside også.</p>
+        </div>
+      </div>
+
+      <div class="takt nede" data-fra="0.63" data-til="0.87">
+        <div class="blokk">
+          <h2>Ett fjell, tre topper.</h2>
+          <p>Nettsider, apper og digitale verktøy. Tre ting jeg bygger, på samme grunn og med samme håndverk.</p>
+        </div>
+      </div>
+
+      <div class="takt nede" data-fra="0.91" data-til="1.01">
+        <div class="blokk">
+          <h2>Ovenfra er det bare striper.</h2>
+          <a class="knapp" href="#tak">Se hva som står på hver topp <svg aria-hidden="true"><use href="#pil"/></svg></a>
+        </div>
+      </div>
+
+      <div class="navn" data-topp="0">Nettsider</div>
+      <div class="navn" data-topp="1">Apper</div>
+      <div class="navn" data-topp="2">Digitale verktøy</div>
+    </div>
+  </section>
+
+  <section class="tak" id="tak">
+    <h2>Dette bygger jeg</h2>
+    <p class="inn">Tre ting jeg bygger. Samme håndverk i alle tre, og du kan drive det selv etterpå.</p>
+    <div class="tre">
+      <article>
+        <h3>Nettsider</h3>
+        <p>Tegnet for deg, og laget for telefon først.</p>
+        <ul><li>Design som ikke er en mal</li><li>Innhold du redigerer selv</li><li>Opplæring når du tar over</li></ul>
+      </article>
+      <article>
+        <h3>Apper</h3>
+        <p>For iPhone, eller rett i nettleseren.</p>
+        <ul><li>Én ting som løser ett problem godt</li><li>Virker uten nett der det trengs</li><li>Hele veien ut i App Store</li></ul>
+      </article>
+      <article>
+        <h3>Digitale verktøy</h3>
+        <p>Små verktøy som tar jobben ingen har tid til.</p>
+        <ul><li>Skjemaer som regner ut selv</li><li>Kart og oversikter du kan stole på</li><li>Ingen konto og ingen sporing hvis du ikke må ha det</li></ul>
+      </article>
+    </div>
+    <div class="ekstra">
+      <article>
+        <h3>Nettsider som forteller historier</h3>
+        <p>Som denne. Du ruller, og siden svarer. Historien din kan fortelles på samme måte, i den rekkefølgen du vil ha den.</p>
+      </article>
+      <article>
+        <h3>Gratis hjelp til dem som bidrar</h3>
+        <p>Driver du noe som gjør det bedre for andre, kan du søke om hjelp uten regning. Ett prosjekt om gangen. Det er måten jeg gir tilbake på.</p>
+      </article>
+    </div>
+    <p class="bevis">Fanatastisk, musikkfestivalen i Fana, fikk nettside, app og trykksaker. Nettsiden hadde 5 558 besøkende i festivaluken, og appen ble godkjent av Apple på under et døgn.</p>
+  </section>
+
+  <section class="kontakt" id="kontakt">
+    <h2>Si hva du trenger.</h2>
+    <p>Send en e-post. Jeg svarer selv.</p>
+    <a class="epost" href="mailto:epost@christianhermansen.no">epost@christianhermansen.no</a>
+  </section>
+</main>
+
+<footer>
+  <span>© 2026 Christian Hermansen. Bygd for hånd i Bergen.</span>
+  <span>Skisse av retning E. Tekstene er utkast.</span>
+</footer>
+
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }</script>
+<script src="../felles/rull.js"></script>
+<script type="module">
+// Lagene. En blokk av limte plater i fargene fra siden. Fresen skjærer seg ned,
+// og stripene kommer fram der den har vært. Først logoen, så et fjell med tre topper.
+import * as THREE from "three";
+
+const sceneEl = document.querySelector(".verksted");
+const laast = sceneEl.querySelector(".laast");
+const lerret = sceneEl.querySelector("canvas");
+const takter = [...sceneEl.querySelectorAll(".takt")].map((el) => ({ el, fra: +el.dataset.fra, til: +el.dataset.til }));
+const navn = [...sceneEl.querySelectorAll(".navn")];
+const rolig = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const NIVAA = 10;                      // antall plater i blokken
+const TOPPER = [                       // [u, v, høyeste nivå]
+  [0.5, 0.56, 9],   // Nettsider
+  [0.25, 0.36, 7],  // Apper
+  [0.77, 0.33, 6],  // Digitale verktøy
+];
+
+// --- Høydekart tegnet på vanlig lerret: hvert grånivå er én plate ---
+const graa = (n) => { const v = Math.round((n / NIVAA) * 255); return `rgb(${v},${v},${v})`; };
+function kart(tegn) {
+  const c = document.createElement("canvas"); c.width = c.height = 512;
+  const x = c.getContext("2d"); x.fillStyle = "#000"; x.fillRect(0, 0, 512, 512); x.lineJoin = "round"; x.lineCap = "round";
+  tegn(x);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.NoColorSpace; t.minFilter = t.magFilter = THREE.LinearFilter; t.generateMipmaps = false;
+  return t;
+}
+// Logoen leses fra den ekte filen, så relieffet følger merket. Hver farge i merket får sin egen høyde:
+// ytterbuen i gull (plate 2), mellombuen i rust (plate 5) og CH innerst i petrol (plate 8).
+const PLATE_FOR = { "cls-2": 2, "cls-1": 5, "cls-4": 8 };
+const logoKart = kart(() => {});
+let logoKlar = false;
+fetch("/assets/img/ch-logo-horisontal-petrol.svg").then((r) => r.text()).then((svg) => {
+  const dok = new DOMParser().parseFromString(svg, "image/svg+xml");
+  const deler = [...dok.querySelectorAll("svg > g > path")]
+    .map((p) => ({ plate: PLATE_FOR[p.getAttribute("class")], sti: new Path2D(p.getAttribute("d")) }))
+    .filter((d) => d.plate).sort((a, b) => a.plate - b.plate);
+  const x = logoKart.image.getContext("2d"), s = 0.8;
+  x.translate((512 - 566 * s) / 2, (512 - 463 * s) / 2); x.scale(s, s);
+  x.strokeStyle = x.fillStyle = graa(1); x.lineWidth = 46;              // sokkelen rundt hele merket
+  for (const d of deler) { x.stroke(d.sti); x.fill(d.sti); }
+  for (const d of deler) { x.fillStyle = graa(d.plate); x.fill(d.sti); }
+  logoKart.needsUpdate = true; logoKlar = true;
+}).catch(() => { logoKlar = true; });
+const fjellKart = kart((x) => {
+  x.globalCompositeOperation = "lighten";
+  const klatt = (u, v, r, fase) => {
+    x.beginPath();
+    for (let k = 0; k <= 72; k++) {
+      const a = (k / 72) * Math.PI * 2;
+      const rr = r * (1 + 0.13 * Math.sin(3 * a + fase) + 0.07 * Math.sin(5 * a + fase * 2.3) + 0.04 * Math.sin(9 * a + fase * 0.7));
+      x[k ? "lineTo" : "moveTo"](u * 512 + Math.cos(a) * rr, (1 - v) * 512 + Math.sin(a) * rr);
+    }
+    x.closePath(); x.fill();
+  };
+  x.fillStyle = graa(1); klatt(0.5, 0.45, 232, 0.4);      // felles grunn
+  x.fillStyle = graa(2); klatt(0.5, 0.44, 198, 1.9);
+  TOPPER.forEach(([u, v, topp], i) => {
+    for (let n = 3; n <= topp; n++) {
+      x.fillStyle = graa(n);
+      klatt(u, v, (i === 0 ? 150 : 112) * (1 - (n - 3) / (topp - 1.6)), i * 2.1 + n * 0.35);
+    }
+  });
+});
+
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ canvas: lerret, antialias: true, alpha: true }); } catch { lerret.remove(); }
+
+if (renderer) {
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  const scene = new THREE.Scene();
+  const kamera = new THREE.PerspectiveCamera(36, 1, 0.1, 60);
+  const mobil = innerWidth < 740;
+  const HOYDE = 1.25, BREDDE = 6;
+
+  const blokk = new THREE.Group();
+  const ruter = mobil ? 220 : 340;
+  const flate = new THREE.Mesh(
+    new THREE.PlaneGeometry(BREDDE, BREDDE, ruter, ruter),
+    new THREE.ShaderMaterial({
+      extensions: { derivatives: true },
+      uniforms: {
+        tA: { value: logoKart }, tB: { value: fjellKart }, uFrontA: { value: 0 }, uFrontB: { value: 0 }, uHoyde: { value: HOYDE },
+        petrol: { value: new THREE.Color(0x24494e) }, rust: { value: new THREE.Color(0xa8432a) }, gull: { value: new THREE.Color(0xd9923c) }, papir: { value: new THREE.Color(0xf1e7d3) },
+      },
+      vertexShader: `uniform sampler2D tA, tB; uniform float uFrontA, uFrontB, uHoyde; varying float vH; varying vec3 vPos;
+        void main() {
+          float raa = 0.9;                                         // ufrest blokk: ni plater
+          float h = mix(raa, texture2D(tA, uv).r, smoothstep(uFrontA + 0.004, uFrontA - 0.004, uv.x));
+          h = mix(h, texture2D(tB, uv).r, smoothstep(uFrontB + 0.004, uFrontB - 0.004, uv.x));
+          float kant = min(min(uv.x, 1.0 - uv.x), min(uv.y, 1.0 - uv.y));
+          h *= step(0.0025, kant);                                 // ytterkanten går ned til bordet, så siden av blokken viser lagene
+          vH = h;
+          vec4 w = modelMatrix * vec4(position + normal * h * uHoyde, 1.0);
+          vPos = w.xyz; gl_Position = projectionMatrix * viewMatrix * w;
+        }`,
+      fragmentShader: `uniform vec3 petrol, rust, gull, papir; varying float vH; varying vec3 vPos;
+        vec3 plate(float n) { float i = mod(n, 4.0); return i < 0.5 ? petrol : (i < 1.5 ? rust : (i < 2.5 ? gull : papir)); }
+        void main() {
+          vec3 n = normalize(cross(dFdx(vPos), dFdy(vPos)));
+          float nivaa = vH * ${NIVAA.toFixed(1)};
+          float bratt = 1.0 - smoothstep(0.55, 0.9, abs(n.y));    // 1 på loddrette flater
+          vec3 c = plate(mix(floor(nivaa + 0.5), floor(nivaa + 0.02), bratt));
+          float lys = 0.6 + 0.4 * clamp(dot(n, normalize(vec3(0.45, 0.8, 0.4))), 0.0, 1.0);
+          c *= mix(lys, lys * 0.86, bratt);
+          gl_FragColor = vec4(c, 1.0);
+          #include <colorspace_fragment>
+        }`,
+    })
+  );
+  flate.rotation.x = -Math.PI / 2;
+  const bord = new THREE.Mesh(new THREE.BoxGeometry(BREDDE + 0.02, 0.16, BREDDE + 0.02), new THREE.MeshBasicMaterial({ color: 0x1d3c41 }));
+  bord.position.y = -0.08;
+  blokk.add(flate, bord);
+  scene.add(blokk);
+
+  // Fresen: et lite bor som følger skjærelinjen
+  const fres = new THREE.Group();
+  const bor = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.3, 12), new THREE.MeshBasicMaterial({ color: 0x1d3c41 }));
+  bor.position.y = 0.95;
+  const spiss = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.14, 12), new THREE.MeshBasicMaterial({ color: 0xd9923c }));
+  spiss.rotation.x = Math.PI; spiss.position.y = 0.23;
+  const hode = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.5, 0.34), new THREE.MeshBasicMaterial({ color: 0xa8432a }));
+  hode.position.y = 1.85;
+  fres.add(bor, spiss, hode); fres.visible = false;
+  blokk.add(fres);
+
+  function nokler() {
+    const bred = laast.clientWidth / laast.clientHeight > 1.05;
+    if (!bred) return [   // telefon: blokken nederst under åpningen, deretter øverst, med teksten under
+      { p: 0.0, pos: [3.6, 7.5, 11.5], se: [0, 2.6, 0], opp: [0, 1, 0] },
+      { p: 0.3, pos: [5.4, 5.5, 9], se: [0, -1.7, 0], opp: [0, 1, 0] },
+      { p: 0.58, pos: [-5.5, 5.0, 9.5], se: [0, -1.7, 0], opp: [0, 1, 0] },
+      { p: 0.8, pos: [-3.0, 3.0, 11], se: [0, -1.5, 0], opp: [0, 1, 0] },
+      { p: 1.0, pos: [0, 22, 2.42], se: [0, 0, 2.4], opp: [0, 0, -1] },
+    ];
+    const s = -2.5;       // stor skjerm: se til venstre for blokken, så den havner til høyre for teksten
+    return [
+      { p: 0.0, pos: [3.6 + s, 6.2, 9.6], se: [s, 0.2, 0], opp: [0, 1, 0] },
+      { p: 0.3, pos: [5.4 + s, 4.6, 6.6], se: [s, 0.2, 0], opp: [0, 1, 0] },
+      { p: 0.58, pos: [-3.8, 4.0, 5.6], se: [1.45, 0.2, 0], opp: [0, 1, 0] },
+      { p: 0.8, pos: [-2.2, 2.0, 6.0], se: [1.2, 0.5, 0], opp: [0, 1, 0] },
+      { p: 1.0, pos: [-1.9, 10.5, 0.02], se: [-1.9, 0, 0], opp: [0, 0, -1] },
+    ];
+  }
+  let vei = nokler();
+  const v = { pos: new THREE.Vector3(), se: new THREE.Vector3(), opp: new THREE.Vector3() }, hjelp = new THREE.Vector3();
+  function settKamera(p) {
+    let i = 1; while (i < vei.length - 1 && p > vei[i].p) i++;
+    const a = vei[i - 1], b = vei[i];
+    let t = THREE.MathUtils.clamp((p - a.p) / (b.p - a.p || 1), 0, 1); t = t * t * (3 - 2 * t);
+    for (const k of ["pos", "se", "opp"]) v[k].fromArray(a[k]).lerp(hjelp.fromArray(b[k]), t);
+    kamera.position.copy(v.pos); kamera.up.copy(v.opp).normalize(); kamera.lookAt(v.se);
+  }
+  function storrelse() {
+    const b = laast.clientWidth, h = laast.clientHeight;
+    renderer.setSize(b, h, false); kamera.aspect = b / h; kamera.updateProjectionMatrix(); vei = nokler();
+  }
+  addEventListener("resize", storrelse); storrelse();
+
+  let pekerX = 0;
+  addEventListener("pointermove", (e) => { pekerX = e.clientX / innerWidth - 0.5; });
+
+  const klokke = new THREE.Clock(), punkt = new THREE.Vector3(), u = flate.material.uniforms;
+  const myk = (t) => t * t * (3 - 2 * t);
+  let p = 0, tid = 0, synlig = true, start = Infinity;
+  new IntersectionObserver(([e]) => { synlig = e.isIntersecting; }).observe(laast);
+
+  function bilde() {
+    requestAnimationFrame(bilde);
+    if (!synlig) { klokke.getDelta(); return; }
+    const dt = Math.min(klokke.getDelta(), 0.05); tid += dt;
+    if (logoKlar && start === Infinity) start = tid + 0.35;      // første kutt venter til logoen er lest
+    const maal = rolig ? 0.76 : parseFloat(sceneEl.style.getPropertyValue("--p")) || 0;
+    p += (maal - p) * Math.min(1, dt * 6);
+
+    // Første kutt går av seg selv når siden åpner. Det neste styres av rullingen.
+    const a = rolig ? (logoKlar ? 1 : 0) : THREE.MathUtils.clamp((tid - start) / 2.8, 0, 1);
+    const b = THREE.MathUtils.clamp((p - 0.3) / 0.26, 0, 1);
+    u.uFrontA.value = myk(a) * 1.02; u.uFrontB.value = b * 1.02;
+    const front = b > 0 && b < 1 ? b : a < 1 ? myk(a) : -1;
+    fres.visible = front >= 0;
+    if (fres.visible) fres.position.set((front - 0.5) * BREDDE, 0, Math.sin(tid * 9) * BREDDE * 0.46);
+
+    blokk.rotation.y += ((rolig ? 0 : pekerX * 0.22) - blokk.rotation.y) * Math.min(1, dt * 3);
+    settKamera(p);
+    renderer.render(scene, kamera);
+
+    if (!rolig) for (const t of takter) t.el.classList.toggle("aktiv", maal >= t.fra && maal < t.til);
+    const vis = b >= 1 && p > 0.6 && p < 0.985;
+    navn.forEach((el, i) => {
+      const [uu, vv, topp] = TOPPER[i];
+      punkt.set((uu - 0.5) * BREDDE, (topp / NIVAA) * HOYDE, -(vv - 0.5) * BREDDE);
+      blokk.localToWorld(punkt).project(kamera);
+      el.style.transform = `translate(${(punkt.x * 0.5 + 0.5) * laast.clientWidth}px, ${(-punkt.y * 0.5 + 0.5) * laast.clientHeight}px)`;
+      el.classList.toggle("synlig", vis);
+    });
+  }
+  bilde();
+}
+</script>
+</body>
+</html>

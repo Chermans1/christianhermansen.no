@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Retning D - Under paraplyen</title>
+<meta name="theme-color" content="#12282c">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600&family=Unbounded:wght@600;800&display=swap" rel="stylesheet">
+<style>
+/* Retning D - Under paraplyen. Skisse, ikke ferdig design.
+   Fargene er de fra christianhermansen.no, skilt på lyshet:
+   natt (mørkest), petrol, rust, gull, papir (lysest). */
+:root {
+  --natt: #12282c;
+  --petrol: #24494e;
+  --rust: #a8432a;
+  --gull: #d9923c;
+  --papir: #f1e7d3;
+  --papir-dus: #b9c4bd;   /* sekundærtekst på natt, 8,6:1 */
+  --tittel: "Unbounded", system-ui, sans-serif;
+  --tekst: "Hanken Grotesk", system-ui, sans-serif;
+  --kant: clamp(1.1rem, 4vw, 3.5rem);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scrollbar-color: var(--gull) var(--natt); }
+body { margin: 0; background: var(--natt); color: var(--papir); font: 400 1.0625rem/1.55 var(--tekst); -webkit-font-smoothing: antialiased; }
+::selection { background: var(--gull); color: var(--natt); }
+a { color: inherit; text-underline-offset: 0.22em; text-decoration-thickness: 2px; text-decoration-color: var(--gull); }
+:focus-visible { outline: 3px solid var(--gull); outline-offset: 3px; }
+h1, h2, h3 { font-family: var(--tittel); font-weight: 800; line-height: 1.02; letter-spacing: -0.03em; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.liten { font: 600 0.8rem/1.3 var(--tekst); letter-spacing: 0.14em; text-transform: uppercase; }
+.hopp { position: absolute; left: -999px; }
+.hopp:focus { left: 1rem; top: 1rem; z-index: 100; background: var(--gull); color: var(--natt); padding: 0.6rem 1rem; }
+
+.topp { position: fixed; z-index: 60; top: 0.9rem; left: var(--kant); right: var(--kant); display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
+.topp > * { pointer-events: auto; }
+.topp .logo { background: var(--natt); padding: 0.55rem 0.8rem; }   /* plate bak logoen, så navnet kan leses på alle flater */
+.topp .logo img { display: block; height: clamp(32px, 2.8vw, 42px); width: auto; }
+.topp nav { display: flex; gap: 0.3rem; }
+.topp nav a { text-decoration: none; padding: 0.7rem 1rem; border-radius: 99px; background: rgb(18 40 44 / 0.72); }
+.topp nav a:hover { background: var(--papir); color: var(--natt); }
+.topp nav a.viktig { background: var(--gull); color: var(--natt); }
+@media (max-width: 46rem) { .topp nav a:not(.viktig) { display: none; } }
+
+/* --- Scenen: ett låst lerret, tekst i lag oppå --- */
+.himmel { height: 640vh; }
+.laast { position: sticky; top: 0; height: 100svh; overflow: hidden; background: radial-gradient(120% 90% at 50% 100%, #1b3b41, var(--natt) 70%); }
+canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; cursor: grab; }
+canvas:active { cursor: grabbing; }
+.takt { position: absolute; inset: 0; pointer-events: none; display: grid; padding: 5.5rem var(--kant) clamp(1.5rem, 5svh, 3rem);
+  opacity: 0; visibility: hidden; translate: 0 14px; transition: opacity 0.45s, translate 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s 0.45s; }
+.takt.aktiv { opacity: 1; visibility: visible; translate: 0 0; transition-delay: 0s; }
+.takt a, .takt button { pointer-events: auto; }
+.takt .blokk { display: grid; gap: 1.1rem; justify-items: start; max-width: 36rem; }
+.takt.apning { align-content: center; background: linear-gradient(90deg, rgb(18 40 44 / 0.72), rgb(18 40 44 / 0.35) 38%, transparent 62%); }
+.takt.regn, .takt.under { background: linear-gradient(0deg, rgb(18 40 44 / 0.78), transparent 55%); }
+.takt.apning h1 { font-size: clamp(2.5rem, 6.4vw, 6.2rem); }
+.takt.apning p { font-size: clamp(1.05rem, 1.5vw, 1.3rem); max-width: 30rem; }
+.takt.regn { align-content: end; }
+.takt.regn h2, .takt.under h2 { font-size: clamp(1.9rem, 4.4vw, 4rem); }
+.takt.regn p, .takt.under p { font-size: clamp(1.05rem, 1.45vw, 1.25rem); max-width: 31rem; }
+.takt.under { align-content: end; }
+.takt.under .blokk { max-width: 24rem; }
+.takt.under h2 { font-size: clamp(1.6rem, 3vw, 2.6rem); }
+.knapp { display: inline-flex; align-items: center; gap: 0.6rem; font: 600 1rem/1 var(--tekst); text-decoration: none; background: var(--gull); color: var(--natt); padding: 1.05rem 1.5rem; border-radius: 99px; transition: background 0.2s, translate 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.knapp:hover { background: var(--papir); translate: 0 -2px; }
+.knapp svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 2.4; }
+.hint { color: var(--papir-dus); }
+.navn { position: absolute; left: 0; top: 0; pointer-events: none; text-align: center; translate: -50% -50%; opacity: 0; transition: opacity 0.4s; font: 800 clamp(0.8rem, 1.7vw, 1.35rem)/1.1 var(--tittel); letter-spacing: -0.02em; color: var(--papir); text-shadow: 0 2px 12px rgb(18 40 44 / 0.7); white-space: nowrap; }
+.navn small { display: block; margin-top: 0.3rem; font: 400 0.85rem/1.25 var(--tekst); letter-spacing: 0; white-space: normal; width: 11rem; }
+.navn.synlig { opacity: 1; }
+@media (max-width: 46rem) {
+  .takt { padding-top: 4.8rem; }
+  .takt.apning { align-content: start; background: linear-gradient(180deg, rgb(18 40 44 / 0.8), rgb(18 40 44 / 0.4) 45%, transparent 62%); }
+  .navn small { display: none; }
+}
+
+/* --- Under paraplyen: samme innhold uten 3D --- */
+.tak { background: var(--papir); color: var(--natt); padding: clamp(4rem, 12vh, 8rem) var(--kant); }
+.tak h2 { font-size: clamp(2.2rem, 6.5vw, 5.6rem); max-width: 14ch; }
+.tak .inn { margin-top: 1.2rem; max-width: 34rem; font-size: 1.15rem; }
+.tre { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(2.5rem, 7vh, 5rem); }
+.tre article { padding: 1.6rem 1.6rem 1.8rem; display: grid; gap: 0.7rem; align-content: start; color: var(--papir); }
+.tre article:nth-child(1) { background: var(--rust); }
+.tre article:nth-child(2) { background: var(--gull); color: var(--natt); }
+.tre article:nth-child(3) { background: var(--petrol); }
+.tre h3 { font-size: clamp(1.25rem, 2.2vw, 1.9rem); }
+.tre ul { margin: 0.3rem 0 0; padding: 0; list-style: none; display: grid; gap: 0.3rem; }
+.tak :focus-visible { outline-color: var(--natt); }
+.ekstra { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 2.4rem; margin-top: clamp(2.5rem, 7vh, 4.5rem); padding-top: 2rem; border-top: 2px solid currentColor; }
+.ekstra h3 { font-size: clamp(1.4rem, 2.6vw, 2.2rem); margin-bottom: 0.7rem; }
+.ekstra p { max-width: 30rem; }
+@media (max-width: 56rem) { .ekstra { grid-template-columns: 1fr; } }
+.bevis { margin-top: 2.5rem; max-width: 40rem; font-size: 1.1rem; }
+@media (max-width: 56rem) { .tre { grid-template-columns: 1fr; } }
+.kontakt { padding: clamp(4rem, 13vh, 9rem) var(--kant); }
+.kontakt h2 { font-size: clamp(2.4rem, 8vw, 7rem); }
+.kontakt p { margin-top: 1.2rem; font-size: 1.15rem; }
+.kontakt .epost { display: inline-block; margin-top: 1.4rem; font: 800 clamp(1rem, 3vw, 2.2rem)/1.2 var(--tittel); overflow-wrap: anywhere; }
+footer { padding: 1.5rem var(--kant) 2rem; display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; justify-content: space-between; color: var(--papir-dus); font-size: 0.95rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .himmel { height: auto; }
+  .laast { position: relative; height: auto; min-height: 100svh; }
+  canvas { height: 100svh; }
+  .takt { position: relative; inset: auto; opacity: 1; visibility: visible; translate: none; min-height: 60svh; }
+  .navn { display: none; }
+  .knapp { transition: none; }
+}
+</style>
+</head>
+<body>
+<a class="hopp" href="#tak">Hopp til innholdet</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="pil" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+</svg>
+
+<header class="topp">
+  <a class="logo" href="#" aria-label="Til toppen"><img src="../felles/ch-logo-horisontal-krem.svg" alt="Christian Hermansen" width="214" height="42"></a>
+  <nav aria-label="Hovedmeny">
+    <a class="liten" href="#tak">Tjenester</a>
+    <a class="liten viktig" href="#kontakt">Kontakt</a>
+  </nav>
+</header>
+
+<main>
+  <section class="himmel" data-scene>
+    <div class="laast">
+      <canvas aria-hidden="true"></canvas>
+
+      <div class="takt apning aktiv" data-fra="0" data-til="0.2">
+        <div class="blokk">
+          <h1>Alt under én paraply.</h1>
+          <p>Jeg er Christian Hermansen. Jeg bygger nettsider, apper og digitale verktøy i Bergen, og her regner det. Derfor.</p>
+          <a class="knapp" href="#kontakt">Fortell hva du trenger <svg aria-hidden="true"><use href="#pil"/></svg></a>
+          <span class="hint liten">Rull ned i regnet. Dra for å snurre paraplyen.</span>
+        </div>
+      </div>
+
+      <div class="takt regn" data-fra="0.34" data-til="0.58">
+        <div class="blokk">
+          <h2>Nettsider som forteller historier.</h2>
+          <p>Som denne. Du ruller, og siden svarer. Sånn kan din historie også fortelles.</p>
+        </div>
+      </div>
+
+      <div class="takt under" data-fra="0.7" data-til="1.01">
+        <div class="blokk">
+          <h2>Her er det tørt.</h2>
+          <p>Tre ting jeg bygger. Velg feltet som passer, eller bare si hva du trenger, så finner jeg ut hva det bør bli.</p>
+          <a class="knapp" href="#tak">Se hva som står under <svg aria-hidden="true"><use href="#pil"/></svg></a>
+        </div>
+      </div>
+
+      <div class="navn" data-felt="0">Nettsider<small>Tegnet for deg, og du driver den selv</small></div>
+      <div class="navn" data-felt="1">Apper<small>For iPhone, eller rett i nettleseren</small></div>
+      <div class="navn" data-felt="2">Digitale verktøy<small>Tar jobben ingen har tid til</small></div>
+    </div>
+  </section>
+
+  <section class="tak" id="tak">
+    <h2>Under paraplyen</h2>
+    <p class="inn">Tre ting jeg bygger. Samme håndverk i alle tre, og du kan drive det selv etterpå.</p>
+    <div class="tre">
+      <article>
+        <h3>Nettsider</h3>
+        <p>Tegnet for deg, og laget for telefon først.</p>
+        <ul><li>Design som ikke er en mal</li><li>Innhold du redigerer selv</li><li>Opplæring når du tar over</li></ul>
+      </article>
+      <article>
+        <h3>Apper</h3>
+        <p>For iPhone, eller rett i nettleseren.</p>
+        <ul><li>Én ting som løser ett problem godt</li><li>Virker uten nett der det trengs</li><li>Hele veien ut i App Store</li></ul>
+      </article>
+      <article>
+        <h3>Digitale verktøy</h3>
+        <p>Små verktøy som tar jobben ingen har tid til.</p>
+        <ul><li>Skjemaer som regner ut selv</li><li>Kart og oversikter du kan stole på</li><li>Ingen konto og ingen sporing hvis du ikke må ha det</li></ul>
+      </article>
+    </div>
+    <div class="ekstra">
+      <article>
+        <h3>Nettsider som forteller historier</h3>
+        <p>Som denne. Du ruller, og siden svarer. Historien din kan fortelles på samme måte, i den rekkefølgen du vil ha den.</p>
+      </article>
+      <article>
+        <h3>Gratis hjelp til dem som bidrar</h3>
+        <p>Driver du noe som gjør det bedre for andre, kan du søke om hjelp uten regning. Ett prosjekt om gangen. Det er måten jeg gir tilbake på.</p>
+      </article>
+    </div>
+    <p class="bevis">Fanatastisk, musikkfestivalen i Fana, fikk nettside, app og trykksaker. Nettsiden hadde 5 558 besøkende i festivaluken, og appen ble godkjent av Apple på under et døgn.</p>
+  </section>
+
+  <section class="kontakt" id="kontakt">
+    <h2>Si hva du trenger.</h2>
+    <p>Send en e-post. Jeg svarer selv.</p>
+    <a class="epost" href="mailto:epost@christianhermansen.no">epost@christianhermansen.no</a>
+  </section>
+</main>
+
+<footer>
+  <span>© 2026 Christian Hermansen. Bygd for hånd i Bergen.</span>
+  <span>Skisse av retning D. Tekstene er utkast.</span>
+</footer>
+
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }</script>
+<script src="../felles/rull.js"></script>
+<script type="module">
+// Under paraplyen. Stripene fra siden faller som regn, og paraplyen sett ovenfra
+// er ringene i logoen. Rullingen fører kameraet fra oversikt, ned i regnet og inn under.
+import * as THREE from "three";
+
+const scene3 = document.querySelector(".himmel");
+const laast = scene3.querySelector(".laast");
+const lerret = scene3.querySelector("canvas");
+const takter = [...scene3.querySelectorAll(".takt")].map((el) => ({ el, fra: +el.dataset.fra, til: +el.dataset.til }));
+const navn = [...scene3.querySelectorAll(".navn")];
+const rolig = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const FARGE = { natt: 0x12282c, petrol: 0x24494e, petrolLys: 0x3a6e75, rust: 0xa8432a, gull: 0xd9923c, papir: 0xf1e7d3 };
+const farge = (hex) => new THREE.Color(hex);
+
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas: lerret, antialias: true, alpha: true });
+} catch {
+  lerret.remove(); // uten WebGL står teksten igjen på nattbakgrunnen
+}
+
+if (renderer) {
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  const scene = new THREE.Scene();
+  const kamera = new THREE.PerspectiveCamera(40, 1, 0.1, 80);
+
+  // --- Paraplyen ---
+  const RS = 2.2, TH = 0.82, TOPP = 2.6;
+  const paraply = new THREE.Group();
+  const duk = new THREE.Mesh(
+    new THREE.SphereGeometry(RS, 72, 24, 0, Math.PI * 2, 0, TH),
+    new THREE.ShaderMaterial({
+      side: THREE.DoubleSide,
+      uniforms: { petrol: { value: farge(FARGE.petrol) }, petrolLys: { value: farge(FARGE.petrolLys) }, rust: { value: farge(FARGE.rust) }, gull: { value: farge(FARGE.gull) }, papir: { value: farge(FARGE.papir) } },
+      vertexShader: `varying vec2 vUv; varying vec3 vN;
+        void main() { vUv = uv; vN = normalize(mat3(modelMatrix) * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+      fragmentShader: `uniform vec3 petrol, petrolLys, rust, gull, papir; varying vec2 vUv; varying vec3 vN;
+        float kant(float r, float e) { float w = fwidth(r) * 1.2; return smoothstep(e - w, e + w, r); }
+        void main() {
+          float r = 1.0 - vUv.y; vec3 c;
+          if (gl_FrontFacing) {            // oversiden: ringer, som logoen sett ovenfra
+            c = mix(petrol, papir, kant(r, 0.14));
+            c = mix(c, rust, kant(r, 0.36));
+            c = mix(c, gull, kant(r, 0.6));
+            c = mix(c, petrol, kant(r, 0.84));
+            c *= 0.84 + 0.16 * clamp(dot(vN, normalize(vec3(0.4, 0.9, 0.3))), 0.0, 1.0);
+          } else {                         // undersiden: tre felt, ett for hver tjeneste
+            float f = fract(vUv.x) * 3.0;
+            c = f < 1.0 ? rust : (f < 2.0 ? gull : petrolLys);
+            float spile = abs(fract(vUv.x * 9.0) - 0.5);
+            c *= mix(0.7, 1.0, smoothstep(0.0, 0.035, spile));
+            c *= 0.78 + 0.22 * r;
+          }
+          gl_FragColor = vec4(c, 1.0);
+          #include <colorspace_fragment>
+        }`,
+    })
+  );
+  duk.position.y = TOPP - RS;
+  paraply.add(duk);
+  const tre = new THREE.MeshBasicMaterial({ color: FARGE.papir });
+  const stang = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, TOPP - 0.42, 10), tre);
+  stang.position.y = (TOPP + 0.42) / 2;
+  const tupp = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.22, 10), tre);
+  tupp.position.y = TOPP + 0.1;
+  const krok = new THREE.Mesh(new THREE.TorusGeometry(0.13, 0.032, 8, 20, Math.PI), new THREE.MeshBasicMaterial({ color: FARGE.gull }));
+  krok.position.set(0.13, 0.42, 0); krok.rotation.z = Math.PI;
+  paraply.add(stang, tupp, krok);
+  paraply.rotation.z = 0.07;
+  scene.add(paraply);
+
+  // --- Regnet: stripene, tusenvis av dem ---
+  const mobil = innerWidth < 740;
+  const ANTALL = mobil ? 1600 : 3400, FELT = 9, HOYDE = 8;
+  const plan = new THREE.PlaneGeometry(1, 1);
+  const regnGeo = new THREE.InstancedBufferGeometry();
+  regnGeo.index = plan.index; regnGeo.attributes.position = plan.attributes.position;
+  const sted = new Float32Array(ANTALL * 3), info = new Float32Array(ANTALL * 3);
+  for (let i = 0; i < ANTALL; i++) {
+    sted.set([(Math.random() * 2 - 1) * FELT, Math.random(), (Math.random() * 2 - 1) * FELT], i * 3);
+    const t = Math.random();
+    info.set([5.5 + Math.random() * 4, t < 0.5 ? 0 : t < 0.8 ? 1 : 2, 0.35 + Math.random() * 0.5], i * 3);
+  }
+  regnGeo.setAttribute("aSted", new THREE.InstancedBufferAttribute(sted, 3));
+  regnGeo.setAttribute("aInfo", new THREE.InstancedBufferAttribute(info, 3));
+  regnGeo.instanceCount = ANTALL;
+  const regnMat = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, side: THREE.DoubleSide,
+    uniforms: { uTid: { value: 0 }, uTopp: { value: TOPP }, rust: { value: farge(0xc9573a) }, gull: { value: farge(FARGE.gull) }, papir: { value: farge(FARGE.papir) } },
+    vertexShader: `attribute vec3 aSted; attribute vec3 aInfo; uniform float uTid; varying vec3 vVerden; varying float vFarge; varying float vLangs;
+      void main() {
+        float H = ${HOYDE.toFixed(1)};
+        float y = H - mod(aSted.y * H + uTid * aInfo.x, H);
+        vec3 retning = normalize(vec3(0.16, 1.0, 0.07));         // litt vind, så regnet synes også ovenfra
+        vec3 midt = vec3(aSted.x, y, aSted.z) + retning * (y - H * 0.5) * 0.16;
+        vec3 mot = cameraPosition - midt;
+        vec3 side = cross(retning, mot);
+        side = length(side) > 0.0001 ? normalize(side) : vec3(1.0, 0.0, 0.0);
+        vec3 p = midt + side * position.x * 0.022 + retning * position.y * aInfo.z;
+        vVerden = p; vFarge = aInfo.y; vLangs = position.y + 0.5;
+        gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.0);
+      }`,
+    fragmentShader: `uniform vec3 rust, gull, papir; uniform float uTopp; varying vec3 vVerden; varying float vFarge; varying float vLangs;
+      void main() {
+        float d = length(vVerden.xz);
+        if (d < 1.58 && vVerden.y < uTopp - d * d * 0.27) discard;   // tørt under duken
+        vec3 c = vFarge < 0.5 ? papir : (vFarge < 1.5 ? gull : rust);
+        float a = smoothstep(0.0, 0.25, vLangs) * 0.9 * smoothstep(11.0, 5.0, d);
+        gl_FragColor = vec4(c, a);
+        #include <colorspace_fragment>
+      }`,
+  });
+  const regn = new THREE.Mesh(regnGeo, regnMat);
+  regn.frustumCulled = false;
+  scene.add(regn);
+
+  // --- Bakken: våt asfalt med ringer der dråpene treffer, og en tørr flekk under paraplyen ---
+  const bakke = new THREE.Mesh(
+    new THREE.PlaneGeometry(70, 70),
+    new THREE.ShaderMaterial({
+      uniforms: { uTid: { value: 0 }, natt: { value: farge(FARGE.natt) }, dyp: { value: farge(0x1a383d) }, papir: { value: farge(FARGE.papir) } },
+      vertexShader: `varying vec3 vVerden; void main() { vec4 w = modelMatrix * vec4(position, 1.0); vVerden = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`,
+      fragmentShader: `uniform float uTid; uniform vec3 natt, dyp, papir; varying vec3 vVerden;
+        float h(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+        void main() {
+          vec2 g = vVerden.xz; float d = length(g); vec3 c = dyp; float ringer = 0.0;
+          for (int i = 0; i < 3; i++) {
+            vec2 q = g / 1.5 + float(i) * 7.31;
+            vec2 celle = floor(q); vec2 f = fract(q) - 0.5;
+            float t = fract(uTid * 0.5 + h(celle));
+            vec2 o = (vec2(h(celle + 1.3), h(celle + 2.7)) - 0.5) * 0.5;
+            float r = length(f - o);
+            ringer += smoothstep(0.03, 0.0, abs(r - t * 0.4)) * (1.0 - t);
+          }
+          c = mix(c, papir, clamp(ringer, 0.0, 1.0) * 0.15 * smoothstep(1.55, 1.85, d));
+          c = mix(c, mix(dyp, papir, 0.1), smoothstep(1.78, 1.6, d));
+          gl_FragColor = vec4(mix(c, natt, smoothstep(6.0, 20.0, d)), 1.0);
+          #include <colorspace_fragment>
+        }`,
+    })
+  );
+  bakke.rotation.x = -Math.PI / 2;
+  scene.add(bakke);
+
+  // --- Dråper som slynges av kanten når paraplyen snurres ---
+  const SPRUT = 260, sprutPos = new Float32Array(SPRUT * 3), sprutFart = new Float32Array(SPRUT * 3), sprutLiv = new Float32Array(SPRUT);
+  const sprutGeo = new THREE.BufferGeometry();
+  sprutGeo.setAttribute("position", new THREE.BufferAttribute(sprutPos, 3));
+  const sprut = new THREE.Points(sprutGeo, new THREE.PointsMaterial({ color: FARGE.papir, size: 0.06, transparent: true, opacity: 0.9, depthWrite: false }));
+  sprut.frustumCulled = false;
+  scene.add(sprut);
+  let nesteSprut = 0;
+  function slyng(vinkelfart) {
+    const kantR = RS * Math.sin(TH), kantY = TOPP - RS * (1 - Math.cos(TH));
+    for (let n = 0; n < 6; n++) {
+      const i = nesteSprut++ % SPRUT, a = Math.random() * Math.PI * 2, f = Math.abs(vinkelfart) * kantR * 0.55;
+      sprutPos.set([Math.cos(a) * kantR, kantY, Math.sin(a) * kantR], i * 3);
+      const tegn = Math.sign(vinkelfart);
+      sprutFart.set([-Math.sin(a) * f * -tegn + Math.cos(a) * 0.6, 0.8 + Math.random(), Math.cos(a) * f * -tegn + Math.sin(a) * 0.6], i * 3);
+      sprutLiv[i] = 1;
+    }
+  }
+
+  // --- Kameraet: fra oversikt, ned i regnet, inn under duken ---
+  function nokler() {
+    const bred = laast.clientWidth / laast.clientHeight > 1.05;
+    const sx = bred ? -2.3 : 0, sz = bred ? 0 : -1.9;       // flytter paraplyen til høyre, eller ned på telefon
+    return [
+      { p: 0.0, pos: [sx, 9.6, sz + 0.02], se: [sx, 0, sz], opp: [0, 0, -1], fov: 40 },
+      { p: 0.14, pos: [sx, 9.6, sz + 0.02], se: [sx, 0, sz], opp: [0, 0, -1], fov: 40 },
+      { p: 0.42, pos: [5.6, 2.3, 6.4], se: [bred ? -1.4 : 0, bred ? 1.5 : 2.4, 0], opp: [0, 1, 0], fov: 40 },
+      { p: 0.56, pos: [4.6, 2.0, 6.9], se: [bred ? -1.4 : 0, bred ? 1.5 : 2.4, 0], opp: [0, 1, 0], fov: 40 },
+      { p: 0.8, pos: [0.4, 0.22, 0.4], se: [bred ? 1.0 : 0.1, 2.6, bred ? 0.1 : 1.15], opp: [0, 0, -1], fov: bred ? 92 : 108 },
+      { p: 1.0, pos: [0.4, 0.2, 0.4], se: [bred ? 1.0 : 0.1, 2.6, bred ? 0.1 : 1.15], opp: [0, 0, -1], fov: bred ? 96 : 112 },
+    ];
+  }
+  let vei = nokler();
+  const v = { pos: new THREE.Vector3(), se: new THREE.Vector3(), opp: new THREE.Vector3() };
+  function settKamera(p) {
+    let i = 1; while (i < vei.length - 1 && p > vei[i].p) i++;
+    const a = vei[i - 1], b = vei[i];
+    let t = THREE.MathUtils.clamp((p - a.p) / (b.p - a.p || 1), 0, 1); t = t * t * (3 - 2 * t);
+    for (const k of ["pos", "se", "opp"]) v[k].fromArray(a[k]).lerp(new THREE.Vector3().fromArray(b[k]), t);
+    kamera.position.copy(v.pos); kamera.up.copy(v.opp).normalize(); kamera.lookAt(v.se);
+    const fov = a.fov + (b.fov - a.fov) * t;
+    if (Math.abs(fov - kamera.fov) > 0.01) { kamera.fov = fov; kamera.updateProjectionMatrix(); }
+  }
+
+  function storrelse() {
+    const b = laast.clientWidth, h = laast.clientHeight;
+    renderer.setSize(b, h, false); kamera.aspect = b / h; kamera.updateProjectionMatrix(); vei = nokler();
+  }
+  addEventListener("resize", storrelse); storrelse();
+
+  // --- Dra for å snurre ---
+  let fart = 0.18, drar = false, forrigeX = 0;
+  lerret.addEventListener("pointerdown", (e) => { drar = true; forrigeX = e.clientX; });
+  addEventListener("pointermove", (e) => { if (!drar) return; fart += (e.clientX - forrigeX) * 0.012; forrigeX = e.clientX; });
+  addEventListener("pointerup", () => { drar = false; });
+  addEventListener("pointercancel", () => { drar = false; });
+
+  const klokke = new THREE.Clock();
+  const punkt = new THREE.Vector3();
+  let p = 0, tid = 0, synlig = true;
+  new IntersectionObserver(([e]) => { synlig = e.isIntersecting; }).observe(laast);
+
+  function bilde() {
+    requestAnimationFrame(bilde);
+    if (!synlig) { klokke.getDelta(); return; }
+    const dt = Math.min(klokke.getDelta(), 0.05);
+    const maal = rolig ? 0.47 : parseFloat(scene3.style.getPropertyValue("--p")) || 0;
+    p += (maal - p) * Math.min(1, dt * 6);
+    if (!rolig) tid += dt;
+
+    fart += ((p > 0.66 ? 0.05 : 0.18) - fart) * Math.min(1, dt * 0.9);   // roligere når du står under og leser
+    fart = THREE.MathUtils.clamp(fart, -9, 9);
+    paraply.rotation.y += fart * dt;
+    if (Math.abs(fart) > 1.4 && !rolig) slyng(fart);
+    for (let i = 0; i < SPRUT; i++) {
+      if (sprutLiv[i] <= 0) { sprutPos[i * 3 + 1] = -5; continue; }
+      sprutLiv[i] -= dt * 1.1; sprutFart[i * 3 + 1] -= 6 * dt;
+      for (let k = 0; k < 3; k++) sprutPos[i * 3 + k] += sprutFart[i * 3 + k] * dt;
+      if (sprutPos[i * 3 + 1] < 0) sprutLiv[i] = 0;
+    }
+    sprutGeo.attributes.position.needsUpdate = true;
+
+    regnMat.uniforms.uTid.value = tid; bakke.material.uniforms.uTid.value = tid;
+    settKamera(p);
+    renderer.render(scene, kamera);
+
+    if (!rolig) for (const t of takter) t.el.classList.toggle("aktiv", maal >= t.fra && maal < t.til);
+
+    // Navnene følger hvert sitt felt på undersiden av duken
+    const vis = p > 0.72;
+    for (const el of navn) {
+      const f = +el.dataset.felt, phi = ((f + 0.5) / 3) * Math.PI * 2, th = TH * 0.62;
+      punkt.set(-RS * Math.cos(phi) * Math.sin(th), RS * Math.cos(th) + TOPP - RS, RS * Math.sin(phi) * Math.sin(th));
+      paraply.localToWorld(punkt).project(kamera);
+      const foran = punkt.z < 1;
+      el.style.transform = `translate(${(punkt.x * 0.5 + 0.5) * laast.clientWidth}px, ${(-punkt.y * 0.5 + 0.5) * laast.clientHeight}px)`;
+      el.classList.toggle("synlig", vis && foran);
+    }
+  }
+  bilde();
+}
+</script>
+</body>
+</html>

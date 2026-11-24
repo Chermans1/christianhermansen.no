@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Retning H - Arbeidsboken</title>
+<meta name="theme-color" content="#f1e7d3">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400..700&display=swap" rel="stylesheet">
+<style>
+/* Retning H - Arbeidsboken. Skisse, ikke ferdig design.
+   Lys og stram. Tjenestene først, så arbeidet, med rendrede bilder fra Blender.
+   Fargene fra christianhermansen.no, skilt på lyshet. */
+:root {
+  --dyp: #1d3c41;
+  --petrol: #24494e;
+  --rust: #a8432a;
+  --gull: #d9923c;
+  --papir: #f1e7d3;
+  --flate: #e6dac2;       /* rolig bunn bak bildene */
+  --linje: #cbbd9f;
+  --dyp-dus: #4d6266;     /* sekundærtekst på papir, 5,6:1 */
+  --papir-dus: #b5c2bc;
+  --skrift: "Familjen Grotesk", system-ui, sans-serif;
+  --kant: clamp(1.1rem, 4vw, 3.5rem);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scrollbar-color: var(--dyp) var(--papir); scroll-behavior: smooth; }
+body { margin: 0; background: var(--papir); color: var(--dyp); font: 400 1.0938rem/1.5 var(--skrift); -webkit-font-smoothing: antialiased; }
+::selection { background: var(--dyp); color: var(--papir); }
+a { color: inherit; text-underline-offset: 0.22em; text-decoration-thickness: 2px; text-decoration-color: var(--rust); }
+:focus-visible { outline: 3px solid var(--rust); outline-offset: 3px; }
+h1, h2, h3 { font-family: var(--skrift); font-weight: 700; line-height: 0.98; letter-spacing: -0.035em; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+ul, ol, dl, dd { margin: 0; padding: 0; list-style: none; }
+.liten { font: 600 0.8rem/1.3 var(--skrift); letter-spacing: 0.12em; text-transform: uppercase; }
+.hopp { position: absolute; left: -999px; }
+.hopp:focus { left: 1rem; top: 1rem; z-index: 100; background: var(--dyp); color: var(--papir); padding: 0.6rem 1rem; }
+
+.topp { position: sticky; top: 0; z-index: 60; background: var(--papir); display: flex; justify-content: space-between; align-items: center; padding: 0.8rem var(--kant); border-bottom: 1px solid var(--linje); }
+.topp .logo img { display: block; height: clamp(30px, 2.6vw, 40px); width: auto; }
+.topp nav { display: flex; gap: 0.2rem; }
+.topp nav a { text-decoration: none; padding: 0.75rem 0.95rem; }
+.topp nav a:hover { background: var(--flate); }
+.topp nav a.viktig { background: var(--dyp); color: var(--papir); }
+.topp nav a.viktig:hover { background: var(--rust); }
+@media (max-width: 46rem) { .topp nav a:not(.viktig) { display: none; } }
+
+/* --- Åpningen --- */
+.apning { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 2rem 3vw; align-items: center; padding: clamp(2.5rem, 8vh, 6rem) var(--kant) clamp(2rem, 6vh, 4rem); min-height: calc(100svh - 4.2rem); }
+.apning h1 { font-size: clamp(2.7rem, 6.6vw, 6.6rem); }
+.apning .inn { margin-top: 1.6rem; max-width: 32rem; font-size: clamp(1.1rem, 1.5vw, 1.35rem); }
+.knapper { display: flex; flex-wrap: wrap; gap: 0.8rem 1.5rem; align-items: center; margin-top: 2rem; }
+.knapp { display: inline-flex; align-items: center; gap: 0.6rem; font: 600 1.05rem/1 var(--skrift); text-decoration: none; background: var(--dyp); color: var(--papir); padding: 1.15rem 1.6rem; transition: background 0.2s, translate 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.knapp:hover { background: var(--rust); translate: 0 -2px; }
+.knapp svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 2.4; }
+.apning figure { margin: 0; --inn: clamp(0, calc(var(--p, 0.3) * 2), 1); }
+.apning figure img { display: block; width: 118%; max-width: none; height: auto; margin-left: -6%; translate: 0 calc((0.5 - var(--p, 0.3)) * 12%); }
+.apning figcaption { margin-top: 0.4rem; color: var(--dyp-dus); font-size: 0.95rem; }
+.apning figure img, .sak figure img { filter: drop-shadow(0 26px 28px rgb(29 60 65 / 0.24)); }   /* skyggen som setter motivet ned på flaten */
+@media (max-width: 56rem) {
+  .apning { grid-template-columns: 1fr; min-height: 0; }
+  .apning figure img { width: 108%; margin-left: -4%; }
+}
+
+/* --- Tjenestene: tre rader, ikke tre kort --- */
+.tjenester { padding: clamp(3rem, 9vh, 6rem) var(--kant); }
+.tjenester > h2, .arbeid h2, .gang h2 { font-size: clamp(2rem, 4.4vw, 3.8rem); }
+.rader { margin-top: clamp(1.8rem, 5vh, 3rem); }
+.rad { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 4fr) minmax(0, 4fr); gap: 1rem 3vw; padding: 1.6rem 0 1.9rem; border-top: 0.45rem solid var(--farge); align-items: start; }
+.rad h3 { font-size: clamp(1.9rem, 3.8vw, 3.4rem); }
+.rad p { font-size: 1.15rem; max-width: 26rem; }
+.rad ul { display: grid; gap: 0.3rem; color: var(--dyp-dus); }
+.rad li { padding-left: 1.1rem; position: relative; }
+.rad li::before { content: ""; position: absolute; left: 0; top: 0.7em; width: 0.5rem; height: 2px; background: var(--farge); }
+.tilbud { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 3vw; padding-top: 1.8rem; border-top: 1px solid var(--dyp); }
+.tilbud h3 { font-size: clamp(1.4rem, 2.3vw, 2rem); margin-bottom: 0.6rem; }
+.tilbud p { max-width: 30rem; }
+@media (max-width: 56rem) { .rad, .tilbud { grid-template-columns: 1fr; } }
+
+/* --- Arbeidet: fast innholdsliste til venstre, sakene til høyre --- */
+.arbeid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: 2rem 3vw; padding: clamp(3rem, 9vh, 6rem) var(--kant); border-top: 1px solid var(--linje); }
+.liste { position: sticky; top: 6rem; align-self: start; display: grid; gap: 1.6rem; }
+.liste ol { display: grid; counter-reset: s; }
+.liste li { counter-increment: s; }
+.liste a { display: grid; grid-template-columns: 2.2rem 1fr; padding: 0.7rem 0; border-top: 1px solid var(--linje); text-decoration: none; color: var(--dyp-dus); transition: color 0.25s, padding-left 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.liste a::before { content: counter(s, decimal-leading-zero); font-variant-numeric: tabular-nums; }
+.liste a[aria-current="true"] { color: var(--dyp); font-weight: 700; padding-left: 0.6rem; border-top-color: var(--dyp); }
+.liste a:hover { color: var(--dyp); }
+.saker { display: grid; gap: clamp(3rem, 10vh, 7rem); }
+.sak figure { margin: 0; background: var(--flate); overflow: hidden; aspect-ratio: 1100 / 760; display: grid; place-items: end center; }
+.sak figure img { display: block; width: 92%; height: auto; translate: 0 calc(4% + (0.5 - var(--p, 0.5)) * 14%); scale: calc(0.95 + var(--p, 0.5) * 0.1); transform-origin: 50% 100%; }
+.sak .om { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 4fr); gap: 1.2rem 3vw; margin-top: 1.4rem; align-items: start; }
+.sak .hva { color: var(--rust); }
+.sak h3 { font-size: clamp(2rem, 4vw, 3.6rem); margin-top: 0.3rem; }
+.sak .om p { margin-top: 0.8rem; font-size: 1.15rem; max-width: 30rem; }
+.sak .om a { display: inline-block; margin-top: 0.9rem; font-weight: 600; }
+.fakta { border-top: 2px solid var(--dyp); }
+.fakta div { display: grid; grid-template-columns: 7rem 1fr; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid var(--linje); }
+.fakta dt { color: var(--dyp-dus); }
+@media (max-width: 56rem) {
+  .arbeid { grid-template-columns: 1fr; }
+  .liste { position: static; }
+  .liste ol { display: none; }
+  .sak .om { grid-template-columns: 1fr; }
+}
+
+.gang { padding: clamp(3rem, 9vh, 6rem) var(--kant); border-top: 1px solid var(--linje); }
+.trinn { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem 3vw; margin-top: clamp(1.8rem, 5vh, 3rem); counter-reset: t; }
+.trinn li { counter-increment: t; display: grid; gap: 0.5rem; align-content: start; padding-top: 1rem; border-top: 2px solid var(--dyp); }
+.trinn h3 { font-size: 1.6rem; }
+.trinn h3::before { content: counter(t) ". "; color: var(--rust); }
+.trinn p { color: var(--dyp-dus); }
+@media (max-width: 56rem) { .trinn { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 30rem) { .trinn { grid-template-columns: 1fr; } }
+
+.kontakt { background: var(--dyp); color: var(--papir); padding: clamp(4rem, 13vh, 9rem) var(--kant); }
+.kontakt h2 { font-size: clamp(2.6rem, 9vw, 8rem); }
+.kontakt p { margin-top: 1.2rem; font-size: 1.2rem; }
+.kontakt .epost { display: inline-block; margin-top: 1.4rem; font: 700 clamp(1.15rem, 3.4vw, 2.6rem)/1.2 var(--skrift); letter-spacing: -0.03em; text-decoration-color: var(--gull); overflow-wrap: anywhere; }
+.kontakt :focus-visible { outline-color: var(--gull); }
+footer { background: var(--dyp); color: var(--papir-dus); padding: 1.5rem var(--kant) 2rem; display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; justify-content: space-between; font-size: 0.95rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .apning figure img, .sak figure img { translate: 0 4%; scale: 1; }
+  .knapp, .liste a { transition: none; }
+}
+</style>
+</head>
+<body>
+<a class="hopp" href="#tjenester">Hopp til tjenestene</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="pil" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+</svg>
+
+<header class="topp">
+  <a class="logo" href="#" aria-label="Til toppen"><img src="/assets/img/ch-logo-horisontal-petrol.svg" alt="Christian Hermansen" width="214" height="42"></a>
+  <nav aria-label="Hovedmeny">
+    <a class="liten" href="#tjenester">Tjenester</a>
+    <a class="liten" href="#arbeid">Arbeid</a>
+    <a class="liten viktig" href="#kontakt">Kontakt</a>
+  </nav>
+</header>
+
+<main>
+  <section class="apning">
+    <div>
+      <h1>Jeg bygger nettsider, apper og digitale verktøy.</h1>
+      <p class="inn">Jeg er Christian Hermansen, og jeg holder til i Bergen. Det jeg bygger, skal du kunne drive selv når jeg er ferdig.</p>
+      <div class="knapper">
+        <a class="knapp" href="#kontakt">Fortell hva du trenger <svg aria-hidden="true"><use href="#pil"/></svg></a>
+        <a href="#arbeid">Se arbeidet</a>
+      </div>
+    </div>
+    <figure data-scene="syn">
+      <img src="../felles/studio/stille/fanatastisk.webp" width="1100" height="900" alt="Fanatastisk vist på en bærbar og en telefon, på en sokkel i rust, gull og petrol" fetchpriority="high">
+      <figcaption>Fanatastisk: nettside og app for musikkfestivalen i Fana.</figcaption>
+    </figure>
+  </section>
+
+  <section class="tjenester" id="tjenester">
+    <h2>Dette bygger jeg</h2>
+    <div class="rader">
+      <article class="rad" style="--farge: var(--rust)">
+        <h3>Nettsider</h3>
+        <p>Tegnet for deg, og laget for telefon først. Du redigerer innholdet selv.</p>
+        <ul><li>Design som ikke er en mal</li><li>Innhold du redigerer selv</li><li>Opplæring når du tar over</li></ul>
+      </article>
+      <article class="rad" style="--farge: var(--gull)">
+        <h3>Apper</h3>
+        <p>For iPhone, eller rett i nettleseren. Én ting som løser ett problem godt.</p>
+        <ul><li>Virker uten nett der det trengs</li><li>Hele veien ut i App Store</li><li>Bygget på innholdet du alt har</li></ul>
+      </article>
+      <article class="rad" style="--farge: var(--petrol)">
+        <h3>Digitale verktøy</h3>
+        <p>Små verktøy som tar jobben ingen har tid til.</p>
+        <ul><li>Skjemaer som regner ut selv</li><li>Kart og oversikter du kan stole på</li><li>Ingen konto og ingen sporing hvis du ikke må ha det</li></ul>
+      </article>
+      <div class="tilbud">
+        <article>
+          <h3>Nettsider som forteller historier</h3>
+          <p>Du ruller, og siden svarer. Historien din fortelles i den rekkefølgen du vil ha den.</p>
+        </article>
+        <article>
+          <h3>Gratis hjelp til dem som bidrar</h3>
+          <p>Driver du noe som gjør det bedre for andre, kan du søke om hjelp uten regning. Ett prosjekt om gangen. Det er måten jeg gir tilbake på.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="arbeid" id="arbeid">
+    <div class="liste">
+      <h2>Utvalgt arbeid</h2>
+      <ol>
+        <li><a href="#fanatastisk">Fanatastisk</a></li>
+        <li><a href="#zempel">Zempel</a></li>
+        <li><a href="#bransjekart">Bransjekart Norge</a></li>
+        <li><a href="#turntable">Turntable</a></li>
+      </ol>
+    </div>
+    <div class="saker">
+      <article class="sak" id="fanatastisk" data-scene="syn">
+        <figure><img src="../felles/studio/stille/app.webp" width="1100" height="900" alt="Tre telefoner med programmet, forsiden og kartet i Fanatastisk-appen" loading="lazy"></figure>
+        <div class="om">
+          <div>
+            <span class="hva liten">Nettside og app</span>
+            <h3>Fanatastisk</h3>
+            <p>Musikkfestivalen i Fana fikk nettside og app, bygget på det samme innholdet. Festivalen redigerer alt selv.</p>
+            <a href="https://fanatastisk.no" target="_blank" rel="noopener">Åpne fanatastisk.no</a>
+          </div>
+          <dl class="fakta">
+            <div><dt>Besøk</dt><dd>5 558 på nettsiden i festivaluken</dd></div>
+            <div><dt>App Store</dt><dd>Godkjent av Apple på under et døgn</dd></div>
+            <div><dt>Status</dt><dd>Live. Android i lukket testing</dd></div>
+          </dl>
+        </div>
+      </article>
+      <article class="sak" id="zempel" data-scene="syn">
+        <figure><img src="../felles/studio/stille/zempel.webp" width="1100" height="900" alt="Zempel vist på en bærbar" loading="lazy"></figure>
+        <div class="om">
+          <div>
+            <span class="hva liten">Digitalt verktøy</span>
+            <h3>Zempel</h3>
+            <p>Et system for festivaldrift. Artister, program, frivillige og budsjett på ett sted, i stedet for i fem regneark.</p>
+            <a href="https://zempel.no" target="_blank" rel="noopener">Åpne zempel.no</a>
+          </div>
+          <dl class="fakta">
+            <div><dt>Roller</dt><dd>Seks, fra frivillig til festivalsjef</dd></div>
+            <div><dt>Status</dt><dd>I pilot hos styret i Fanatastisk</dd></div>
+            <div><dt>Bildet</dt><dd>Viser demodata, ikke en ekte festival</dd></div>
+          </dl>
+        </div>
+      </article>
+      <article class="sak" id="bransjekart" data-scene="syn">
+        <figure><img src="../felles/studio/stille/bransjekart.webp" width="1100" height="900" alt="Bransjekart Norge vist på en skjerm" loading="lazy"></figure>
+        <div class="om">
+          <div>
+            <span class="hva liten">Digitalt verktøy</span>
+            <h3>Bransjekart Norge</h3>
+            <p>Et åpent kart over tech-selskaper i Norge. Det begynte med et regneark på 36 linjer.</p>
+            <a href="https://bransjekart.christianhermansen.no" target="_blank" rel="noopener">Åpne bransjekartet</a>
+          </div>
+          <dl class="fakta">
+            <div><dt>Omfang</dt><dd>277 selskaper</dd></div>
+            <div><dt>Kontroll</dt><dd>Sjekket mot Brønnøysundregistrene</dd></div>
+            <div><dt>Pris</dt><dd>Gratis, uten innlogging og annonser</dd></div>
+          </dl>
+        </div>
+      </article>
+      <article class="sak" id="turntable" data-scene="syn">
+        <figure><img src="../felles/studio/stille/turntable.webp" width="1100" height="900" alt="Turntable, en illustrert platespiller, vist på en skjerm" loading="lazy"></figure>
+        <div class="om">
+          <div>
+            <span class="hva liten">Nettside som forteller</span>
+            <h3>Turntable</h3>
+            <p>En platespiller bygget som nettside. Tonearmen følger låten, og spilleren bytter form etter skjermen du holder.</p>
+            <a href="https://musikk.christianhermansen.no" target="_blank" rel="noopener">Sett på en plate</a>
+          </div>
+          <dl class="fakta">
+            <div><dt>Former</dt><dd>Platespiller, kassettdekk og CD</dd></div>
+            <div><dt>Detalj</dt><dd>Ingen fremdriftslinje, bare mekanikk</dd></div>
+            <div><dt>Status</dt><dd>Live</dd></div>
+          </dl>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="gang">
+    <h2>Slik foregår det</h2>
+    <ol class="trinn">
+      <li><h3>Samtale</h3><p>Du forteller hva som plager deg. Jeg spør mer enn jeg selger.</p></li>
+      <li><h3>Skisse</h3><p>Du får se tre retninger før noe bygges, og velger selv.</p></li>
+      <li><h3>Bygging</h3><p>Du følger med underveis og ser det vokse fram.</p></li>
+      <li><h3>Overlevering</h3><p>Du får opplæring og nøklene. Etterpå driver du det selv.</p></li>
+    </ol>
+  </section>
+
+  <section class="kontakt" id="kontakt">
+    <h2>Si hva du trenger.</h2>
+    <p>Send en e-post. Jeg svarer selv.</p>
+    <a class="epost" href="mailto:epost@christianhermansen.no">epost@christianhermansen.no</a>
+  </section>
+</main>
+
+<footer>
+  <span>© 2026 Christian Hermansen. Bygd for hånd i Bergen.</span>
+  <span>Skisse av retning H. Bildene er rendret i Blender. Tekstene er utkast.</span>
+</footer>
+
+<script src="../felles/rull.js"></script>
+<script>
+// Innholdslisten til venstre viser hvilken sak du står ved
+(() => {
+  const lenker = [...document.querySelectorAll(".liste a")];
+  const saker = lenker.map((a) => document.querySelector(a.getAttribute("href")));
+  const io = new IntersectionObserver((treff) => {
+    for (const t of treff) if (t.isIntersecting) lenker.forEach((a, i) => a.setAttribute("aria-current", String(saker[i] === t.target)));
+  }, { rootMargin: "-45% 0px -45% 0px" });
+  saker.forEach((s) => io.observe(s));
+})();
+</script>
+</body>
+</html>

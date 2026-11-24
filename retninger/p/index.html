@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retning P - Plansjen</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* P. Plansjen: snekker og koder i ett. Siden er en arbeidstegning på rutepapir som tegner seg selv,
+   og prosjektene vises som tegning som blir til bygg mens en ruller. */
+:root { --papir: #efe7d6; --rute: rgba(36, 73, 78, 0.07); --blekk: #24494e; --rust: #b5472b; --natt: #172426;
+  --f-tittel: "Archivo", system-ui, sans-serif; --f-mono: "IBM Plex Mono", ui-monospace, monospace; --kant: clamp(1.25rem, 3.2vw, 3rem); }
+* { box-sizing: border-box; margin: 0; }
+html { background: var(--papir); color: var(--natt); }
+body { font: 400 1rem/1.55 var(--f-tittel); font-variation-settings: "wdth" 100; -webkit-font-smoothing: antialiased;
+  background-image: linear-gradient(var(--rute) 1px, transparent 1px), linear-gradient(90deg, var(--rute) 1px, transparent 1px), linear-gradient(rgba(36, 73, 78, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(36, 73, 78, 0.035) 1px, transparent 1px);
+  background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px; }
+a { color: inherit; }
+.mono { font: 400 0.6875rem/1.45 var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.rust { color: var(--rust); }
+
+.topp { display: flex; justify-content: space-between; align-items: center; padding: 1.3rem var(--kant); border-bottom: 1px solid var(--blekk); }
+.topp img { height: 1.5rem; display: block; }
+.topp nav { display: flex; gap: 2rem; } .topp nav a { text-decoration: none; }
+
+/* Første skjerm: tekst til venstre, tegningen til høyre, tittelfelt nederst som på en ekte plansje */
+.blad { min-height: calc(100svh - 4.2rem); display: grid; grid-template-columns: 1fr 1.25fr; grid-template-rows: 1fr auto; gap: 0 3rem; padding: clamp(2rem, 6vh, 4rem) var(--kant) 0; }
+.blad .venstre { align-self: center; }
+.blad h1 { font: 760 clamp(2.6rem, 6.4vw, 6.6rem)/0.92 var(--f-tittel); font-variation-settings: "wdth" 125; font-stretch: 125%; letter-spacing: -0.02em; text-transform: uppercase; color: var(--blekk); }
+.blad h1 span { display: block; } .blad h1 .rust { color: var(--rust); }
+.blad .ingress { margin-top: 1.8rem; max-width: 30rem; font-size: 1.05rem; }
+.blad .knapper { margin-top: 2rem; display: flex; gap: 0.8rem; flex-wrap: wrap; }
+.blad .knapp { font: 500 0.75rem/1 var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; padding: 0.9rem 1.2rem; border: 1px solid var(--blekk); }
+.blad .knapp.fylt { background: var(--blekk); color: var(--papir); }
+.tegning { align-self: center; width: 100%; height: auto; overflow: visible; }
+.tegning .strek { fill: none; stroke: var(--blekk); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
+.tegning .tynn { fill: none; stroke: var(--blekk); stroke-width: 0.7; vector-effect: non-scaling-stroke; opacity: 0.7; }
+.tegning .maal { fill: none; stroke: var(--rust); stroke-width: 0.9; vector-effect: non-scaling-stroke; }
+.tegning text { font: 400 11px var(--f-mono); letter-spacing: 0.06em; fill: var(--rust); text-transform: uppercase; }
+.tegning text.blekk { fill: var(--blekk); }
+.tegning .skravur { fill: url(#skravur); stroke: none; }
+.tittelfelt { grid-column: 1 / -1; display: grid; grid-template-columns: 2fr repeat(4, 1fr); border: 1px solid var(--blekk); margin: 2.5rem 0 1.5rem; background: rgba(239, 231, 214, 0.85); }
+.tittelfelt div { padding: 0.7rem 0.9rem; border-left: 1px solid var(--blekk); } .tittelfelt div:first-child { border-left: 0; }
+.tittelfelt b { display: block; font: 600 0.95rem/1.2 var(--f-tittel); font-variation-settings: "wdth" 110; text-transform: uppercase; margin-top: 0.2rem; }
+
+/* Tegning til bygg: et prosjekt der en loddrett linje skiller tegningen fra det ferdige */
+.bygg { height: 260svh; position: relative; border-top: 1px solid var(--blekk); }
+.bygg .scene { position: sticky; top: 0; height: 100svh; display: grid; grid-template-columns: 0.8fr 1.6fr; gap: 3rem; align-items: center; padding: 0 var(--kant); }
+.bygg h2 { font: 760 clamp(2.4rem, 5.4vw, 5.4rem)/0.9 var(--f-tittel); font-variation-settings: "wdth" 125; font-stretch: 125%; text-transform: uppercase; color: var(--blekk); margin: 0.8rem 0 1rem; }
+.bygg .data { margin-top: 1.4rem; border-top: 1px solid var(--blekk); }
+.bygg .data div { display: flex; justify-content: space-between; padding: 0.55rem 0; border-bottom: 1px solid rgba(36, 73, 78, 0.35); }
+.bygg .lenke { display: inline-block; margin-top: 1.4rem; font: 500 0.75rem/1 var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.ramme { position: relative; }
+.ramme .vindu { position: relative; aspect-ratio: 16 / 10; border: 1.4px solid var(--blekk); background: var(--papir); overflow: hidden; }
+.ramme .ferdig { position: absolute; inset: 0; clip-path: inset(0 0 0 var(--del, 100%)); }
+.ramme .ferdig img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.ramme .spor { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ramme .spor rect, .ramme .spor line, .ramme .spor path { fill: none; stroke: var(--blekk); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.ramme .spor text { font: 400 13px var(--f-mono); fill: var(--rust); letter-spacing: 0.06em; text-transform: uppercase; }
+.ramme .skille { position: absolute; top: -1.8rem; bottom: -1.8rem; left: var(--del, 100%); width: 0; border-left: 1.5px solid var(--rust); }
+.ramme .skille span { position: absolute; top: 0; transform: translateX(calc(-1 * var(--etikett, 50%))); background: var(--rust); color: var(--papir); padding: 0.25rem 0.5rem; white-space: nowrap; }
+.ramme .maal-x, .ramme .maal-y { position: absolute; color: var(--rust); }
+.ramme .maal-x { left: 0; right: 0; bottom: -2.6rem; border-top: 1px solid var(--rust); text-align: center; padding-top: 0.4rem; }
+.ramme .maal-y { top: 0; bottom: 0; right: -2.6rem; border-left: 1px solid var(--rust); writing-mode: vertical-rl; display: grid; place-content: center; padding-left: 0.4rem; }
+.ramme .maal-x::before, .ramme .maal-x::after { content: ""; position: absolute; top: -5px; width: 1px; height: 9px; background: var(--rust); } .ramme .maal-x::before { left: 0; } .ramme .maal-x::after { right: 0; }
+
+.fot { border-top: 1px solid var(--blekk); padding: 2rem var(--kant); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+
+@media (max-width: 860px) {
+  .topp nav { display: none; }
+  .blad { grid-template-columns: 1fr; gap: 2rem; }
+  .tittelfelt { grid-template-columns: 1fr 1fr; } .tittelfelt div:nth-child(n+2) { border-left: 0; border-top: 1px solid var(--blekk); } .tittelfelt div:nth-child(odd):not(:first-child) { border-left: 1px solid var(--blekk); }
+  .tittelfelt div:first-child { grid-column: 1 / -1; }
+  .bygg .scene { grid-template-columns: 1fr; gap: 2.6rem; align-content: center; }
+  .bygg h2 { font-size: 2.4rem; } .bygg .omtale, .bygg .data { display: none; }
+  .ramme .maal-y { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tegning [pathLength] { stroke-dasharray: 1; stroke-dashoffset: 1; animation: tegn 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; animation-delay: calc(var(--i, 0) * 0.12s + 0.2s); }
+  .tegning text, .tegning .skravur { opacity: 0; animation: frem 0.6s forwards; animation-delay: calc(var(--i, 0) * 0.12s + 1.2s); }
+  @keyframes tegn { to { stroke-dashoffset: 0; } } @keyframes frem { to { opacity: 1; } }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bygg { height: auto; } .bygg .scene { position: relative; height: auto; padding: 5rem var(--kant); }
+  .ramme { --del: 50% !important; }
+}
+</style>
+</head>
+<body>
+<header class="topp">
+  <a href="#"><img src="../../assets/img/ch-logo-horisontal-petrol.svg" alt="Christian Hermansen"></a>
+  <nav aria-label="Hovedmeny" class="mono"><a href="#arbeid">Arbeid</a><a href="#">Tjenester</a><a href="#">Om meg</a><a href="#">Kontakt</a></nav>
+</header>
+<main>
+  <section class="blad" aria-labelledby="h-tittel">
+    <div class="venstre">
+      <p class="mono rust">Blad 01 · Nettsider, apper og digitale verktøy</p>
+      <h1 id="h-tittel" style="margin-top:1.2rem"><span>Tegnet</span><span>først.</span><span class="rust">Bygget</span><span class="rust">for hånd.</span></h1>
+      <p class="ingress">Femten år som tømrer lærte meg å måle to ganger. Nå bygger jeg nettsider, apper og digitale verktøy for arrangører, lag, foreninger og små bedrifter i Bergen.</p>
+      <div class="knapper"><a class="knapp fylt" href="#arbeid">Se arbeidet</a><a class="knapp" href="#">Fortell hva du trenger</a></div>
+    </div>
+    <!-- Tegningen: et nettleservindu med gavltak, som et hus og en nettside på én gang -->
+    <svg class="tegning" viewBox="0 0 640 520" role="img" aria-label="Arbeidstegning av en nettside formet som et hus, med mål og snitt">
+      <defs><pattern id="skravur" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#24494e" stroke-width="0.8" opacity="0.45"/></pattern></defs>
+      <path class="strek" pathLength="1" style="--i:0" d="M70 190 L320 60 L570 190"/>
+      <path class="tynn" pathLength="1" style="--i:1" d="M96 190 L320 74 L544 190"/>
+      <rect class="strek" pathLength="1" style="--i:1" x="80" y="190" width="480" height="290"/>
+      <path class="strek" pathLength="1" style="--i:2" d="M80 214 H560"/>
+      <circle class="tynn" pathLength="1" style="--i:2" cx="94" cy="202" r="4"/><circle class="tynn" pathLength="1" style="--i:2" cx="108" cy="202" r="4"/><circle class="tynn" pathLength="1" style="--i:2" cx="122" cy="202" r="4"/>
+      <rect class="tynn" pathLength="1" style="--i:3" x="104" y="234" width="250" height="20"/>
+      <rect class="tynn" pathLength="1" style="--i:3" x="104" y="262" width="190" height="20"/>
+      <rect class="tynn" pathLength="1" style="--i:4" x="104" y="302" width="96" height="26"/>
+      <rect class="strek" pathLength="1" style="--i:4" x="380" y="234" width="156" height="120"/>
+      <rect class="skravur" style="--i:5" x="380" y="234" width="156" height="120"/>
+      <path class="tynn" pathLength="1" style="--i:5" d="M104 376 H536 M104 392 H500 M104 408 H520"/>
+      <rect class="tynn" pathLength="1" style="--i:6" x="104" y="428" width="130" height="34"/><rect class="tynn" pathLength="1" style="--i:6" x="250" y="428" width="130" height="34"/><rect class="tynn" pathLength="1" style="--i:6" x="396" y="428" width="140" height="34"/>
+      <path class="maal" pathLength="1" style="--i:7" d="M80 500 H560 M80 494 V506 M560 494 V506"/>
+      <text style="--i:7" x="320" y="516" text-anchor="middle">1440 px</text>
+      <path class="maal" pathLength="1" style="--i:8" d="M590 190 V480 M584 190 H596 M584 480 H596"/>
+      <text style="--i:8" x="604" y="340" transform="rotate(90 604 340)" text-anchor="middle">900 px</text>
+      <path class="maal" pathLength="1" style="--i:9" d="M20 300 H60 M20 300 m0 -8 a8 8 0 1 0 0.01 0"/>
+      <text style="--i:9" x="20" y="286" text-anchor="middle">A</text>
+      <path class="maal" pathLength="1" style="--i:9" d="M580 300 H620"/>
+      <text style="--i:10" x="104" y="226" class="blekk">christianhermansen.no</text>
+      <text style="--i:10" x="458" y="372" text-anchor="middle">Bilde · 4:3</text>
+      <text style="--i:10" x="320" y="40" text-anchor="middle">Mønehøyde · gavl 30°</text>
+    </svg>
+    <div class="tittelfelt mono">
+      <div>Prosjekt<b>christianhermansen.no</b></div>
+      <div>Tegnet av<b>C. Hermansen</b></div>
+      <div>Målestokk<b>1:1</b></div>
+      <div>Sted<b>Bergen</b></div>
+      <div>Blad<b>01 / 04</b></div>
+    </div>
+  </section>
+
+  <section class="bygg" id="arbeid" aria-labelledby="b-tittel">
+    <div class="scene">
+      <div>
+        <p class="mono rust">Blad 02 · Tegning til bygg</p>
+        <h2 id="b-tittel">Fanatastisk</h2>
+        <p class="omtale">Musikkfestivalen i Fana fikk nettside og app, bygget på det samme innholdet. Festivalen redigerer alt selv.</p>
+        <div class="data mono"><div><span>Type</span><span>Nettside + app</span></div><div><span>Status</span><span>Live · App Store</span></div><div><span>Sted</span><span>Fana, Bergen</span></div></div>
+        <a class="lenke mono" href="https://www.fanatastisk.no/" target="_blank" rel="noopener">Åpne fanatastisk.no →</a>
+      </div>
+      <div class="ramme">
+        <div class="vindu">
+          <!-- Sporet av den ferdige siden, i samme koordinater som skjermbildet (1280 × 800) -->
+          <svg class="spor" viewBox="0 0 1280 800" preserveAspectRatio="none" aria-hidden="true">
+            <rect x="360" y="110" width="560" height="290"/><line x1="360" y1="110" x2="920" y2="400"/><line x1="920" y1="110" x2="360" y2="400"/>
+            <text x="372" y="134">Logo · vektor</text>
+            <line x1="384" y1="428" x2="896" y2="428"/><text x="384" y="418">Dato · sted</text>
+            <rect x="424" y="462" width="432" height="96"/><text x="436" y="486">Overskrift · serif</text>
+            <rect x="447" y="597" width="196" height="60" rx="30"/><rect x="660" y="597" width="173" height="60" rx="30"/>
+            <line x1="488" y1="690" x2="792" y2="690"/>
+            <path d="M0 0 H1280 V800 H0 Z" style="stroke-dasharray:6 6"/>
+          </svg>
+          <div class="ferdig"><img src="../o/media/fanatastisk-topp.webp" alt="Forsiden til fanatastisk.no" loading="lazy"></div>
+        </div>
+        <div class="skille mono" aria-hidden="true"><span>Tegning ← → Bygg</span></div>
+        <div class="maal-x mono" aria-hidden="true">1280 px</div>
+        <div class="maal-y mono" aria-hidden="true">800 px</div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="fot mono"><span>Skisse P · Plansjen</span><span>Tekstene er utkast</span></footer>
+<script>
+// Den loddrette linjen flytter seg fra høyre mot venstre mens en ruller: tegningen blir til det ferdige bygget
+const bygg = document.querySelector(".bygg"), ramme = bygg.querySelector(".ramme");
+const rolig = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const glatt = (x) => x * x * (3 - 2 * x);
+function oppdater() {
+  if (rolig) return;
+  const r = bygg.getBoundingClientRect(), lengde = bygg.offsetHeight - innerHeight;
+  const p = Math.min(1, Math.max(0, -r.top / lengde));
+  const del = 100 - glatt(Math.min(1, Math.max(0, (p - 0.1) / 0.75))) * 100;
+  ramme.style.setProperty("--del", del.toFixed(2) + "%");
+  ramme.style.setProperty("--etikett", del.toFixed(2) + "%"); // etiketten holder seg innenfor rammen
+}
+addEventListener("scroll", oppdater, { passive: true }); addEventListener("resize", oppdater); oppdater();
+</script>
+</body>
+</html>

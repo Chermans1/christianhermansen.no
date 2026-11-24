@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retning N - Plakaten</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="media/portrett-ut.webp">
+<style>
+/* N. Plakaten: prinsippene fra Pulse (typografi som bilde, én sterk farge, små etiketter mot store ord,
+   rytme mellom høyt og stille, objekter med funksjon) i Christians egne farger fra logostripene. */
+:root {
+  --rust: #b5472b; --rust-dyp: #8f3520; --gull: #d9923c; --papir: #f1e7d3; --natt: #14191a;
+  --f-plakat: "Anton", Impact, sans-serif; --f-tekst: "Instrument Sans", system-ui, sans-serif;
+  --kant: clamp(1.25rem, 3.2vw, 3rem);
+}
+* { box-sizing: border-box; margin: 0; }
+html { background: var(--papir); }
+body { font: 400 1rem/1.5 var(--f-tekst); color: var(--natt); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+.etikett { font: 500 0.6875rem/1.35 var(--f-tekst); letter-spacing: 0.12em; text-transform: uppercase; }
+
+/* Toppen */
+.topp { position: absolute; z-index: 5; inset: 0 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 1.4rem var(--kant); color: var(--papir); }
+.topp img { height: 1.6rem; display: block; }
+.topp nav { display: flex; gap: clamp(1rem, 3vw, 2.6rem); }
+.topp nav a { text-decoration: none; font-size: 0.8125rem; font-weight: 500; }
+.topp .kontakt { border: 1px solid currentColor; border-radius: 99px; padding: 0.55rem 1.1rem; text-decoration: none; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; display: flex; align-items: center; gap: 0.6rem; }
+.topp .kontakt::after { content: ""; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--gull); }
+
+/* Første skjerm */
+.helt { position: relative; min-height: 100svh; background: var(--rust); color: var(--papir); overflow: hidden; isolation: isolate; }
+.helt .meta-v { position: absolute; left: var(--kant); top: clamp(6rem, 14vh, 9rem); display: grid; gap: 1.6rem; z-index: 3; }
+.helt .meta-h { position: absolute; right: var(--kant); top: clamp(6rem, 14vh, 9rem); text-align: right; z-index: 3; display: grid; gap: 0.8rem; justify-items: end; }
+.striper { display: flex; gap: 5px; } .striper i { width: 1.9rem; height: 4px; } .striper i:nth-child(1) { background: var(--natt); } .striper i:nth-child(2) { background: var(--gull); } .striper i:nth-child(3) { background: var(--papir); }
+.ordet { position: absolute; z-index: 1; left: calc(var(--kant) - 0.06em); bottom: 6vh; font: 400 min(16vw, 23svh)/0.8 var(--f-plakat); text-transform: uppercase; letter-spacing: -0.01em; color: var(--papir); }
+.ordet span { display: block; overflow: hidden; padding-top: 0.16em; margin-top: -0.16em; }
+.ordet span:nth-child(3) { margin-top: 0.03em; padding-top: 0.36em; } /* luft til ringen i Å, ellers smelter den inn i R-en over */
+.ordet span b { display: block; font-weight: 400; transform: translateY(var(--inn, 0)); }
+/* Bildet er beskåret i venstre kant (armen går ut av bildet). Kanten tones ut, så det ikke blir en hard linje. */
+.portrett { position: absolute; z-index: 2; right: 0; bottom: 0; height: min(calc(100svh - 4.5rem), 66vw); -webkit-mask-image: linear-gradient(to right, transparent, #000 24%); mask-image: linear-gradient(to right, transparent, #000 24%); aspect-ratio: 900 / 1350; transform: translateY(var(--p, 0px)); pointer-events: none; }
+.portrett img { width: 100%; height: 100%; object-fit: contain; object-position: bottom; filter: grayscale(1) contrast(1.08) sepia(0.18); display: block; }
+.helt .bunn { position: absolute; z-index: 3; left: var(--kant); right: var(--kant); bottom: 2rem; display: flex; justify-content: space-between; align-items: end; }
+.helt .bunn .linje { width: 1px; height: 3.2rem; background: currentColor; margin-bottom: 0.8rem; }
+.pil { width: 3.4rem; height: 1px; background: currentColor; position: relative; } .pil::after { content: ""; position: absolute; right: 0; top: -4px; width: 9px; height: 9px; border: solid currentColor; border-width: 1px 1px 0 0; transform: rotate(45deg); }
+
+/* Rolig del */
+.stille { padding: clamp(5rem, 14vh, 9rem) var(--kant); display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; align-items: end; border-bottom: 1px solid rgba(20, 25, 26, 0.18); }
+.stille h2 { font: 500 clamp(1.8rem, 3.6vw, 3.4rem)/1.05 var(--f-tekst); letter-spacing: -0.02em; }
+.stille h2 em { font-style: normal; color: var(--rust); }
+.stille p { max-width: 30rem; font-size: 0.95rem; }
+
+/* Billetten: prosjektet som et objekt, og hele billetten er lenken */
+.arbeid { padding: clamp(4rem, 10vh, 7rem) var(--kant); }
+.arbeid .hode { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2rem; }
+.billett { display: grid; grid-template-columns: 1.05fr 1.6fr auto; text-decoration: none; color: var(--papir); filter: drop-shadow(0 30px 40px rgba(20, 25, 26, 0.22)); transform: rotate(-1.2deg); transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.billett:hover, .billett:focus-visible { transform: rotate(0deg) translateY(-4px); }
+.billett:focus-visible { outline: 3px solid var(--gull); outline-offset: 6px; }
+.billett .bilde { position: relative; border-radius: 14px 0 0 14px; overflow: hidden; min-height: 18rem; background: var(--natt); }
+.billett .bilde img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.15); mix-blend-mode: screen; opacity: 0.75; }
+.billett .bilde::after { content: ""; position: absolute; inset: 0; background: linear-gradient(120deg, rgba(181, 71, 43, 0.85), rgba(20, 25, 26, 0.2)); mix-blend-mode: multiply; }
+.billett .kropp { background: var(--rust); padding: clamp(1.5rem, 3vw, 2.6rem); display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-content: space-between; position: relative; }
+.billett .kropp h3 { grid-column: 1 / -1; font: 400 clamp(3rem, 8.2vw, 8.4rem)/0.82 var(--f-plakat); text-transform: uppercase; }
+.billett .kropp .tekst { max-width: 26rem; font-size: 0.95rem; }
+.billett .kropp .data { display: grid; gap: 0.35rem; text-align: right; border-left: 1px solid rgba(241, 231, 211, 0.4); padding-left: 1.2rem; }
+.billett .stubb { background: var(--natt); border-radius: 0 14px 14px 0; width: clamp(4.5rem, 7vw, 6.5rem); display: grid; justify-items: center; align-content: space-between; padding: 1.4rem 0; position: relative; -webkit-mask: radial-gradient(circle 14px at 0 0, transparent 98%, #000) top left / 100% 51% no-repeat, radial-gradient(circle 14px at 0 100%, transparent 98%, #000) bottom left / 100% 51% no-repeat; mask: radial-gradient(circle 14px at 0 0, transparent 98%, #000) top left / 100% 51% no-repeat, radial-gradient(circle 14px at 0 100%, transparent 98%, #000) bottom left / 100% 51% no-repeat; }
+.billett .stubb::before { content: ""; position: absolute; left: 0; top: 18px; bottom: 18px; border-left: 2px dashed rgba(241, 231, 211, 0.35); }
+.billett .stubb .rund { width: 2.6rem; height: 2.6rem; border: 1px solid var(--papir); border-radius: 50%; display: grid; place-items: center; }
+.billett .stubb .rund .pil { width: 0.9rem; }
+.billett .stubb .loddrett { writing-mode: vertical-rl; transform: rotate(180deg); font: 400 1.6rem/1 var(--f-plakat); letter-spacing: 0.02em; text-transform: uppercase; }
+.flere { margin-top: 3.5rem; border-top: 1px solid rgba(20, 25, 26, 0.18); }
+.flere a { display: grid; grid-template-columns: 3rem 1fr 1fr auto; gap: 1rem; align-items: center; padding: 1.1rem 0; border-bottom: 1px solid rgba(20, 25, 26, 0.18); text-decoration: none; }
+.flere a strong { font: 400 clamp(1.6rem, 3vw, 2.6rem)/1 var(--f-plakat); text-transform: uppercase; font-weight: 400; }
+.flere a:hover strong, .flere a:focus-visible strong { color: var(--rust); }
+
+/* Løpebåndet */
+.band { overflow: hidden; border-block: 1px solid rgba(20, 25, 26, 0.18); padding: 1.2rem 0; }
+.band div { display: flex; width: max-content; animation: band 38s linear infinite; }
+.band span { font: 400 clamp(4rem, 13vw, 12rem)/0.9 var(--f-plakat); text-transform: uppercase; color: var(--rust); transform: skewX(-14deg); padding-right: 0.4em; white-space: nowrap; }
+@keyframes band { to { transform: translateX(-50%); } }
+.fot { background: var(--natt); color: var(--papir); padding: 3rem var(--kant); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+
+@media (max-width: 760px) {
+  .topp nav { display: none; }
+  .helt { min-height: 100svh; }
+  .helt .meta-h { display: none; }
+  .ordet { bottom: auto; top: 27svh; font-size: 23vw; }
+  .helt .meta-v p:nth-child(2) { display: none; }
+  .portrett { right: -10vw; height: 58svh; }
+  .stille { grid-template-columns: 1fr; }
+  .billett { grid-template-columns: 1fr; transform: none; }
+  .billett .bilde { border-radius: 14px 14px 0 0; min-height: 12rem; }
+  .billett .kropp { grid-template-columns: 1fr; }
+  .billett .kropp .data { text-align: left; border-left: 0; padding-left: 0; border-top: 1px solid rgba(241, 231, 211, 0.4); padding-top: 1rem; }
+  .billett .stubb { width: auto; border-radius: 0 0 14px 14px; display: flex; justify-content: space-between; align-items: center; padding: 1.1rem 1.5rem; -webkit-mask: none; mask: none; }
+  .billett .stubb::before { left: 18px; right: 18px; top: 0; bottom: auto; border-left: 0; border-top: 2px dashed rgba(241, 231, 211, 0.35); }
+  .billett .stubb .loddrett { writing-mode: horizontal-tb; transform: none; }
+  .flere a { grid-template-columns: 2rem 1fr; } .flere a .etikett:nth-of-type(2), .flere a .pil { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ordet span b { animation: opp 1.1s cubic-bezier(0.2, 0.75, 0.15, 1) both; }
+  .ordet span:nth-child(2) b { animation-delay: 0.1s; } .ordet span:nth-child(3) b { animation-delay: 0.2s; }
+  .portrett { animation: frem 1.4s 0.25s cubic-bezier(0.2, 0.75, 0.15, 1) both; }
+  @keyframes opp { from { transform: translateY(105%); } }
+  @keyframes frem { from { opacity: 0; translate: 0 6%; } }
+}
+@media (prefers-reduced-motion: reduce) { .band div { animation: none; } .billett { transform: none; } }
+</style>
+</head>
+<body>
+<header class="topp">
+  <a href="#"><img src="../felles/ch-logo-horisontal-krem.svg" alt="Christian Hermansen"></a>
+  <nav aria-label="Hovedmeny"><a href="#arbeid">Arbeid</a><a href="#">Tjenester</a><a href="#">Om meg</a></nav>
+  <a class="kontakt" href="#">Kontakt</a>
+</header>
+<main>
+  <section class="helt" aria-labelledby="h-tittel">
+    <div class="meta-v">
+      <p class="etikett">Nettsider<br>Apper<br>Digitale verktøy</p>
+      <p class="etikett">Bergen, Norge</p>
+    </div>
+    <div class="meta-h">
+      <div class="striper" aria-hidden="true"><i></i><i></i><i></i></div>
+      <p class="etikett">Tømrer i femten år.<br>Koder nå.</p>
+    </div>
+    <h1 class="ordet" id="h-tittel"><span><b>Bygget</b></span><span><b>for</b></span><span><b>hånd.</b></span></h1>
+    <div class="portrett"><img src="media/portrett-ut.webp" alt="Christian Hermansen" width="900" height="1350"></div>
+    <div class="bunn">
+      <a class="etikett" href="#arbeid" style="text-decoration:none"><div class="linje"></div>Se arbeidet</a>
+      <span class="pil" aria-hidden="true"></span>
+    </div>
+  </section>
+
+  <section class="stille" aria-labelledby="s-tittel">
+    <p class="etikett">Christian Hermansen<br>Bergen</p>
+    <div>
+      <h2 id="s-tittel">Nettsider, apper og verktøy <em>for folk som får ting til å skje.</em></h2>
+      <p style="margin-top:1.4rem">For arrangører, lag, foreninger og små bedrifter. Tegnet for deg, og bygget for hånd i Bergen.</p>
+    </div>
+  </section>
+
+  <section class="arbeid" id="arbeid" aria-labelledby="a-tittel">
+    <div class="hode"><h2 class="etikett" id="a-tittel">Utvalgt arbeid</h2><p class="etikett">01 / 04</p></div>
+    <a class="billett" href="https://www.fanatastisk.no/" target="_blank" rel="noopener">
+      <div class="bilde"><img src="../o/media/fanatastisk-topp.webp" alt="" loading="lazy"></div>
+      <div class="kropp">
+        <h3>Fanatastisk</h3>
+        <p class="tekst">Musikkfestivalen i Fana fikk nettside og app, bygget på det samme innholdet. Festivalen redigerer alt selv.</p>
+        <div class="data etikett"><span>Fana, Bergen</span><span>Nettside + app</span><span>Live</span><span>App Store</span></div>
+      </div>
+      <div class="stubb"><span class="rund"><span class="pil"></span></span><span class="loddrett">Åpne siden</span></div>
+    </a>
+    <nav class="flere" aria-label="Flere prosjekter">
+      <a href="https://zempel.no/" target="_blank" rel="noopener"><span class="etikett">02</span><strong>Zempel</strong><span class="etikett">Digitalt verktøy · I pilot</span><span class="pil" aria-hidden="true"></span></a>
+      <a href="https://adhdoyane.no/" target="_blank" rel="noopener"><span class="etikett">03</span><strong>ADHD Norge Øyane</strong><span class="etikett">Nettside · Live</span><span class="pil" aria-hidden="true"></span></a>
+      <a href="https://bransjekart.christianhermansen.no" target="_blank" rel="noopener"><span class="etikett">04</span><strong>Bransjekart Norge</strong><span class="etikett">Webapp · Live</span><span class="pil" aria-hidden="true"></span></a>
+    </nav>
+  </section>
+
+  <div class="band" aria-hidden="true"><div><span>Bergen ·</span><span>Nettsider ·</span><span>Apper ·</span><span>Verktøy ·</span><span>Bergen ·</span><span>Nettsider ·</span><span>Apper ·</span><span>Verktøy ·</span></div></div>
+</main>
+<footer class="fot"><span class="etikett">Skisse N · Plakaten</span><span class="etikett">Tekstene er utkast</span></footer>
+<script>
+// Portrettet glir litt saktere enn ordet når en ruller, så de skiller lag
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  const p = document.querySelector(".portrett");
+  const oppdater = () => p.style.setProperty("--p", (Math.min(scrollY, innerHeight) * -0.12).toFixed(1) + "px");
+  addEventListener("scroll", oppdater, { passive: true }); oppdater();
+}
+</script>
+</body>
+</html>

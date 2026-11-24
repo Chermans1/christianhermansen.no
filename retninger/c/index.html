@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Retning C - Kjelleren</title>
+<meta name="theme-color" content="#120a08">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Retning C - Kjelleren. Skisse, ikke ferdig design.
+   Mørkt og varmt. Fargene skilles på lyshet: natt, panel, rav og lys. */
+:root {
+  --natt: #120a08;
+  --panel: #1f1310;
+  --rav: #e3a43b;
+  --lys: #f3e6cc;
+  --lys-dus: #c8b491;   /* sekundærtekst på panel, 8,6:1 */
+  --bla: #a79df0;       /* C64-blå, lysnet til 7:1 på natt */
+  --tittel: "Bricolage Grotesque", system-ui, sans-serif;
+  --piksel: "Silkscreen", ui-monospace, monospace;
+  --kant: clamp(1rem, 3.5vw, 3rem);
+  --hoyde: 62svh;
+}
+@media (max-width: 46rem) { :root { --hoyde: 42svh; } }
+*, *::before, *::after { box-sizing: border-box; }
+html { scrollbar-color: var(--rav) var(--natt); }
+body { margin: 0; background: var(--natt); color: var(--lys); font: 400 1.0625rem/1.5 var(--tittel); -webkit-font-smoothing: antialiased; }
+::selection { background: var(--rav); color: var(--natt); }
+a { color: inherit; text-underline-offset: 0.2em; text-decoration-thickness: 2px; text-decoration-color: var(--rav); }
+:focus-visible { outline: 3px solid var(--rav); outline-offset: 3px; }
+h1, h2, h3 { font-family: var(--tittel); font-weight: 800; line-height: 1; letter-spacing: -0.025em; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.piksel { font: 400 0.8rem/1.3 var(--piksel); letter-spacing: 0.04em; text-transform: uppercase; }
+.hopp { position: absolute; left: -999px; }
+.hopp:focus { left: 1rem; top: 1rem; z-index: 100; background: var(--rav); color: var(--natt); padding: 0.6rem 1rem; }
+
+.topp { position: fixed; z-index: 60; top: 0.8rem; left: var(--kant); right: var(--kant); display: flex; justify-content: space-between; align-items: stretch; pointer-events: none; }
+.topp > * { pointer-events: auto; }
+.topp .logo { display: flex; align-items: center; gap: 0.6rem; background: var(--natt); padding: 0.45rem 0.8rem 0.45rem 0.55rem; border: 3px solid var(--rav); text-decoration: none; }
+.topp .logo svg { width: 1.5rem; fill: var(--rav); }
+.topp nav { display: flex; background: var(--natt); border: 3px solid var(--rav); }
+.topp nav a { display: grid; place-items: center; padding: 0 0.95rem; text-decoration: none; }
+.topp nav a:hover { background: var(--lys); color: var(--natt); }
+.topp nav a.viktig { background: var(--rav); color: var(--natt); }
+@media (max-width: 46rem) { .topp nav a:not(.viktig) { display: none; } .topp .logo span { display: none; } }
+
+/* --- Kjelleren: én låst scene. Øverst rommet, under dialogboksen. --- */
+.kjeller { height: 1000vh; }
+.laast { position: sticky; top: 0; height: 100svh; overflow: hidden; display: grid; grid-template-rows: var(--hoyde) minmax(0, 1fr); }
+.rute { position: relative; overflow: hidden; background: #0b0706; }
+.kamera { position: absolute; left: 0; top: 0; will-change: transform; }
+.verden { position: relative; width: 768px; height: 209px; transform-origin: 0 0; transform: scale(var(--s, 3)); image-rendering: pixelated; }
+.rom { position: absolute; inset: 0; background-repeat: no-repeat; image-rendering: pixelated; visibility: hidden; }
+.rom.bar { background-image: url(grafikk/bar_bakgrunn.png); }
+.rom.verksted { background: #0b0a0c url(grafikk/verksted_bakgrunn.png) 0 3px no-repeat; }
+.kjeller[data-rom="bar"] .rom.bar, .kjeller[data-rom="verksted"] .rom.verksted { visibility: visible; }
+.helt { position: absolute; width: 32px; height: 32px; background: url(grafikk/helt_ark_32.png) 0 0 no-repeat; image-rendering: pixelated; z-index: 3; }
+.helt.staar { animation: puste 1s steps(4) infinite; }
+.helt.snudd { scale: -1 1; }
+@keyframes puste { to { background-position: -128px 0; } }
+.mobil { position: absolute; left: 384px; top: 124px; width: 5px; height: 8px; background: #05050a; }
+.mobil::after { content: ""; position: absolute; inset: 1px; background: #70a4b2; animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { background: #c9eef7; } }
+.pil { position: absolute; width: 7px; height: 7px; background: var(--rav); rotate: 45deg; animation: dupp 0.9s steps(2) infinite; z-index: 2; }
+.pil.tatt { background: #6c6c6c; animation: none; }
+@keyframes dupp { 50% { translate: 0 -3px; } }
+.morke { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 5; }
+.hud { position: absolute; z-index: 6; left: var(--kant); top: 4.6rem; display: grid; gap: 0.35rem; color: var(--bla); text-shadow: 2px 2px 0 #000; }
+.hud .funnet { display: flex; align-items: center; gap: 0.5rem; color: var(--lys); }
+.hud .plate { width: 16px; height: 16px; background: url(grafikk/vinyl_ark.png) 0 0 / auto 16px; image-rendering: pixelated; scale: 1.5; animation: snurr 0.9s steps(8) infinite; }
+@keyframes snurr { to { background-position: -128px 0; } }
+.rullhint { position: absolute; z-index: 6; right: var(--kant); bottom: 0.8rem; color: var(--lys); text-shadow: 2px 2px 0 #000; transition: opacity 0.3s; }
+.kjeller:not([data-start]) .rullhint { opacity: 0; }
+
+/* Dialogboksen */
+.boks { position: relative; background: var(--panel); border-top: 4px solid var(--rav); box-shadow: inset 0 4px 0 var(--natt); }
+.panel {
+  position: absolute; inset: 0; padding: clamp(1rem, 3.2svh, 2rem) var(--kant) 1rem;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem clamp(1.5rem, 4vw, 4rem); align-items: start; align-content: start;
+  opacity: 0; visibility: hidden; translate: 0 10px;
+  transition: opacity 0.25s, translate 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s 0.25s;
+}
+.panel.aktiv { opacity: 1; visibility: visible; translate: 0 0; transition-delay: 0s; }
+.panel .tekst { display: grid; gap: 0.7rem; justify-items: start; max-width: 40rem; }
+.panel h1 { font-size: clamp(2.4rem, 6.5vw, 5.2rem); }
+.panel h2 { font-size: clamp(1.8rem, 3.6vw, 3rem); }
+.panel p { font-size: clamp(1rem, 1.4vw, 1.2rem); max-width: 36rem; }
+.panel .hvor { color: var(--rav); }
+.meny { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.45rem; font-size: clamp(1rem, 1.4vw, 1.2rem); }
+.meny b { font-weight: 800; }
+.meny span { color: var(--lys-dus); }
+.knapper { display: flex; flex-wrap: wrap; gap: 0.7rem 1.3rem; align-items: center; margin-top: 0.2rem; }
+.knapp { display: inline-flex; align-items: center; gap: 0.6rem; font: 700 0.85rem/1 var(--piksel); letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none; background: var(--rav); color: var(--natt); padding: 0.95rem 1.1rem; box-shadow: 4px 0 0 var(--rav), -4px 0 0 var(--rav), 0 4px 0 #9a6a1c; transition: translate 0.12s steps(2); }
+.knapp:hover { translate: 0 2px; background: var(--lys); box-shadow: 4px 0 0 var(--lys), -4px 0 0 var(--lys), 0 2px 0 #9a6a1c; }
+.lenke { font-weight: 600; }
+.bilde { height: min(26svh, 15rem); border: 3px solid var(--lys); background: var(--natt) center / cover no-repeat; }
+.bilde.telefon { aspect-ratio: 485 / 1031; border-radius: 12.4% / 5.8%; background-position: 50.07% 45.56%; background-size: 247.42% auto; }
+.bilde.bredt { aspect-ratio: 16 / 10; }
+@media (max-width: 46rem) {
+  .panel { grid-template-columns: minmax(0, 1fr) auto; gap: 0.8rem; padding-top: 0.9rem; }
+  .panel h1 { font-size: 2.5rem; }
+  .panel h2 { font-size: 1.65rem; }
+  .bilde { height: 8.5rem; }
+  .bilde.bredt { display: none; }
+  .hud { top: 4.2rem; }
+}
+
+/* --- Alt på ett sted: samme innhold uten å gå noe sted --- */
+.alt { padding: clamp(3.5rem, 11vh, 7rem) var(--kant); border-top: 4px solid var(--rav); }
+.alt h2 { font-size: clamp(2.4rem, 7vw, 5.5rem); }
+.alt .inn { max-width: 34rem; margin-top: 1rem; color: var(--lys-dus); font-size: 1.15rem; }
+.kolonner { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5rem; margin-top: clamp(2rem, 6vh, 4rem); }
+.kolonner h3 { font-size: 1.7rem; color: var(--rav); margin-bottom: 0.6rem; }
+.kolonner ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.35rem; }
+@media (max-width: 52rem) { .kolonner { grid-template-columns: 1fr; gap: 1.8rem; } }
+.kontakt { padding: clamp(3.5rem, 12vh, 8rem) var(--kant); background: var(--rav); color: var(--natt); }
+.kontakt h2 { font-size: clamp(2.8rem, 10vw, 8rem); }
+.kontakt p { margin-top: 1rem; font-size: 1.15rem; max-width: 30rem; }
+.kontakt .epost { display: inline-block; margin-top: 1.3rem; font: 800 clamp(1.2rem, 3.6vw, 2.6rem)/1.15 var(--tittel); text-decoration-color: var(--natt); overflow-wrap: anywhere; }
+.kontakt :focus-visible { outline-color: var(--natt); }
+footer { padding: 1.5rem var(--kant) 2rem; display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; justify-content: space-between; color: var(--lys-dus); font-size: 0.95rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .kjeller { height: auto; }
+  .laast { position: static; height: auto; display: block; }
+  .rute { height: var(--hoyde); }
+  .boks { border-top-width: 4px; }
+  .panel { position: static; opacity: 1; visibility: visible; translate: none; border-bottom: 1px solid #3a2a22; }
+  .helt.staar, .pil, .hud .plate, .mobil::after { animation: none; }
+  .rullhint { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="hopp" href="#alt">Hopp over turen, rett til innholdet</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="pil" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+</svg>
+
+<header class="topp">
+  <a class="logo" href="#" aria-label="Christian Hermansen, til toppen">
+    <svg viewBox="0 0 320.91 361.3" aria-hidden="true"><path d="M238.76,289.09c-17.31,9.29-37.09,14.57-58.11,14.57-67.94,0-123.01-55.08-123.01-123.01s55.08-123.01,123.01-123.01c21.02,0,40.81,5.28,58.11,14.57V9.55C220.53,3.36,200.98,0,180.65,0,80.88,0,0,80.88,0,180.65s80.88,180.65,180.65,180.65c20.33,0,39.88-3.36,58.11-9.55v-62.65Z"/><path d="M320.91,67.7v223.94c-15.26,19.03-34.32,35.35-56.15,48.03v-132.52h-92.6l.04,63.93c-19.34,1.48-41.01-5.29-52.82-24.99V116.97c7.48-18.74,32.7-29.07,52.7-26.57l.04,63.75h92.64V19.67c21.83,12.68,40.89,29,56.15,48.03Z"/></svg>
+    <span class="piksel">Christian Hermansen</span>
+  </a>
+  <nav aria-label="Hovedmeny">
+    <a class="piksel" href="#alt">Alt på ett sted</a>
+    <a class="piksel viktig" href="#kontakt">Kontakt</a>
+  </nav>
+</header>
+
+<main id="innhold">
+  <section class="kjeller" data-scene data-rom="bar" data-start>
+    <div class="laast">
+
+      <div class="rute" aria-hidden="true">
+        <div class="kamera">
+          <div class="verden">
+            <div class="rom bar">
+              <i class="pil" data-x="283" style="left: 280px; top: 24px"></i>
+              <i class="mobil"></i>
+              <i class="pil" data-x="386" style="left: 383px; top: 108px"></i>
+              <i class="pil" data-x="505" style="left: 502px; top: 60px"></i>
+              <i class="pil" data-x="738" style="left: 735px; top: 124px"></i>
+            </div>
+            <div class="rom verksted">
+              <i class="pil" data-x="312" style="left: 309px; top: 78px"></i>
+            </div>
+            <div class="helt staar"></div>
+          </div>
+        </div>
+        <div class="morke"></div>
+        <div class="hud piksel">
+          <span class="sted">Etasje 1: Room 404</span>
+          <span class="funnet"><i class="plate"></i><span><b class="antall">0</b>/3 funnet</span></span>
+        </div>
+        <span class="rullhint piksel">Rull for å gå</span>
+      </div>
+
+      <div class="boks">
+        <article class="panel aktiv" data-fra="0" data-til="0.09">
+          <div class="tekst">
+            <h1>Jeg bygger ting.</h1>
+            <p>Nettsider, apper og verktøy for arrangører, lag og små bedrifter. Dette er kjelleren min. Ta en runde.</p>
+            <div class="knapper">
+              <a class="knapp" href="#kontakt">Fortell hva du trenger</a>
+              <a class="lenke" href="#alt">Hopp over turen</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel" data-fra="0.14" data-til="0.26">
+          <div class="tekst">
+            <span class="hvor piksel">Tavlen bak baren</span>
+            <h2>Dette står på menyen</h2>
+            <ul class="meny">
+              <li><b>Nettsider.</b> <span>Tegnet for deg, med innhold du redigerer selv.</span></li>
+              <li><b>Apper og verktøy.</b> <span>Én ting som løser ett problem godt.</span></li>
+              <li><b>Identitet og trykk.</b> <span>Logo, plakater og skilt frest i tre.</span></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="panel" data-fra="0.285" data-til="0.36" data-teller>
+          <div class="tekst">
+            <span class="hvor piksel">Telefonen på baren · 1 av 3</span>
+            <h2>Fanatastisk</h2>
+            <p>Festivalappen til musikkfestivalen i Fana. Program, kart og favoritter med varsel før konsertstart.</p>
+          </div>
+          <div class="bilde telefon" style="background-image: url(/assets/img/fanatastisk-app-hjem.webp)" role="img" aria-label="Forsiden i Fanatastisk-appen"></div>
+        </article>
+        <article class="panel" data-fra="0.36" data-til="0.435">
+          <div class="tekst">
+            <span class="hvor piksel">Telefonen på baren · 2 av 3</span>
+            <h2>Samme innhold, to flater</h2>
+            <p>Alt bor i Sanity, det samme som driver fanatastisk.no. Legger noen inn en ny artist, dukker den opp i appen uten at jeg rører noe.</p>
+          </div>
+          <div class="bilde telefon" style="background-image: url(/assets/img/fanatastisk-app-program.webp)" role="img" aria-label="Programmet i appen, dag for dag"></div>
+        </article>
+        <article class="panel" data-fra="0.435" data-til="0.515">
+          <div class="tekst">
+            <span class="hvor piksel">Telefonen på baren · 3 av 3</span>
+            <h2>Ute hos folk</h2>
+            <p>I App Store siden 17. august 2026, godkjent av Apple på under et døgn. Nettsiden hadde 5 558 besøkende i festivaluken.</p>
+            <a class="lenke" href="https://fanatastisk.no" target="_blank" rel="noopener">Åpne fanatastisk.no</a>
+          </div>
+          <div class="bilde telefon" style="background-image: url(/assets/img/fanatastisk-app-kart.webp)" role="img" aria-label="Festivalkartet i appen"></div>
+        </article>
+
+        <article class="panel" data-fra="0.55" data-til="0.635" data-teller>
+          <div class="tekst">
+            <span class="hvor piksel">Platen på veggen</span>
+            <h2>Turntable</h2>
+            <p>En platespiller bygget som nettside. Tonearmen vandrer innover mens låten spiller, slik en ekte arm gjør.</p>
+            <a class="lenke" href="https://musikk.christianhermansen.no" target="_blank" rel="noopener">Sett på en plate</a>
+          </div>
+          <div class="bilde bredt" style="background-image: url(/assets/img/turntable.webp)" role="img" aria-label="Turntable, den illustrerte platespilleren"></div>
+        </article>
+
+        <article class="panel" data-fra="0.67" data-til="0.728">
+          <div class="tekst">
+            <span class="hvor piksel">Jukeboksen</span>
+            <h2>Det er en dør her</h2>
+            <p>Den går til verkstedet. De færreste finner den.</p>
+          </div>
+        </article>
+
+        <article class="panel" data-fra="0.785" data-til="0.915" data-teller>
+          <div class="tekst">
+            <span class="hvor piksel">Høvelbenken</span>
+            <h2>Verkstedet</h2>
+            <p>Her lages det du kan ta på: skilt frest i tre, et arkadekabinett, og en Radionette fra 1960 med ny innmat. Lysskiltet til Nordic Fire &amp; Safety tok jeg med på jobbintervju. Jeg fikk jobben.</p>
+          </div>
+          <div class="bilde bredt" style="background-image: url(/assets/img/skaperlaben-nordic.webp)" role="img" aria-label="Håndbygget lysskilt for Nordic Fire &amp; Safety på arbeidsbenken"></div>
+        </article>
+
+        <article class="panel" data-fra="0.93" data-til="1.01">
+          <div class="tekst">
+            <span class="hvor piksel">Døren ut</span>
+            <h2>Si hva du trenger</h2>
+            <p>Send en e-post. Jeg svarer selv.</p>
+            <div class="knapper">
+              <a class="knapp" href="mailto:epost@christianhermansen.no">epost@christianhermansen.no</a>
+              <a class="lenke" href="spill/index.html">Spill Kjelleren på ordentlig</a>
+            </div>
+          </div>
+        </article>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="alt" id="alt">
+    <h2>Alt på ett sted</h2>
+    <p class="inn">For deg som ikke vil gå en runde i kjelleren for å finne ut hva jeg gjør.</p>
+    <div class="kolonner">
+      <div><h3>Nettsider</h3><ul><li>Design tegnet for deg, ikke en mal</li><li>Innhold du redigerer selv</li><li>Laget for telefon først</li><li>Opplæring når du tar over</li></ul></div>
+      <div><h3>Apper og verktøy</h3><ul><li>Én ting som løser ett problem godt</li><li>iPhone-app, eller verktøy rett i nettleseren</li><li>Virker uten nett der det trengs</li></ul></div>
+      <div><h3>Identitet og trykk</h3><ul><li>Logo som tåler både favicon og skiltvegg</li><li>Plakater, flyere og infoskriv</li><li>Skilt frest i tre, hvis du vil</li></ul></div>
+    </div>
+  </section>
+
+  <section class="kontakt" id="kontakt">
+    <h2>Si hva du trenger.</h2>
+    <p>Send en e-post. Jeg svarer selv.</p>
+    <a class="epost" href="mailto:epost@christianhermansen.no">epost@christianhermansen.no</a>
+  </section>
+</main>
+
+<footer>
+  <span>© 2026 Christian Hermansen. Bygd for hånd i Bergen. Pikselgrafikken er laget med AI.</span>
+  <span>Skisse av retning C. Tekstene er utkast.</span>
+</footer>
+
+<script src="../felles/rull.js"></script>
+<script>
+// Kjelleren: rullingen flytter figuren gjennom rommene.
+// Nøklene sier hvor figuren står (x i bildepiksler) ved en gitt p.
+// Flate strekk er stopp, og der vises et panel i dialogboksen.
+(() => {
+  const scene = document.querySelector(".kjeller");
+  const rute = scene.querySelector(".rute");
+  const kamera = scene.querySelector(".kamera");
+  const verden = scene.querySelector(".verden");
+  const helt = scene.querySelector(".helt");
+  const morke = scene.querySelector(".morke");
+  const sted = scene.querySelector(".sted");
+  const antall = scene.querySelector(".antall");
+  const paneler = [...scene.querySelectorAll(".panel")].map((el) => ({ el, fra: +el.dataset.fra, til: +el.dataset.til, teller: "teller" in el.dataset }));
+  const piler = [...scene.querySelectorAll(".pil")].map((el) => ({ el, x: +el.dataset.x, rom: el.parentElement.classList.contains("bar") ? "bar" : "verksted" }));
+
+  const BYTTE = 0.74;
+  const rom = {
+    bar: { navn: "Etasje 1: Room 404", gulv: 191, vei: [[0, 70], [0.09, 70], [0.16, 283], [0.25, 283], [0.3, 372], [0.51, 372], [0.56, 505], [0.63, 505], [0.68, 728], [BYTTE, 728]] },
+    verksted: { navn: "Bak døren: verkstedet", gulv: 178, vei: [[BYTTE, 40], [0.8, 312], [0.91, 312], [0.95, 722], [1, 722]] },
+  };
+
+  function xVed(p, vei) {
+    for (let i = 1; i < vei.length; i++) {
+      const [p0, x0] = vei[i - 1], [p1, x1] = vei[i];
+      if (p <= p1) {
+        const t = p1 === p0 ? 1 : Math.min(1, Math.max(0, (p - p0) / (p1 - p0)));
+        const myk = t * t * (3 - 2 * t);
+        return x0 + (x1 - x0) * myk;
+      }
+    }
+    return vei[vei.length - 1][1];
+  }
+
+  let forrigeX = null, staaTid = 0;
+  function tegn() {
+    const p = parseFloat(scene.style.getPropertyValue("--p")) || 0;
+    const s = rute.clientHeight / 209;
+    verden.style.setProperty("--s", s);
+    const navn = p < BYTTE ? "bar" : "verksted";
+    const r = rom[navn];
+    if (scene.dataset.rom !== navn) { scene.dataset.rom = navn; sted.textContent = r.navn; forrigeX = null; }
+
+    const x = xVed(p, r.vei);
+    const bredde = rute.clientWidth;
+    const kamX = Math.min(Math.max(0, x * s - bredde * 0.32), Math.max(0, 768 * s - bredde));
+    kamera.style.transform = `translate3d(${-kamX}px, 0, 0)`;
+    helt.style.left = x - 16 + "px";
+    helt.style.top = r.gulv - 32 + "px";
+
+    if (forrigeX !== null && Math.abs(x - forrigeX) > 0.02) {
+      helt.classList.remove("staar");
+      helt.classList.toggle("snudd", x < forrigeX);
+      helt.style.backgroundPosition = `${-(4 + (Math.floor(x / 5) % 6)) * 32}px 0`;
+      clearTimeout(staaTid);
+      staaTid = setTimeout(() => { helt.style.backgroundPosition = ""; helt.classList.add("staar"); }, 140);
+    }
+    forrigeX = x;
+
+    morke.style.opacity = Math.max(0, 1 - Math.abs(p - BYTTE) / 0.012);
+    scene.toggleAttribute("data-start", p < 0.02);
+
+    let funnet = 0;
+    for (const pan of paneler) {
+      pan.el.classList.toggle("aktiv", p >= pan.fra && p < pan.til);
+      if (pan.teller && p >= pan.fra) funnet++;
+    }
+    antall.textContent = funnet;
+    for (const pil of piler) pil.el.classList.toggle("tatt", pil.rom === "bar" ? navn === "verksted" || x > pil.x + 12 : navn === "verksted" && x > pil.x + 12);
+  }
+
+  document.addEventListener("rull", tegn);
+  addEventListener("resize", tegn);
+  tegn();
+})();
+</script>
+<noscript><style>.kjeller { height: auto } .laast { position: static; height: auto; display: block } .rute { height: var(--hoyde) } .panel { position: static; opacity: 1; visibility: visible; translate: none }</style></noscript>
+</body>
+</html>

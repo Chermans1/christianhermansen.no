@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fanatastisk - Retning O2</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="o2.css">
+<style>
+/* Prosjektsiden: delt i to. Til venstre ruller arbeidet i store flater. Til høyre står et fast felt på papir
+   med navnet, én setning, fakta og plassen til en kort video der Christian selv viser prosjektet. */
+.case { display: grid; grid-template-columns: minmax(0, 1fr) clamp(22rem, 34vw, 32rem); min-height: 100svh; }
+.bilder { padding: 6rem clamp(1rem, 2.4vw, 2.4rem) 4rem var(--kant); display: grid; gap: clamp(1rem, 2.4vw, 2rem); align-content: start; }
+.flate { border-radius: 10px; overflow: hidden; background: rgba(18, 13, 10, 0.55); box-shadow: 0 0 0 1px var(--linje), 0 40px 90px -30px rgba(8, 5, 3, 0.8); opacity: 0; transform: translateY(2.5rem) scale(0.985); transition: opacity 0.8s ease, transform 1s cubic-bezier(0.2, 0.75, 0.15, 1); }
+.flate.synlig { opacity: 1; transform: none; }
+.flate img { display: block; width: 100%; height: auto; }
+.flate.app { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(0.8rem, 2vw, 2rem); padding: clamp(1.5rem, 4vw, 3.5rem); background: linear-gradient(160deg, rgba(181, 71, 43, 0.5), rgba(18, 13, 10, 0.7)); }
+.flate.app img { border-radius: clamp(10px, 1.6vw, 22px); box-shadow: 0 24px 50px -16px rgba(8, 5, 3, 0.85); }
+.flate.app img:nth-child(2) { transform: translateY(-6%); }
+.flate.to { display: grid; grid-template-columns: 1.6fr 1fr; gap: clamp(0.8rem, 2vw, 2rem); background: none; box-shadow: none; }
+.flate.to > * { border-radius: 10px; overflow: hidden; box-shadow: 0 0 0 1px var(--linje), 0 40px 90px -30px rgba(8, 5, 3, 0.8); }
+.flate.to .side { height: 100%; position: relative; background: #000; }
+.flate.to .side img { position: absolute; inset: 0; height: 100%; object-fit: cover; object-position: top; }
+.bildetekst { color: var(--demp); font-size: 0.875rem; margin-top: -0.4rem; }
+
+.panel { position: sticky; top: 0; height: 100svh; overflow: auto; background: var(--papir); color: var(--natt); padding: 6rem clamp(1.5rem, 2.6vw, 2.6rem) 2rem; display: grid; align-content: start; gap: 1.4rem; }
+.panel .rad { display: flex; justify-content: space-between; align-items: baseline; }
+.panel .rad a { text-decoration: none; font-size: 0.9375rem; display: inline-flex; gap: 0.5rem; }
+.panel .rad a:hover { text-decoration: underline; }
+.panel .etikett { color: var(--demp-lys); }
+.panel h1 { font: 400 clamp(3rem, 5vw, 5rem)/0.9 var(--f-tittel); color: var(--rust-dyp); letter-spacing: -0.015em; }
+.panel .linje { font: 400 clamp(1.6rem, 2.2vw, 2.2rem)/1.08 var(--f-tittel); }
+.panel .linje em { color: var(--demp-lys); }
+.panel p { color: var(--demp-lys); }
+.panel dl { display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1.4rem; border-top: 1px solid rgba(18, 13, 10, 0.16); padding-top: 1.2rem; font-size: 0.9375rem; }
+.panel dt { color: var(--demp-lys); }
+.panel dd { margin: 0; }
+.video { display: grid; grid-template-columns: auto 1fr; gap: 1.1rem; align-items: center; margin-top: 0.6rem; }
+.video .sirkel { width: clamp(5.5rem, 8vw, 7.5rem); aspect-ratio: 1; border-radius: 50%; overflow: hidden; position: relative; box-shadow: 0 14px 30px -12px rgba(18, 13, 10, 0.5); }
+.video .sirkel img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 16%; filter: grayscale(1) sepia(0.3); }
+.video b { display: block; font-weight: 600; }
+.video span { font-size: 0.875rem; color: var(--demp-lys); }
+.panel .gaa { justify-self: start; margin-top: 0.4rem; font: 600 0.75rem/1 var(--f-tekst); letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; background: var(--natt); color: var(--papir); border-radius: 99px; padding: 1rem 1.4rem; transition: background 0.2s; }
+.panel .gaa:hover { background: var(--rust-dyp); }
+.neste { margin-top: auto; padding-top: 1.4rem; border-top: 1px solid rgba(18, 13, 10, 0.16); display: flex; justify-content: space-between; align-items: baseline; text-decoration: none; }
+.neste b { font: 400 1.6rem/1 var(--f-tittel); }
+.neste:hover b { color: var(--rust-dyp); }
+
+/* Menyen står over det lyse panelet på stor skjerm, logoen over det mørke */
+@media (min-width: 901px) { .topp nav a { color: var(--demp-lys); } .topp nav a:hover, .topp nav a[aria-current] { color: var(--natt); } }
+@media (max-width: 900px) {
+  .case { grid-template-columns: 1fr; }
+  .panel { position: relative; height: auto; order: -1; padding-top: 5.5rem; }
+  .bilder { padding: 2rem var(--kant) 4rem; }
+  .flate.to { grid-template-columns: 1fr; } .flate.to .side { aspect-ratio: 16 / 10; }
+}
+@media (prefers-reduced-motion: reduce) { .flate { opacity: 1; transform: none; transition: none; } }
+</style>
+</head>
+<body>
+<div class="rom" aria-hidden="true">
+  <img src="media/rom.webp" alt="">
+  <video src="media/rom.mp4" muted loop playsinline autoplay preload="auto"></video>
+</div>
+<div class="linse" aria-hidden="true"></div>
+<div class="korn" aria-hidden="true"></div>
+
+<header class="topp">
+  <a href="./"><img class="mork" src="../felles/ch-logo-horisontal-krem.svg" alt="Christian Hermansen, til forsiden" width="168" height="40"><img class="lys" src="/assets/img/ch-logo-horisontal-petrol.svg" alt="Christian Hermansen, til forsiden" width="168" height="40"></a>
+  <nav aria-label="Hovedmeny"><a href="./" aria-current="page">Arbeid</a><a href="./#om">Om meg</a><a href="./#kontakt">Kontakt</a></nav>
+</header>
+
+<main class="case">
+  <div class="bilder">
+    <figure class="flate"><img src="../felles/r4/media/fanatastisk/topp.webp" alt="Forsiden på fanatastisk.no" width="1280" height="800"></figure>
+    <figure class="flate app">
+      <img src="../felles/r4/media/fanatastisk/app-hjem.webp" alt="Appen: forsiden" width="480" height="1043" loading="lazy">
+      <img src="../felles/r4/media/fanatastisk/app-program.webp" alt="Appen: programmet" width="480" height="1043" loading="lazy">
+      <img src="../felles/r4/media/fanatastisk/app-kart.webp" alt="Appen: kartet over festivalområdet" width="480" height="1043" loading="lazy">
+    </figure>
+    <p class="bildetekst">Appen bruker det samme innholdet som nettsiden. Det festivalen skriver inn ett sted, kommer begge steder.</p>
+    <div class="flate to">
+      <figure class="side"><img src="../felles/r4/media/fanatastisk/hel.webp" alt="Nettsiden på stor skjerm" width="1200" height="750" loading="lazy"></figure>
+      <figure><img src="../felles/r4/media/fanatastisk/mobil.webp" alt="Nettsiden på telefon" width="520" height="1126" loading="lazy" style="display:block;width:100%;height:auto"></figure>
+    </div>
+  </div>
+
+  <aside class="panel" aria-labelledby="p-tittel">
+    <div class="rad"><a href="./"><span aria-hidden="true">←</span> Alt arbeid</a><span class="etikett">01 / 04</span></div>
+    <h1 id="p-tittel">Fanatastisk</h1>
+    <p class="linje">Én festival. <em>Nettside og app av samme innhold.</em></p>
+    <p>Musikkfestivalen i Fana fikk nettside og app, bygget på det samme innholdet. Festivalen redigerer alt selv.</p>
+    <dl>
+      <dt>Kunde</dt><dd>Fanatastisk, musikkfestival</dd>
+      <dt>Sted</dt><dd>Fana, Bergen</dd>
+      <dt>Arbeid</dt><dd>Nettside og app</dd>
+      <dt>Status</dt><dd>Live, appen ligger i App Store</dd>
+      <dt>Nettsted</dt><dd><a href="https://www.fanatastisk.no/" target="_blank" rel="noopener">fanatastisk.no ↗</a></dd>
+    </dl>
+    <div class="video">
+      <div class="sirkel"><img src="/assets/img/portrett.webp" alt="" width="900" height="1350"></div>
+      <div><b>Jeg viser deg prosjektet</b><span>Plass til en kort video der du går gjennom det selv. Ikke spilt inn ennå.</span></div>
+    </div>
+    <a class="gaa" href="https://www.fanatastisk.no/" target="_blank" rel="noopener">Åpne siden ↗</a>
+    <a class="neste" href="https://zempel.no/" target="_blank" rel="noopener"><span class="etikett">Neste</span><b>Zempel</b></a>
+  </aside>
+</main>
+
+<script>
+// Flatene glir frem når de kommer inn i bildet
+const flater = document.querySelectorAll(".flate");
+if ("IntersectionObserver" in window) {
+  const io = new IntersectionObserver((rader) => rader.forEach((r) => { if (r.isIntersecting) { r.target.classList.add("synlig"); io.unobserve(r.target); } }), { rootMargin: "0px 0px -8% 0px" });
+  flater.forEach((f) => io.observe(f));
+} else flater.forEach((f) => f.classList.add("synlig"));
+
+// På telefon ligger panelet øverst: toppen er mørk så lenge den står over papiret
+const topp = document.querySelector(".topp"), panel = document.querySelector(".panel"), smal = matchMedia("(max-width: 900px)");
+const sjekkTopp = () => { const r = panel.getBoundingClientRect(); topp.classList.toggle("paa-lys", smal.matches && r.top <= 40 && r.bottom > 40); };
+addEventListener("scroll", sjekkTopp, { passive: true }); addEventListener("resize", sjekkTopp); sjekkTopp();
+</script>
+</body>
+</html>
