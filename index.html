@@ -143,8 +143,19 @@ body.om .omside, .omside.ut { visibility: visible; }
 /* Ingen prisliste, bare en setning som gjør det lett å spørre */
 .omside .pris { max-width: 34rem; padding-left: 0.9rem; border-left: 1px solid var(--rod); font-size: 0.9375rem; line-height: 1.5; color: var(--svart); }
 .omside .kontakt { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.4rem; margin-top: 0.4rem; }
-.omside .kontakt a.epost { font-weight: 600; text-decoration: underline; text-decoration-color: var(--linje); }
-.omside .kontakt a.epost:hover { text-decoration-color: currentColor; color: var(--rod-tekst); }
+/* Arkene: bare det valgte vises. Bytter man mens visningen er åpen, glir det nye arket kort inn. */
+.omside .ark { display: flex; flex-direction: column; gap: inherit; }
+.omside[data-ark="om"] .ark-kontakt, .omside[data-ark="kontakt"] .ark-om { display: none; }
+.omside.bytter .ark { animation: arkinn 0.5s cubic-bezier(0.2, 0.7, 0.15, 1); }
+@keyframes arkinn { from { opacity: 0; transform: translateY(0.8rem); } }
+.omside a.bytt { align-self: flex-start; font-weight: 600; text-decoration: underline; text-decoration-color: var(--linje); text-underline-offset: 0.2em; }
+.omside a.bytt:hover { text-decoration-color: currentColor; color: var(--rod-tekst); }
+.omside .kanaler { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; border-top: 1px solid var(--linje); padding-top: 1.2rem; max-width: 34rem; }
+.omside .kanaler li { display: grid; gap: 0.3rem; }
+.omside .kanaler span { font: 600 0.75rem/1 var(--f); letter-spacing: 0.14em; text-transform: uppercase; color: var(--rod-tekst); }
+.omside .kanaler a { font: 800 clamp(1.25rem, min(2.2vw, 4vh), 1.9rem)/1.15 var(--f); text-decoration: none; overflow-wrap: anywhere; }
+.omside .kanaler a:hover { color: var(--rod-tekst); }
+.topp nav a[aria-current="page"] { color: var(--rod-tekst); }
 .omside .bunn { margin-top: 0.6rem; font-size: 0.8125rem; color: var(--gra); }
 /* Lave skjermer: litt tettere, så alt får plass uten rulling */
 @media (max-height: 780px) and (min-width: 861px) { .omside { gap: 0.9rem; padding-top: 4.6rem; } .omside h2 { font-size: clamp(2rem, min(4.2vw, 7.4vh), 4.4rem); }
@@ -382,14 +393,25 @@ body.aapen .panel > * { opacity: 1; transform: none; transition: opacity 0.6s 0.
     <p class="hint etikett" aria-hidden="true">Se arbeidet</p>
     <div class="omside" id="om" role="region" aria-labelledby="om-tittel" inert>
       <button class="tilbake" type="button">← Tilbake</button>
+      <!-- To ark i samme visning: Om meg og Kontakt. Bildet står stille når man bytter mellom dem, bare arket bytter. -->
+      <div class="ark ark-om">
       <h2 id="om-tittel">Fra idé til <span>fungerende løsning</span></h2>
       <div class="tekst">
         <p>Jeg er en fullstack-utvikler som liker å gjøre ideer om til funksjonelle og meningsfulle digitale løsninger. Før jeg skriver en eneste linje med kode, ønsker jeg å forstå problemet, menneskene jeg utvikler for, og hva løsningen faktisk skal oppnå.</p>
         <p>Derfra kombinerer jeg design, logikk og teknologi for å skape nettsider og applikasjoner som ikke bare ser bra ut, men som også fungerer optimalt.</p>
         <p>Jeg mener at de beste løsningene ikke nødvendigvis er de mest kompliserte, men de som gjør det kompliserte enkelt.</p>
       </div>
+      <a class="bytt" href="#kontakt" data-til="kontakt">Ta kontakt <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="ark ark-kontakt" id="kontakt">
+      <h2 id="kontakt-tittel">Har du et <span>prosjekt?</span></h2>
       <p class="pris">Prisen settes etter hva prosjektet skal gjøre, enten det er en liten forening eller en bedrift. Spør gjerne, det koster ingenting.</p>
-      <div class="kontakt" id="kontakt"><a class="cta" href="mailto:epost@christianhermansen.no">Start et prosjekt <span aria-hidden="true">→</span></a><a class="epost" href="mailto:epost@christianhermansen.no">epost@christianhermansen.no</a></div>
+      <!-- Én rad per kanal. Jobbtelefon eller sosiale medier legges til som nye <li> med samme oppsett. -->
+      <ul class="kanaler">
+        <li><span>E-post</span><a href="mailto:epost@christianhermansen.no">epost@christianhermansen.no</a></li>
+      </ul>
+      <div class="kontakt"><a class="cta" href="mailto:epost@christianhermansen.no">Start et prosjekt <span aria-hidden="true">→</span></a><a class="bytt" href="#om" data-til="om"><span aria-hidden="true">←</span> Om meg</a></div>
+      </div>
       <p class="bunn">© 2026 Christian Hermansen · <a href="/personvern.html">Personvern</a></p>
     </div>
   </section>
@@ -627,8 +649,19 @@ function sprekkBakStol(tilOm) {
   const x1 = smal ? x : innerWidth * (tilOm ? 0.27 : 0.67);
   window.glassSprekk?.(x, y, x1, y, h * 0.5, 1100);
 }
+// Om meg og Kontakt er to ark i samme visning. Menyen viser hvilket som er åpent.
+const menyOm = document.querySelector(".tilom"), menyKontakt = document.querySelector(".tilkontakt");
+function visArk(kontakt) {
+  const ark = kontakt ? "kontakt" : "om", bytte = omApen && omside.dataset.ark && omside.dataset.ark !== ark;
+  omside.dataset.ark = ark;
+  omside.setAttribute("aria-labelledby", kontakt ? "kontakt-tittel" : "om-tittel");
+  (kontakt ? menyOm : menyKontakt).removeAttribute("aria-current");
+  (kontakt ? menyKontakt : menyOm).setAttribute("aria-current", "page");
+  if (bytte) { omside.scrollTop = 0; omside.classList.remove("bytter"); void omside.offsetWidth; omside.classList.add("bytter"); }
+}
 function aapneOm(kontakt = false) {
   if (aapen >= 0) lukk();
+  visArk(kontakt);
   const fraArbeid = tp !== 0;
   if (fraArbeid) tilDel(0);
   if (!omApen) {
@@ -637,20 +670,22 @@ function aapneOm(kontakt = false) {
     setTimeout(() => sprekkBakStol(true), fraArbeid ? 450 : 0);
   }
   history.replaceState(history.state, "", kontakt ? "#kontakt" : "#om");
-  setTimeout(() => omside.querySelector(kontakt ? ".cta" : ".tilbake").focus({ preventScroll: true, focusVisible: tastatur }), rolig ? 0 : 600);
+  setTimeout(() => omside.querySelector(kontakt ? ".ark-kontakt .kanaler a" : ".tilbake").focus({ preventScroll: true, focusVisible: tastatur }), rolig || omside.classList.contains("bytter") ? 0 : 600);
 }
 function lukkOm(stille = false) {
   if (!omApen) return;
   omApen = false; omMaal = 0;
-  document.body.classList.remove("om"); omside.inert = true;
+  document.body.classList.remove("om"); omside.inert = true; omside.classList.remove("bytter");
+  menyOm.removeAttribute("aria-current"); menyKontakt.removeAttribute("aria-current");
   omside.classList.add("ut"); setTimeout(() => omside.classList.remove("ut"), 900);
   if (!stille) sprekkBakStol(false);
   history.replaceState(history.state, "", location.pathname + location.search);
   if (!stille && omFra && document.contains(omFra)) omFra.focus({ preventScroll: true, focusVisible: tastatur });
 }
 omside.querySelector(".tilbake").addEventListener("click", () => lukkOm());
-document.querySelector(".tilom").addEventListener("click", (e) => { e.preventDefault(); aapneOm(false); });
-document.querySelector(".tilkontakt").addEventListener("click", (e) => { e.preventDefault(); aapneOm(true); });
+menyOm.addEventListener("click", (e) => { e.preventDefault(); aapneOm(false); });
+menyKontakt.addEventListener("click", (e) => { e.preventDefault(); aapneOm(true); });
+omside.querySelectorAll("a.bytt").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); aapneOm(a.dataset.til === "kontakt"); }));
 
 // ---------- Styring ----------
 let hvileTid = 0, hakkLaas = 0;
