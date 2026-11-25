@@ -73,7 +73,8 @@ a { color: inherit; text-underline-offset: 0.2em; }
 /* ---------- Del 1: bildet ---------- */
 .helt { position: fixed; inset: 0; overflow: hidden; }
 /* Uskarpheten bak Arbeid er tatt ned fra 26 til 16 px (24.11), så stolen og navnet skimtes bak ringen */
-.bilde { position: absolute; inset: 0; filter: blur(calc(var(--p, 0) * 16px)); transform: scale(calc(1 + var(--p, 0) * 0.06)); will-change: filter, transform; }
+/* Bare bildet i .helt: galleriet bruker også klassen «bilde» (slot bilde), og ble uskarpt av denne regelen */
+.helt > .bilde { position: absolute; inset: 0; filter: blur(calc(var(--p, 0) * 16px)); transform: scale(calc(1 + var(--p, 0) * 0.06)); will-change: filter, transform; }
 /* Glasset bak alt. Lerretet tones inn når første bilde er tegnet, så det ikke blinker grått. */
 .glass { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s; }
 .glass.klar { opacity: 1; }
