@@ -249,6 +249,15 @@ if (!rolig) {
   }, 700);
 }
 
+// ---------- Sprekk bak stolen (Om meg) ----------
+// Når bildet flytter seg til Om meg og tilbake, sprekker glasset i et felt bak stolen som følger den, og legger seg
+// når den står stille. Kalles fra siden: glassSprekk(fraX, fraY, tilX, tilY, radius, ms), i skjermpunkter.
+let sprekk = null;
+window.glassSprekk = (x0, y0, x1, y1, r, ms) => {
+  if (rolig) return;
+  sprekk = { x0: x0 - W / 2, y0: H / 2 - y0, x1: x1 - W / 2, y1: H / 2 - y1, r, ms, t0: performance.now() };
+};
+
 // ---------- Tegning: bare når noe beveger seg ----------
 let sist = performance.now();
 function ramme(naa) {
@@ -258,10 +267,26 @@ function ramme(naa) {
   if (peker.aktiv && !iDel1()) peker.aktiv = false;
   const steg = Math.max(1, Math.ceil(dt / 0.008)), h = dt / steg;
   let endret = false, maks = 0;
+  // Hvor sprekkfeltet er nå: det følger stolen med samme myke fart, kommer fort og legger seg mot slutten
+  let sx = 0, sy = 0, sStyrke = 0;
+  if (sprekk) {
+    const t = (naa - sprekk.t0) / sprekk.ms;
+    if (t > 1) sprekk = null;
+    else {
+      const g = 1 - Math.exp(-t * 4.2);
+      sx = sprekk.x0 + (sprekk.x1 - sprekk.x0) * g; sy = sprekk.y0 + (sprekk.y1 - sprekk.y0) * g;
+      sStyrke = Math.min(1, t / 0.15) * (t < 0.55 ? 1 : 1 - (t - 0.55) / 0.45) * 0.9;
+    }
+  }
   for (const f of biter) {
-    const dx = f.x - peker.x, dy = f.y - peker.y, d = Math.hypot(dx, dy);
+    let dx = f.x - peker.x, dy = f.y - peker.y, d = Math.hypot(dx, dy);
     const t = peker.aktiv ? Math.max(0, 1 - d / S.radius) : 0;
-    const maal = t * t * (3 - 2 * t);
+    let maal = t * t * (3 - 2 * t);
+    if (t > 0) f.sprekk = false;
+    if (sStyrke > 0) {
+      const bx = f.x - sx, by = f.y - sy, bd = Math.hypot(bx, by), k = Math.max(0, 1 - bd / sprekk.r), b = k * k * (3 - 2 * k) * sStyrke;
+      if (b > maal) { f.sprekk = true; maal = b; dx = bx * S.radius / sprekk.r; dy = by * S.radius / sprekk.r; }
+    }
     if (maal === 0 && f.p === 0 && f.rx === 0 && f.ry === 0) continue;
     const korn = Math.sin(f.x * 12.9898 + f.y * 78.233);
     const rx = maal * (dy / S.radius * 3 + korn * 0.45), ry = maal * (-dx / S.radius * 3 + Math.cos(f.y * 5.17 + f.x) * 0.45);
@@ -271,7 +296,9 @@ function ramme(naa) {
       [f.rx, f.vx] = fjaer(f.rx, f.vx, rx, k, dm, h);
       [f.ry, f.vy] = fjaer(f.ry, f.vy, ry, k, dm, h);
     }
-    maks = Math.max(maks, f.p); endret = true;
+    // det røde lyset følger pekeren, ikke sprekken bak stolen
+    if (!f.sprekk) maks = Math.max(maks, f.p);
+    endret = true;
     for (let i = f.start; i < f.start + f.count; i++) { const o = i * 4; bevegelse.array[o] = f.p; bevegelse.array[o + 1] = f.rx; bevegelse.array[o + 2] = f.ry; }
   }
   if (endret) { bevegelse.needsUpdate = true; renderer.shadowMap.needsUpdate = true; skitten = true; }

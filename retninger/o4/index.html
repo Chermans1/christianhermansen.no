@@ -56,7 +56,9 @@ a { color: inherit; text-underline-offset: 0.2em; }
 .glass.klar { opacity: 1; }
 .glass canvas { display: block; width: 100%; height: 100%; }
 .tredje { position: absolute; inset: 0; perspective: 1500px; perspective-origin: 50% 40%; }
-.verden { position: absolute; left: var(--sx, 67%); top: 0; bottom: 0; width: 0; transform-style: preserve-3d; transform: rotateY(calc(var(--mx, 0) * 10deg)); }
+/* --om går fra 0 til 1 når Om meg er åpen: bildet flytter seg fra --sx til --sxOm (og på mobil opp og mindre) */
+.verden { position: absolute; left: calc(var(--sx, 67%) * (1 - var(--om, 0)) + var(--sxOm, 27%) * var(--om, 0)); top: 0; bottom: 0; width: 0; transform-style: preserve-3d;
+  transform: translateY(calc(var(--omY, 0svh) * var(--om, 0))) scale(calc(1 - var(--omS, 0) * var(--om, 0))) rotateY(calc(var(--mx, 0) * 10deg)); }
 /* Utklipt helfigur i den røde stolen (gjennomsiktig rundt), så ordene bak ringen synes mellom stolbeina og rundt armene */
 .portrett { position: absolute; bottom: 0; left: 0; height: min(86vh, 130vw); aspect-ratio: 1280 / 1648; transform: translateX(-50%) translateZ(0); }
 .portrett img { width: 100%; height: 100%; display: block; position: relative; }
@@ -67,12 +69,14 @@ a { color: inherit; text-underline-offset: 0.2em; }
   transform: translate(-50%, -50%) rotateY(var(--a)) translateZ(var(--rr, 300px)); transition: color 0.3s; white-space: pre; }
 .ring span.bak { color: var(--svart); opacity: 0.85; }
 
+.tittel { transform: translateX(calc(var(--om, 0) * -55vw)); opacity: calc(1 - var(--om, 0) * 1.4); }
 .tittel { position: absolute; left: var(--kant); top: clamp(8.4rem, 20vh, 12rem); font: 900 clamp(3rem, 8.4vw, 10rem)/0.86 var(--f); text-transform: uppercase; letter-spacing: -0.01em; pointer-events: none; }
 .tittel .ord { display: block; white-space: nowrap; }
 .tittel .ord + .ord { color: var(--rod); }
 .tittel b { font-weight: inherit; display: inline-block; font-variation-settings: "wdth" var(--w, 78); transition: font-variation-settings 0.25s; }
 /* Mappe-stilen: etiketter i bokser, striper, koordinater og strekkode */
-.mappe { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: calc(1 - var(--p, 0) * 1.7); transform: translateY(calc(var(--p, 0) * -5vh)); }
+.mappe { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: calc(1 - var(--p, 0) * 1.7 - var(--om, 0) * 1.6); transform: translate(calc(var(--om, 0) * -30vw), calc(var(--p, 0) * -5vh)); }
+body.om .mappe { visibility: hidden; transition: visibility 0s 0.5s; }
 .mappe > * { position: absolute; }
 .boks { display: inline-block; font: 800 0.75rem/1 var(--f); font-variation-settings: "wdth" 110; letter-spacing: 0.12em; text-transform: uppercase; background: var(--svart); color: var(--hvit); padding: 0.42rem 0.55rem 0.38rem; }
 .boks.rod { background: var(--rod); }
@@ -98,9 +102,28 @@ a { color: inherit; text-underline-offset: 0.2em; }
 .cta span { transition: transform 0.25s; } .cta:hover span { transform: translateX(0.25rem); }
 /* Fast rekkefølge i bildet: glasset bakerst, så navnet, så portrettet med ordringen */
 .glass { z-index: 0; } .tittel { z-index: 1; } .tredje { z-index: 2; }
-.hint { position: absolute; left: 50%; bottom: 1.8rem; z-index: 2; transform: translateX(-50%); display: grid; justify-items: center; gap: 0.5rem; opacity: calc(1 - var(--p, 0) * 3); }
+.hint { position: absolute; left: 50%; bottom: 1.8rem; z-index: 2; transform: translateX(-50%); display: grid; justify-items: center; gap: 0.5rem; opacity: calc(1 - var(--p, 0) * 3 - var(--om, 0) * 3); }
 .hint::after { content: ""; width: 1px; height: 2.4rem; background: var(--svart); transform-origin: 50% 0; animation: drypp 2.2s ease-in-out infinite; }
 @keyframes drypp { 0% { transform: scaleY(0); } 55% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+/* ---------- Om meg: bildet går til venstre, teksten glir inn fra høyre ---------- */
+.omside { position: absolute; z-index: 3; left: 52%; right: var(--kant); top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: safe center; gap: 1.6rem;
+  padding: 6rem 0 2rem; max-width: 40rem; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
+  opacity: var(--om, 0); transform: translateX(calc((1 - var(--om, 0)) * 34vw)); visibility: hidden; }
+body.om .omside, .omside.ut { visibility: visible; }
+.omside .tilbake { align-self: flex-start; font: 600 0.75rem/1 var(--f); letter-spacing: 0.14em; text-transform: uppercase; background: none; border: 1px solid var(--linje); border-radius: 99px; padding: 0.7rem 1rem; color: var(--svart); cursor: pointer; }
+.omside .tilbake:hover { border-color: var(--svart); }
+.omside h2 { font: 900 clamp(2.2rem, min(4.6vw, 8.4vh), 4.8rem)/0.88 var(--f); font-variation-settings: "wdth" 112; text-transform: uppercase; letter-spacing: -0.01em; text-wrap: balance; }
+.omside h2 span { display: block; color: var(--rod); }
+.omside .tekst { display: grid; gap: 1rem; max-width: 34rem; font-size: 1.0625rem; line-height: 1.6; font-weight: 500; }
+.omside .tekst p + p { color: var(--gra); }
+.omside .kontakt { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.4rem; margin-top: 0.4rem; }
+.omside .kontakt a.epost { font-weight: 600; text-decoration: underline; text-decoration-color: var(--linje); }
+.omside .kontakt a.epost:hover { text-decoration-color: currentColor; color: var(--rod-tekst); }
+.omside .bunn { margin-top: 0.6rem; font-size: 0.8125rem; color: var(--gra); }
+/* Lave skjermer: litt tettere, så alt får plass uten rulling */
+@media (max-height: 780px) and (min-width: 861px) { .omside { gap: 1.1rem; padding-top: 5rem; } .omside .tekst { font-size: 1rem; line-height: 1.5; gap: 0.8rem; } }
+.omside .bunn a { color: var(--svart); }
+
 /* Hvitt slør over det uskarpe bildet, så ringen i del 2 står klart */
 .slor { position: fixed; inset: 0; background: var(--hvit); opacity: calc(var(--p, 0) * 0.42); pointer-events: none; }
 
@@ -255,7 +278,13 @@ body.aapen .panel > * { opacity: 1; transform: none; transition: opacity 0.6s 0.
   .rang { left: var(--kant); top: calc(7.4rem + clamp(2.4rem, 12vw, 5rem) * 1.8); }
   .hjorne { display: none; }
   .koord { display: none; }
-  .verden { --sx: 50%; }
+  /* Om meg på mobil: bildet blir mindre og går opp, teksten står under og kan rulles */
+  .verden { --sx: 50%; --sxOm: 50%; --omY: -38svh; --omS: 0.54; }
+  .omside { left: 0; right: 0; top: 33svh; max-width: none; justify-content: flex-start; gap: 1.2rem; padding: 1.6rem var(--kant) 5rem;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.94) 1.6rem); transform: translateY(calc((1 - var(--om, 0)) * 30svh)); }
+  .omside h2 { font-size: clamp(2rem, 9vw, 3rem); }
+  .omside .tekst { font-size: 0.975rem; line-height: 1.55; }
+  .omside .bunn { margin-top: 1rem; }
   /* Bildet løftes opp så stolen står fri over teksten. Beina og skoen går inn i den hvite overgangen nederst. */
   /* 20rem er der teksten over slutter, så hodet aldri går inn i «Web og iOS» på lave telefoner */
   .portrett { height: min(58svh, 125vw, calc(95svh - 20rem)); bottom: 5svh; }
@@ -293,7 +322,7 @@ body.aapen .panel > * { opacity: 1; transform: none; transition: opacity 0.6s 0.
 
 <header class="topp">
   <button class="navn" type="button" aria-label="Christian Hermansen, til start">Christian Hermansen<i>.</i></button>
-  <nav aria-label="Hovedmeny"><a href="#" class="tilarbeid">Arbeid</a><a href="mailto:epost@christianhermansen.no">Kontakt</a></nav>
+  <nav aria-label="Hovedmeny"><a href="#" class="tilarbeid">Arbeid</a><a href="#om" class="tilom">Om meg</a><a href="#kontakt" class="tilkontakt">Kontakt</a></nav>
 </header>
 
 <main>
@@ -324,6 +353,17 @@ body.aapen .panel > * { opacity: 1; transform: none; transition: opacity 0.6s 0.
       </div>
     </div>
     <p class="hint etikett" aria-hidden="true">Se arbeidet</p>
+    <div class="omside" id="om" role="region" aria-labelledby="om-tittel" inert>
+      <button class="tilbake" type="button">← Tilbake</button>
+      <h2 id="om-tittel">Fra idé til <span>fungerende løsning</span></h2>
+      <div class="tekst">
+        <p>Jeg er en fullstack-utvikler som liker å gjøre ideer om til funksjonelle og meningsfulle digitale løsninger. Før jeg skriver en eneste linje med kode, ønsker jeg å forstå problemet, menneskene jeg utvikler for, og hva løsningen faktisk skal oppnå.</p>
+        <p>Derfra kombinerer jeg design, logikk og teknologi for å skape nettsider og applikasjoner som ikke bare ser bra ut, men som også fungerer optimalt.</p>
+        <p>Jeg mener at de beste løsningene ikke nødvendigvis er de mest kompliserte, men de som gjør det kompliserte enkelt.</p>
+      </div>
+      <div class="kontakt" id="kontakt"><a class="cta" href="mailto:epost@christianhermansen.no">Start et prosjekt <span aria-hidden="true">→</span></a><a class="epost" href="mailto:epost@christianhermansen.no">epost@christianhermansen.no</a></div>
+      <p class="bunn">© 2026 Christian Hermansen · <a href="/personvern.html">Personvern</a></p>
+    </div>
   </section>
   <div class="slor" aria-hidden="true"></div>
 
@@ -529,6 +569,7 @@ function tegn(naa) {
   vmx += (mx - vmx) * (1 - Math.exp(-dt * 4)); vmy += (my - vmy) * (1 - Math.exp(-dt * 4));
   p += (tp - p) * (1 - Math.exp(-dt * 5)); if (Math.abs(tp - p) < 0.001) p = tp;
   rot.style.setProperty("--p", p.toFixed(4));
+  if (omV !== omMaal) { omV += (omMaal - omV) * (1 - Math.exp(-dt * 4.5)); if (Math.abs(omMaal - omV) < 0.002 || rolig) omV = omMaal; rot.style.setProperty("--om", omV.toFixed(4)); }
   rot.style.setProperty("--mx", vmx.toFixed(4)); rot.style.setProperty("--my", vmy.toFixed(4));
   scene.style.setProperty("--vis2", p > 0.02 ? "visible" : "hidden");
   scene.style.pointerEvents = p > 0.9 ? "" : "none";
@@ -548,11 +589,46 @@ function tegn(naa) {
   requestAnimationFrame(tegn);
 }
 
+// ---------- Om meg ----------
+// Bildet glir til venstre og teksten inn fra høyre. Glasset sprekker bak stolen mens den flytter seg (glassSprekk i glass.js).
+const omside = document.querySelector(".omside");
+let omApen = false, omMaal = 0, omV = 0, omFra = null;
+const stolMidt = () => { const b = portrett.getBoundingClientRect(); return [b.left + b.width / 2, b.top + b.height * 0.55, b.height]; };
+function sprekkBakStol(tilOm) {
+  const [x, y, h] = stolMidt(), smal = innerWidth < 860;
+  const x1 = smal ? x : innerWidth * (tilOm ? 0.27 : 0.67);
+  window.glassSprekk?.(x, y, x1, y, h * 0.5, 1100);
+}
+function aapneOm(kontakt = false) {
+  if (aapen >= 0) lukk();
+  const fraArbeid = tp !== 0;
+  if (fraArbeid) tilDel(0);
+  if (!omApen) {
+    omFra = document.activeElement; omApen = true; omMaal = 1;
+    document.body.classList.add("om"); omside.inert = false;
+    setTimeout(() => sprekkBakStol(true), fraArbeid ? 450 : 0);
+  }
+  history.replaceState(history.state, "", kontakt ? "#kontakt" : "#om");
+  setTimeout(() => omside.querySelector(kontakt ? ".cta" : ".tilbake").focus({ preventScroll: true, focusVisible: tastatur }), rolig ? 0 : 600);
+}
+function lukkOm(stille = false) {
+  if (!omApen) return;
+  omApen = false; omMaal = 0;
+  document.body.classList.remove("om"); omside.inert = true;
+  omside.classList.add("ut"); setTimeout(() => omside.classList.remove("ut"), 900);
+  if (!stille) sprekkBakStol(false);
+  history.replaceState(history.state, "", location.pathname + location.search);
+  if (!stille && omFra && document.contains(omFra)) omFra.focus({ preventScroll: true, focusVisible: tastatur });
+}
+omside.querySelector(".tilbake").addEventListener("click", () => lukkOm());
+document.querySelector(".tilom").addEventListener("click", (e) => { e.preventDefault(); aapneOm(false); });
+document.querySelector(".tilkontakt").addEventListener("click", (e) => { e.preventDefault(); aapneOm(true); });
+
 // ---------- Styring ----------
 let hvileTid = 0, hakkLaas = 0;
 const smekk = () => { clearTimeout(hvileTid); hvileTid = setTimeout(() => { maalPos = Math.round(maalPos); }, 150); };
 addEventListener("wheel", (e) => {
-  if (aapen >= 0 || travel) return;
+  if (aapen >= 0 || travel || omApen) return;
   const naa = performance.now();
   if (del2() && visning === "rutenett") {          // rutenettet ruller som en vanlig side
     if (naa < laastTil) { e.preventDefault(); return; }
@@ -578,7 +654,7 @@ addEventListener("wheel", (e) => {
 let dra = null;
 addEventListener("pointerdown", (e) => {
   if (aapen >= 0 || travel || e.button !== 0) return;
-  if (e.target.closest("a, .topp, .tilstart, .case, .visning")) return;
+  if (omApen || e.target.closest("a, .topp, .tilstart, .case, .visning, .omside")) return;
   if (del2() && visning === "rutenett") return;
   dra = { x: e.clientX, y: e.clientY, fra: maalPos, tp0: tp, id: e.pointerId, del2: del2() }; dro = false;
 });
@@ -598,6 +674,7 @@ addEventListener("pointerup", () => {
 });
 addEventListener("pointercancel", () => { dra = null; dro = false; maalPos = Math.round(maalPos); });
 addEventListener("keydown", (e) => {
+  if (omApen) { if (e.key === "Escape") lukkOm(); return; }
   if (aapen >= 0) { if (e.key === "Escape") lukk(); return; }
   if (travel) return;
   if (!del2()) { if (["ArrowDown", "PageDown", " ", "Enter"].includes(e.key) && !e.target.closest("a, button")) { e.preventDefault(); tilDel(1); setTimeout(fokusArbeid, 900); } return; }
@@ -606,8 +683,8 @@ addEventListener("keydown", (e) => {
   if (e.key === "ArrowRight" || e.key === "ArrowDown") { e.preventDefault(); maalPos = Math.round(maalPos) + 1; kort[iRing(Math.round(maalPos))].focus({ preventScroll: true }); }
   if (e.key === "ArrowLeft" || e.key === "ArrowUp") { e.preventDefault(); maalPos = Math.round(maalPos) - 1; kort[iRing(Math.round(maalPos))].focus({ preventScroll: true }); }
 });
-document.querySelector(".topp .navn").addEventListener("click", () => { if (aapen >= 0) lukk(); tilDel(0); });
-document.querySelector(".tilarbeid").addEventListener("click", (e) => { e.preventDefault(); if (aapen >= 0) lukk(); tilDel(1); });
+document.querySelector(".topp .navn").addEventListener("click", () => { if (omApen) lukkOm(); if (aapen >= 0) lukk(); tilDel(0); });
+document.querySelector(".tilarbeid").addEventListener("click", (e) => { e.preventDefault(); if (omApen) lukkOm(true); if (aapen >= 0) lukk(); tilDel(1); });
 scene.querySelector(".tilstart").addEventListener("click", () => tilDel(0));
 
 // ---------- Prosjektvisningen (fra O3) ----------
@@ -729,6 +806,7 @@ settVisning(visning, false);
 if (iAdressen || PROSJEKTER.some((q) => q.id === hash)) { tp = p = 1; rot.style.setProperty("--p", 1); laastTil = performance.now() + 400; }
 plasserKort(1);
 if (iAdressen) aapne(start, false, false);
+else if (hash === "om" || hash === "kontakt") { omV = 1; rot.style.setProperty("--om", 1); aapneOm(hash === "kontakt"); }
 requestAnimationFrame(tegn);
 </script>
 </body>
