@@ -3,13 +3,14 @@
 // film: rullefilm laget av 02_Design/opptak/lag-rull.sh (den ekte siden som ruller sakte nedover)
 export const PROSJEKTER = [
   {
-    id: "zempel", navn: "Zempel", type: "Digitalt verktøy", status: "I pilot hos styret i Fanatastisk", aar: "",
+    id: "zempel", navn: "Zempel", type: "Digitalt verktøy", status: "I pilot hos styret i Fanatastisk", aar: "2026",
     ingress: "Styr festivalen, ikke innboksen.",
     tekst: [
       "Et system for festivaldrift. Artister, program, frivillige og budsjett på ett sted, i stedet for i fem regneark.",
-      "Artister, crew, ridere og produksjon er samlet, så ingen må jakte på artistinformasjon i innboksen.",
+      "Hver artist har kontrakt, rider, gjesteliste og en status fra hentet til levert, så ingen må jakte på artistinformasjon i innboksen. Kalenderen viser alle scenene samtidig og sier fra når skiftetiden mellom to artister blir for kort.",
+      "Oversikten samler det som trenger noen nå: avvik, forfalte oppgaver og ridere som mangler. Tilgangen styres i databasen, så hver i staben ser det de skal.",
     ],
-    omfang: ["Idé og konsept", "Design", "Kode", "Pilot med en ekte festival"],
+    omfang: ["Idé og konsept", "Design", "Next.js og Supabase", "Pilot med en ekte festival"],
     lenke: "https://zempel.no/", lenketekst: "zempel.no",
   },
   {
@@ -74,7 +75,7 @@ export const plakat = (id) => `/media/arbeid/${id}.webp`;
 // telefon: hele telefonopptaket ruller sakte i en telefon. bilde: et stillbilde over hele bredden. apper: skjermer side om side.
 const R4 = "/media/arbeid/";
 export const GALLERI = {
-  zempel: [{ t: "film" }, { t: "telefon", src: "/media/arbeid/zempel-mobil.webp", tekst: "Zempel på telefon" }, { t: "bilde", src: R4 + "zempel-topp.webp", tekst: "Første skjerm på zempel.no" }],
+  zempel: [{ t: "film" }, { t: "bilde", src: R4 + "zempel-kalender.webp", tekst: "Kalenderen med alle scenene, og konfliktene listet under" }, { t: "bilde", src: R4 + "zempel-rider.webp", tekst: "Én artist: status fra hentet til levert, og rideren" }, { t: "telefon", src: R4 + "zempel-mobil.webp", tekst: "zempel.no på telefon" }],
   adhdoyane: [{ t: "film" }, { t: "telefon", src: "/media/arbeid/adhdoyane-mobil.webp", tekst: "Hele forsiden på telefon" },
     { t: "apper", bg: "#eef2f7", src: ["/media/arbeid/adhdoyane-app-prosjekter.webp", "/media/arbeid/adhdoyane-app-send.webp", "/media/arbeid/adhdoyane-app-kasserer.webp"], tekst: "Appen: prosjektene med det som er igjen, å sende en kvittering, og køen kassereren godkjenner fra. Bildene er tatt med oppdiktede data." }, { t: "bilde", src: R4 + "adhdoyane-topp.webp", tekst: "Første skjerm på adhdoyane.no" }],
   fanatastisk: [{ t: "film" }, { t: "apper", bg: "#090707", src: [R4 + "fanatastisk-app-hjem.webp", R4 + "fanatastisk-app-program.webp", R4 + "fanatastisk-app-artist.webp"], tekst: "Appen i versjon 2.0: forsiden, programmet og en artistside" }, { t: "telefon", src: R4 + "fanatastisk-mobil.webp", tekst: "Nettsiden på telefon, med 2026-programmet" }, { t: "bilde", src: R4 + "fanatastisk-topp.webp", tekst: "Første skjerm i det nye designet. Filmen spiller inne i logoen." }],
