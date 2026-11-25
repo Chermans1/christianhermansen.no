@@ -734,9 +734,10 @@ function fyll(i) {
   passTittel();
   panel.querySelector(".ingress2").textContent = pr.ingress;
   panel.querySelector(".tekst").innerHTML = pr.tekst.map((t) => `<p>${t}</p>`).join("");
-  panel.querySelector("dl").innerHTML = `<dt>Type</dt><dd>${pr.type}</dd><dt>Status</dt><dd>${pr.status}</dd>${pr.aar ? `<dt>År</dt><dd>${pr.aar}</dd>` : ""}<dt>Nettsted</dt><dd><a href="${pr.lenke}" target="_blank" rel="noopener">${pr.lenketekst} ↗</a></dd>`;
+  panel.querySelector("dl").innerHTML = `<dt>Type</dt><dd>${pr.type}</dd><dt>Status</dt><dd>${pr.status}</dd>${pr.aar ? `<dt>År</dt><dd>${pr.aar}</dd>` : ""}${pr.lenke ? `<dt>Nettsted</dt><dd><a href="${pr.lenke}" target="_blank" rel="noopener">${pr.lenketekst} ↗</a></dd>` : ""}`;
   panel.querySelector(".omfang").innerHTML = pr.omfang.map((o) => `<li>${o}</li>`).join("");
-  const gaa = panel.querySelector(".gaa"); gaa.href = pr.lenke; gaa.textContent = "Åpne siden ↗";
+  // Prosjekter uten offentlig adresse (for eksempel en app som bare er i TestFlight) har ingen lenke
+  const gaa = panel.querySelector(".gaa"); gaa.hidden = !pr.lenke; if (pr.lenke) { gaa.href = pr.lenke; gaa.textContent = "Åpne siden ↗"; }
   resten.innerHTML = (GALLERI[pr.id] || []).slice(1).map((g) => {
     const tekst = g.tekst ? `<figcaption>${g.tekst}</figcaption>` : "";
     if (g.t === "telefon") return `<figure class="slot telefon"><div class="ramme"><div class="mobil"><div><img src="${sti(g.src)}" alt="${g.tekst || ""}" loading="lazy"></div></div></div>${tekst}</figure>`;

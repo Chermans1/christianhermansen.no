@@ -37,6 +37,17 @@ export const PROSJEKTER = [
     lenke: "https://fanatastisk.no/", lenketekst: "fanatastisk.no",
   },
   {
+    // iOS-appen ligger i TestFlight (25.11.2026), så den har ingen offentlig lenke ennå
+    id: "signal-noise", navn: "Signal | Noise", type: "iOS-app", status: "I TestFlight", aar: "2024–2026",
+    ingress: "Noen få ting som betyr noe i dag, og resten parkert.",
+    tekst: [
+      "En fokusapp for hoder som mitt. Dagen starter med ett mål, signalet. Oppgavene sorteres i Signal, Noise og Parked, og fokustimeren kjører økter på 15, 25 eller 50 minutter med pauser.",
+      "Første versjon var en nettapp. Denne er skrevet på nytt i SwiftUI med SwiftData, og alt ligger på telefonen: ingen konto, ingen server og ingen sporing.",
+      "Pro-versjonen har en hjernedump. Du skriver alt du har i hodet, og en språkmodell som kjører på selve telefonen gjør det om til oppgaver. Du bestemmer selv hvor hver av dem hører hjemme, og teksten forlater aldri telefonen.",
+    ],
+    omfang: ["iOS-app i SwiftUI", "Lagring med SwiftData", "Språkmodell på enheten (Foundation Models)", "Engangskjøp med StoreKit 2"],
+  },
+  {
     id: "bransjekart", navn: "Bransjekart Norge", type: "Webapp", status: "Live", aar: "2026",
     ingress: "Et åpent kart, uten betalt plass.",
     tekst: [
@@ -79,6 +90,7 @@ export const GALLERI = {
   adhdoyane: [{ t: "film" }, { t: "telefon", src: "/media/arbeid/adhdoyane-mobil.webp", tekst: "Hele forsiden på telefon" },
     { t: "apper", bg: "#eef2f7", src: ["/media/arbeid/adhdoyane-app-prosjekter.webp", "/media/arbeid/adhdoyane-app-send.webp", "/media/arbeid/adhdoyane-app-kasserer.webp"], tekst: "Appen: prosjektene med det som er igjen, å sende en kvittering, og køen kassereren godkjenner fra. Bildene er tatt med oppdiktede data." }, { t: "bilde", src: R4 + "adhdoyane-topp.webp", tekst: "Første skjerm på adhdoyane.no" }],
   fanatastisk: [{ t: "film" }, { t: "apper", bg: "#090707", src: [R4 + "fanatastisk-app-hjem.webp", R4 + "fanatastisk-app-program.webp", R4 + "fanatastisk-app-artist.webp"], tekst: "Appen i versjon 2.0: forsiden, programmet og en artistside" }, { t: "telefon", src: R4 + "fanatastisk-mobil.webp", tekst: "Nettsiden på telefon, med 2026-programmet" }, { t: "bilde", src: R4 + "fanatastisk-topp.webp", tekst: "Første skjerm i det nye designet. Filmen spiller inne i logoen." }],
+  "signal-noise": [{ t: "film" }, { t: "apper", bg: "#fff1e6", src: [R4 + "signal-noise-app-home.webp", R4 + "signal-noise-app-tasks.webp", R4 + "signal-noise-app-focus.webp"], tekst: "Forsiden, oppgavene og fokustimeren. Oppgavene er eksemplene appen starter med." }],
   bransjekart: [{ t: "film" }, { t: "telefon", src: "/media/arbeid/bransjekart-mobil.webp", tekst: "Listen og kartet på telefon" }, { t: "bilde", src: "/assets/img/bransjekart.webp", tekst: "Kartet med filter" }],
   "nordlys-journal": [{ t: "film" }, { t: "telefon", src: "/media/arbeid/nordlys-journal-mobil.webp", tekst: "Hele siden på telefon" }, { t: "bilde", src: R4 + "nordlys-journal-topp.webp", tekst: "Første skjerm" }],
   "retro-vault": [{ t: "film" }, { t: "telefon", src: "/media/arbeid/retro-vault-mobil.webp", tekst: "Arkivet på telefon" }, { t: "bilde", src: R4 + "retro-vault-topp.webp", tekst: "Arkivet med filter og detaljvisning" }],
