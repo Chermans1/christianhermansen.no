@@ -25,13 +25,14 @@ export const PROSJEKTER = [
     lenke: "https://adhdoyane.no/", lenketekst: "adhdoyane.no",
   },
   {
-    id: "fanatastisk", navn: "Fanatastisk", type: "Nettside og app", status: "Live, appen ligger i App Store", aar: "2025–2026",
-    ingress: "Én festival. Nettside og app av samme innhold.",
+    id: "fanatastisk", navn: "Fanatastisk", type: "Nettside og app", status: "Live, nytt design til 2027", aar: "2025–2027",
+    ingress: "En lokal festival i Fana, med nettside og app som leser det samme innholdet.",
     tekst: [
-      "Festivalens nettside har program per dag, artistsider, FAQ og billettkjøp via Ticketmaster. Festivalen redigerer alt innhold selv i Sanity Studio.",
-      "Appen er bygget i SwiftUI mot det samme innholdet: program, artistsider, interaktivt kart og favoritter med varsel før konsertstart. Den har ligget i App Store siden 17. august 2026.",
+      "Det nye designet til 2027 er en nattplakat: filmen spiller inne i logoen, billetten ligger oppå i krem, og festivaldagene er billetter du trykker deg inn på. Program, artistsider, FAQ og billettkjøp via Ticketmaster følger med fra før.",
+      "Festivalen redigerer alt selv i Sanity Studio, også hvilken fase siden står i, fra nedtelling før første artist er sluppet til fullt program. Artister som ikke er annonsert, vises aldri.",
+      "Appen leser det samme innholdet og har fått det samme designet i versjon 2.0: program, artistsider, kart over området og favoritter med varsel før konserten starter. Første versjon har ligget i App Store siden 17. august 2026.",
     ],
-    omfang: ["Nettside i Next.js", "Innhold i Sanity", "iOS-app i SwiftUI", "Billettkjøp via Ticketmaster"],
+    omfang: ["Nettside i Next.js", "Innhold og faser i Sanity", "iOS-app i SwiftUI", "Billettkjøp via Ticketmaster"],
     lenke: "https://fanatastisk.no/", lenketekst: "fanatastisk.no",
   },
   {
@@ -76,7 +77,7 @@ export const GALLERI = {
   zempel: [{ t: "film" }, { t: "telefon", src: "/media/arbeid/zempel-mobil.webp", tekst: "Zempel på telefon" }, { t: "bilde", src: R4 + "zempel-topp.webp", tekst: "Første skjerm på zempel.no" }],
   adhdoyane: [{ t: "film" }, { t: "telefon", src: "/media/arbeid/adhdoyane-mobil.webp", tekst: "Hele forsiden på telefon" },
     { t: "apper", bg: "#eef2f7", src: ["/media/arbeid/adhdoyane-app-prosjekter.webp", "/media/arbeid/adhdoyane-app-send.webp", "/media/arbeid/adhdoyane-app-kasserer.webp"], tekst: "Appen: prosjektene med det som er igjen, å sende en kvittering, og køen kassereren godkjenner fra. Bildene er tatt med oppdiktede data." }, { t: "bilde", src: R4 + "adhdoyane-topp.webp", tekst: "Første skjerm på adhdoyane.no" }],
-  fanatastisk: [{ t: "film" }, { t: "apper", src: ["/assets/img/fanatastisk-app-hjem.webp", "/assets/img/fanatastisk-app-program.webp", "/assets/img/fanatastisk-app-kart.webp"], tekst: "Appen: forsiden, programmet og kartet" }, { t: "bilde", src: R4 + "fanatastisk-topp.webp", tekst: "Første skjerm på fanatastisk.no akkurat nå, med nedtelling til neste festival" }],
+  fanatastisk: [{ t: "film" }, { t: "apper", bg: "#090707", src: [R4 + "fanatastisk-app-hjem.webp", R4 + "fanatastisk-app-program.webp", R4 + "fanatastisk-app-artist.webp"], tekst: "Appen i versjon 2.0: forsiden, programmet og en artistside" }, { t: "telefon", src: R4 + "fanatastisk-mobil.webp", tekst: "Nettsiden på telefon, med 2026-programmet" }, { t: "bilde", src: R4 + "fanatastisk-topp.webp", tekst: "Første skjerm i det nye designet. Filmen spiller inne i logoen." }],
   bransjekart: [{ t: "film" }, { t: "telefon", src: "/media/arbeid/bransjekart-mobil.webp", tekst: "Listen og kartet på telefon" }, { t: "bilde", src: "/assets/img/bransjekart.webp", tekst: "Kartet med filter" }],
   "nordlys-journal": [{ t: "film" }, { t: "telefon", src: "/media/arbeid/nordlys-journal-mobil.webp", tekst: "Hele siden på telefon" }, { t: "bilde", src: R4 + "nordlys-journal-topp.webp", tekst: "Første skjerm" }],
   "retro-vault": [{ t: "film" }, { t: "telefon", src: "/media/arbeid/retro-vault-mobil.webp", tekst: "Arkivet på telefon" }, { t: "bilde", src: R4 + "retro-vault-topp.webp", tekst: "Arkivet med filter og detaljvisning" }],
