@@ -1,295 +1,837 @@
 <!doctype html>
 <html lang="nb">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Christian Hermansen - jeg bygger ting</title>
-    <meta
-      name="description"
-      content="Apper, nettsider, skilt og sanger fra arbeidsbenken i Bergen. Ærlig portefølje, ingen pynt."
-    />
-    <meta name="theme-color" content="#f1e7d3" />
-    <link rel="canonical" href="https://christianhermansen.no" />
-    <meta property="og:site_name" content="Christian Hermansen" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Christian Hermansen - jeg bygger ting" />
-    <meta
-      property="og:description"
-      content="Apper, nettsider, skilt og sanger fra arbeidsbenken i Bergen. Ærlig portefølje, ingen pynt."
-    />
-    <meta property="og:url" content="https://christianhermansen.no" />
-    <meta
-      property="og:image"
-      content="https://christianhermansen.no/og-bilde.jpg"
-    />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content="nb_NO" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,450;9..144,550&family=Inter:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/css/style.css" />
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Christian Hermansen",
-        "url": "https://christianhermansen.no",
-        "jobTitle": "Utvikler og designer",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Bergen",
-          "addressCountry": "NO"
-        },
-        "sameAs": ["https://github.com/Chermans1"]
-      }
-    </script>
-  </head>
-  <body class="forside">
-    <div class="gloed" aria-hidden="true"></div>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Christian Hermansen - Fullstack-utvikler i Bergen</title>
+<meta name="description" content="Fullstack-utvikler i Bergen. Jeg designer og bygger nettsider, apper og digitale verktøy for bedrifter, arrangører og organisasjoner.">
+<link rel="canonical" href="https://christianhermansen.no/">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="nb_NO">
+<meta property="og:site_name" content="Christian Hermansen">
+<meta property="og:url" content="https://christianhermansen.no/">
+<meta property="og:title" content="Christian Hermansen - Fullstack-utvikler i Bergen">
+<meta property="og:description" content="Jeg designer og bygger nettsider, apper og digitale verktøy for bedrifter, arrangører og organisasjoner.">
+<meta property="og:image" content="https://christianhermansen.no/og-bilde.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@type": "Person", "name": "Christian Hermansen", "url": "https://christianhermansen.no",
+  "jobTitle": "Fullstack-utvikler", "address": { "@type": "PostalAddress", "addressLocality": "Bergen", "addressCountry": "NO" },
+  "sameAs": ["https://github.com/Chermans1"] }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/",
+  "d3-delaunay": "https://cdn.jsdelivr.net/npm/d3-delaunay@6.0.4/+esm"
+} }
+</script>
+<script type="module" src="/js/glass.js"></script>
+<style>
+/* O4. Typografien. Ingen logo: navnet og ordene bærer siden. Hvitt mest, så rødt, så svart.
+   Del 1 er et bilde: et stilisert portrett på knust hvitt glass (rødt under, trykkes inn av pekeren) og en ring av ord i 3D som går
+   rundt deg. Musen styrer ringen, og bokstavene i navnet vider seg ut der pekeren er.
+   Del 2 er ringen med prosjektene fra O3. Den ruller ikke opp nedenfra: den kommer opp i bildet mens bildet
+   blir uskarpt, så det uskarpe bildet blir bakgrunnen. */
+:root {
+  --hvit: #ffffff; --rod: #e3242b; --rod-tekst: #c01a20; --svart: #111111; --gra: #5a5a5a; --linje: rgba(17, 17, 17, 0.14);
+  --f: "Archivo", system-ui, sans-serif; --kant: clamp(1.25rem, 3.2vw, 3rem);
+}
+* { box-sizing: border-box; margin: 0; }
+html, body { height: 100%; overflow: hidden; overscroll-behavior: none; background: var(--hvit); color: var(--svart); }
+body { font: 400 1rem/1.5 var(--f); font-variation-settings: "wdth" 100; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-underline-offset: 0.2em; }
+::selection { background: var(--rod); color: var(--hvit); }
+:focus-visible { outline: 2px solid var(--rod); outline-offset: 3px; }
+.etikett { font: 600 0.6875rem/1.4 var(--f); letter-spacing: 0.14em; text-transform: uppercase; color: var(--gra); }
 
-    <header class="topp">
-      <nav class="nav ramme" aria-label="Hovedmeny">
-        <a href="/" class="nav-navn"
-          ><img
-            src="/assets/img/ch-logo-horisontal-petrol.svg"
-            alt="Christian Hermansen"
-            class="nav-logo"
-            width="214"
-            height="42"
-        /></a>
-        <button
-          class="burger"
-          type="button"
-          aria-expanded="false"
-          aria-controls="nav-liste"
-          aria-label="Meny"
-        >
-          <img
-            class="lag lag-topp"
-            src="/assets/img/burger/topp.png"
-            alt=""
-            width="36"
-            height="14"
-          />
-          <img
-            class="lag lag-salat"
-            src="/assets/img/burger/salat.png"
-            alt=""
-            width="36"
-            height="7"
-          />
-          <img
-            class="lag lag-ost"
-            src="/assets/img/burger/ost.png"
-            alt=""
-            width="35"
-            height="7"
-          />
-          <img
-            class="lag lag-kjott"
-            src="/assets/img/burger/kjott.png"
-            alt=""
-            width="35"
-            height="9"
-          />
-          <img
-            class="lag lag-bunn"
-            src="/assets/img/burger/bunn.png"
-            alt=""
-            width="36"
-            height="11"
-          />
-        </button>
-        <ul id="nav-liste">
-          <li><a href="/" aria-current="page">Hjem</a></li>
-          <li><a href="/prosjekter.html">Prosjekter</a></li>
-          <li><a href="/om.html">Om meg</a></li>
-          <li><a href="#kontakt">Kontakt</a></li>
-        </ul>
-      </nav>
-    </header>
+/* Korn over alt, som trykk på papir */
+.korn { position: fixed; inset: 0; z-index: 60; pointer-events: none; opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='k'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23k)'/%3E%3C/svg%3E"); }
 
-    <main>
-      <section class="hero-bilde">
-        <img
-          src="/assets/img/retro-hero.webp"
-          alt="Illustrasjon av en arbeidsbenk med gammel radio, en retro datamaskin med kode på skjermen, kaffe og utsikt mot Bergen"
-          width="1536"
-          height="1024"
-          fetchpriority="high"
-        />
-        <div class="baand-hero" aria-hidden="true"></div>
-        <div class="hero-tekst">
-          <div class="ramme">
-            <div class="hero-panel">
-              <h1 class="inn">Jeg bygger ting.</h1>
-              <p class="ingress inn">
-                Jeg har vært tømrer, driftssjef og det meste imellom. Nå bygger
-                jeg fra Bergen, med både kappsag og kompilator på benken. Denne
-                siden er ikke et byrå og ikke en salgsplakat. Det er
-                arbeidsbenken min: appene, nettsidene, skiltene, sangene og de
-                rare byggeprosjektene, med ærlig status på hvert eneste ett.
-              </p>
-            </div>
-          </div>
+/* Toppen: navnet i tekst i stedet for logo */
+.topp { position: fixed; z-index: 50; inset: 0 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1.3rem var(--kant); pointer-events: none; }
+.topp > * { pointer-events: auto; }
+.topp .navn { font: 800 1.05rem/1 var(--f); font-variation-settings: "wdth" 112; letter-spacing: -0.01em; text-transform: uppercase; background: none; border: 0; color: var(--svart); cursor: pointer; padding: 0.3rem 0; }
+.topp .navn i { font-style: normal; color: var(--rod); }
+.topp nav { display: flex; gap: clamp(1rem, 2.4vw, 2rem); font-size: 0.9375rem; font-weight: 500; }
+.topp nav a { text-decoration: none; }
+.topp nav a:hover { color: var(--rod-tekst); }
+
+/* ---------- Del 1: bildet ---------- */
+.helt { position: fixed; inset: 0; overflow: hidden; }
+/* Uskarpheten bak Arbeid er tatt ned fra 26 til 16 px (24.11), så stolen og navnet skimtes bak ringen */
+.bilde { position: absolute; inset: 0; filter: blur(calc(var(--p, 0) * 16px)); transform: scale(calc(1 + var(--p, 0) * 0.06)); will-change: filter, transform; }
+/* Glasset bak alt. Lerretet tones inn når første bilde er tegnet, så det ikke blinker grått. */
+.glass { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s; }
+.glass.klar { opacity: 1; }
+.glass canvas { display: block; width: 100%; height: 100%; }
+.tredje { position: absolute; inset: 0; perspective: 1500px; perspective-origin: 50% 40%; }
+/* --om går fra 0 til 1 når Om meg er åpen: bildet flytter seg fra --sx til --sxOm (og på mobil opp og mindre) */
+.verden { position: absolute; left: calc(var(--sx, 67%) * (1 - var(--om, 0)) + var(--sxOm, 27%) * var(--om, 0)); top: 0; bottom: 0; width: 0; transform-style: preserve-3d;
+  transform: translateY(calc(var(--omY, 0svh) * var(--om, 0))) scale(calc(1 - var(--omS, 0) * var(--om, 0))) rotateY(calc(var(--mx, 0) * 10deg)); }
+/* Utklipt helfigur i den røde stolen (gjennomsiktig rundt), så ordene bak ringen synes mellom stolbeina og rundt armene */
+.portrett { position: absolute; bottom: 0; left: 0; height: min(86vh, 130vw); aspect-ratio: 1280 / 1648; transform: translateX(-50%) translateZ(0); }
+.portrett img { width: 100%; height: 100%; display: block; position: relative; }
+/* Gulvskyggen er hentet ut av samme foto, så den ligger der stolen og skoen sto. Tallene kommer fra utklippet. */
+.portrett img.skygge { position: absolute; left: 10.76%; top: 79.21%; width: 83.137%; height: auto; pointer-events: none; }
+.ring { position: absolute; left: 0; top: var(--ry, 52%); transform-style: preserve-3d; transform: rotateX(var(--tilt, -13deg)) rotateZ(-7deg); }
+.ring span { position: absolute; left: 0; top: 0; font: 900 var(--fs, 4.2vw)/1 var(--f); font-variation-settings: "wdth" 118; text-transform: uppercase; color: var(--rod);
+  transform: translate(-50%, -50%) rotateY(var(--a)) translateZ(var(--rr, 300px)); transition: color 0.3s; white-space: pre; }
+.ring span.bak { color: var(--svart); opacity: 0.85; }
+
+.tittel { transform: translateX(calc(var(--om, 0) * -55vw)); opacity: calc(1 - var(--om, 0) * 1.4); }
+.tittel { position: absolute; left: var(--kant); top: clamp(8.4rem, 20vh, 12rem); font: 900 clamp(3rem, 8.4vw, 10rem)/0.86 var(--f); text-transform: uppercase; letter-spacing: -0.01em; pointer-events: none; }
+.tittel .ord { display: block; white-space: nowrap; }
+.tittel .ord + .ord { color: var(--rod); }
+.tittel b { font-weight: inherit; display: inline-block; font-variation-settings: "wdth" var(--w, 78); transition: font-variation-settings 0.25s; }
+/* Mappe-stilen: etiketter i bokser, striper, koordinater og strekkode */
+.mappe { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: calc(1 - var(--p, 0) * 1.7 - var(--om, 0) * 1.6); transform: translate(calc(var(--om, 0) * -30vw), calc(var(--p, 0) * -5vh)); }
+body.om .mappe { visibility: hidden; transition: visibility 0s 0.5s; }
+.mappe > * { position: absolute; }
+.boks { display: inline-block; font: 800 0.75rem/1 var(--f); font-variation-settings: "wdth" 110; letter-spacing: 0.12em; text-transform: uppercase; background: var(--svart); color: var(--hvit); padding: 0.42rem 0.55rem 0.38rem; }
+.boks.rod { background: var(--rod); }
+.striper { display: inline-block; width: 3.4rem; height: 0.7rem; background: repeating-linear-gradient(-55deg, var(--svart) 0 3px, transparent 3px 7px); vertical-align: middle; }
+.striper.rod { background: repeating-linear-gradient(-55deg, var(--rod) 0 3px, transparent 3px 7px); }
+.stempel { left: var(--kant); top: clamp(5.4rem, 13vh, 8rem); display: flex; gap: 0.6rem; align-items: center; }
+/* Venstre side er én kolonne fra under navnet og ned til bunnen: linjen om hva jeg gjør øverst, ingressen nederst
+   og luft mellom. Da kan de aldri skli inn i hverandre, uansett skjermhøyde. */
+.kolonne { left: var(--kant); top: calc(clamp(8.4rem, 20vh, 12rem) + clamp(3rem, 8.4vw, 10rem) * 1.78); bottom: clamp(2rem, 5vh, 3rem); width: 30rem; display: flex; flex-direction: column; align-items: flex-start; }
+.kolonne .ingress { margin-top: auto; }
+.rang { display: grid; gap: 0.55rem; justify-items: start; }
+.rang strong { max-width: 15em; font: 900 clamp(1.4rem, 2.4vw, 2.4rem)/1.05 var(--f); font-variation-settings: "wdth" 80; text-transform: uppercase; }
+.rang span { font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.ingress { font-size: 1rem; font-weight: 500; }
+.koord { pointer-events: auto; right: var(--kant); bottom: clamp(2rem, 5vh, 3rem); display: grid; gap: 0.4rem; justify-items: end; text-align: right; background: rgba(255, 255, 255, 0.92); padding: 0.6rem 0.7rem; border: 1.5px solid var(--svart); }
+.koord svg { width: 9rem; height: 2.2rem; display: block; }
+.koord span { font: 700 0.75rem/1.3 var(--f); letter-spacing: 0.08em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+.hjorne { right: var(--kant); top: clamp(5.4rem, 13vh, 8rem); display: grid; justify-items: end; gap: 0.4rem; }
+.ingress em { font-style: normal; color: var(--rod-tekst); }
+.ingress { display: grid; gap: 1rem; justify-items: start; pointer-events: auto; }
+.cta { display: inline-flex; gap: 0.6rem; align-items: center; font: 800 0.8125rem/1 var(--f); font-variation-settings: "wdth" 110; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; background: var(--rod); color: var(--hvit); padding: 1rem 1.3rem; transition: background 0.2s; }
+.cta:hover { background: var(--svart); }
+.cta span { transition: transform 0.25s; } .cta:hover span { transform: translateX(0.25rem); }
+/* Fast rekkefølge i bildet: glasset bakerst, så navnet, så portrettet med ordringen */
+.glass { z-index: 0; } .tittel { z-index: 1; } .tredje { z-index: 2; }
+.hint { position: absolute; left: 50%; bottom: 1.8rem; z-index: 2; transform: translateX(-50%); display: grid; justify-items: center; gap: 0.5rem; opacity: calc(1 - var(--p, 0) * 3 - var(--om, 0) * 3); }
+.hint::after { content: ""; width: 1px; height: 2.4rem; background: var(--svart); transform-origin: 50% 0; animation: drypp 2.2s ease-in-out infinite; }
+@keyframes drypp { 0% { transform: scaleY(0); } 55% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+/* ---------- Om meg: bildet går til venstre, teksten glir inn fra høyre ---------- */
+.omside { position: absolute; z-index: 3; left: 52%; right: var(--kant); top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: safe center; gap: 1.6rem;
+  padding: 6rem 0 2rem; max-width: 40rem; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
+  opacity: var(--om, 0); transform: translateX(calc((1 - var(--om, 0)) * 34vw)); visibility: hidden; }
+body.om .omside, .omside.ut { visibility: visible; }
+.omside .tilbake { align-self: flex-start; font: 600 0.75rem/1 var(--f); letter-spacing: 0.14em; text-transform: uppercase; background: none; border: 1px solid var(--linje); border-radius: 99px; padding: 0.7rem 1rem; color: var(--svart); cursor: pointer; }
+.omside .tilbake:hover { border-color: var(--svart); }
+.omside h2 { font: 900 clamp(2.2rem, min(4.6vw, 8.4vh), 4.8rem)/0.88 var(--f); font-variation-settings: "wdth" 112; text-transform: uppercase; letter-spacing: -0.01em; text-wrap: balance; }
+.omside h2 span { display: block; color: var(--rod); }
+.omside .tekst { display: grid; gap: 1rem; max-width: 34rem; font-size: 1.0625rem; line-height: 1.6; font-weight: 500; }
+.omside .tekst p + p { color: var(--gra); }
+/* Ingen prisliste, bare en setning som gjør det lett å spørre */
+.omside .pris { max-width: 34rem; padding-left: 0.9rem; border-left: 1px solid var(--rod); font-size: 0.9375rem; line-height: 1.5; color: var(--svart); }
+.omside .kontakt { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.4rem; margin-top: 0.4rem; }
+.omside .kontakt a.epost { font-weight: 600; text-decoration: underline; text-decoration-color: var(--linje); }
+.omside .kontakt a.epost:hover { text-decoration-color: currentColor; color: var(--rod-tekst); }
+.omside .bunn { margin-top: 0.6rem; font-size: 0.8125rem; color: var(--gra); }
+/* Lave skjermer: litt tettere, så alt får plass uten rulling */
+@media (max-height: 780px) and (min-width: 861px) { .omside { gap: 0.9rem; padding-top: 4.6rem; } .omside h2 { font-size: clamp(2rem, min(4.2vw, 7.4vh), 4.4rem); }
+  .omside .tekst { font-size: 0.975rem; line-height: 1.5; gap: 0.7rem; } .omside .pris { font-size: 0.875rem; } }
+.omside .bunn a { color: var(--svart); }
+
+/* Hvitt slør over det uskarpe bildet, så ringen i del 2 står klart */
+.slor { position: fixed; inset: 0; background: var(--hvit); opacity: calc(var(--p, 0) * 0.42); pointer-events: none; }
+
+/* ---------- Del 2: ringen med prosjektene ---------- */
+.scene { position: fixed; inset: 0; overflow: hidden; perspective: var(--persp, 1800px); perspective-origin: var(--px, 50%) var(--py, 46%); touch-action: none; user-select: none; -webkit-user-select: none;
+  opacity: clamp(0, calc((var(--p, 0) - 0.2) / 0.6), 1); transform: translateY(calc((1 - var(--p, 0)) * 42vh)); visibility: var(--vis2, hidden); }
+.kortring { position: absolute; left: 50%; top: 46%; transform-style: preserve-3d; transition: transform 0.9s cubic-bezier(0.7, 0, 0.2, 1), opacity 0.6s, filter 0.6s; }
+.kort { --b: min(50vw, 820px); position: absolute; width: var(--b); aspect-ratio: 16 / 10; left: calc(var(--b) / -2); top: calc(var(--b) * -0.3125);
+  border: 0; padding: 0; background: none; color: inherit; cursor: pointer; backface-visibility: hidden;
+  transform: translateZ(var(--r)) rotateY(var(--v, 0deg)) translateZ(calc(var(--r) * -1)); }
+.kort .flate { position: absolute; inset: 0; border-radius: 4px; overflow: hidden; background: var(--svart); box-shadow: 0 30px 70px -28px rgba(17, 17, 17, 0.55); }
+.kort img, .kort video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; pointer-events: none; }
+.kort video { opacity: 0; transition: opacity 0.5s; }
+.kort.spiller video { opacity: 1; }
+.kort .flate::after { content: ""; position: absolute; inset: 0; background: var(--hvit); opacity: var(--mork, 0); pointer-events: none; }
+.sikte { position: absolute; inset: -16px; pointer-events: none; opacity: 0; transition: opacity 0.4s; }
+/* Fangsten: fire røde hjørner som står fast midt i ringen og holder på prosjektet foran. De glir ut og slipper når
+   kortet går, og klemmer inn igjen med et lite fjærende tak når det neste kommer (--aap settes fra skriptet).
+   Den ligger i ringen med samme 3D-plass som kortet foran, så den følger med når musen vrir ringen. */
+.fangst { --b: min(50vw, 820px); --t: 2px; position: absolute; width: var(--b); aspect-ratio: 16 / 10; left: calc(var(--b) / -2); top: calc(var(--b) * -0.3125); pointer-events: none;
+  transform: translateZ(var(--r)) rotateY(var(--v, 0deg)) translateZ(calc(var(--r) * -1)); transition: opacity 0.4s; }
+.fangst i { position: absolute; width: 18px; height: 18px; border: 0 solid var(--rod); --u: calc(var(--aap, 0px) * -1); }
+.fangst i:nth-child(1) { left: -16px; top: -16px; border-width: var(--t) 0 0 var(--t); transform: translate(var(--u), var(--u)); }
+.fangst i:nth-child(2) { right: -16px; top: -16px; border-width: var(--t) var(--t) 0 0; transform: translate(var(--aap, 0px), var(--u)); }
+.fangst i:nth-child(3) { left: -16px; bottom: -16px; border-width: 0 0 var(--t) var(--t); transform: translate(var(--u), var(--aap, 0px)); }
+.fangst i:nth-child(4) { right: -16px; bottom: -16px; border-width: 0 var(--t) var(--t) 0; transform: translate(var(--aap, 0px), var(--aap, 0px)); }
+/* Tastaturfokus på kortet foran: hjørnene blir tykkere */
+.kortring:has(.kort:focus-visible) .fangst { --t: 3.5px; }
+body.aapen .fangst { opacity: 0; }
+.sikte i { position: absolute; width: 16px; height: 16px; border: 0 solid var(--rod); }
+.sikte i:nth-child(1) { left: 0; top: 0; border-width: 2px 0 0 2px; } .sikte i:nth-child(2) { right: 0; top: 0; border-width: 2px 2px 0 0; }
+.sikte i:nth-child(3) { left: 0; bottom: 0; border-width: 0 0 2px 2px; } .sikte i:nth-child(4) { right: 0; bottom: 0; border-width: 0 2px 2px 0; }
+.kort:focus-visible { outline: none; }
+.over { position: absolute; left: 0; right: 0; top: clamp(5.4rem, 13vh, 8.5rem); text-align: center; padding: 0 var(--kant); pointer-events: none; transition: opacity 0.4s; }
+.over h2 { font: 900 clamp(1.6rem, 3vw, 2.8rem)/1 var(--f); font-variation-settings: "wdth" 118; text-transform: uppercase; letter-spacing: -0.01em; }
+.over h2 i { font-style: normal; color: var(--rod); }
+.under { position: absolute; left: 0; right: 0; top: calc(46% + min(50vw, 820px) * 0.3125 + clamp(1.6rem, 4vh, 2.6rem)); text-align: center; padding: 0 var(--kant); pointer-events: none; transition: opacity 0.4s; }
+.under h3 { font: 800 clamp(1.6rem, 2.6vw, 2.5rem)/1 var(--f); font-variation-settings: "wdth" 110; text-transform: uppercase; letter-spacing: -0.01em; transition: opacity 0.25s, transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.under p { margin-top: 0.5rem; color: var(--gra); font-weight: 500; transition: opacity 0.25s; }
+.under.bytter h3, .under.bytter p { opacity: 0; transform: translateY(0.4rem); }
+.under .hint2 { margin-top: 0.9rem; font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--rod-tekst); font-weight: 700; }
+.teller, .rullhint { position: absolute; bottom: 2rem; transition: opacity 0.4s; }
+.teller { left: var(--kant); } .rullhint { right: var(--kant); }
+.tilstart { position: absolute; left: 50%; bottom: 1.6rem; transform: translateX(-50%); font: 600 0.75rem/1 var(--f); letter-spacing: 0.14em; text-transform: uppercase; background: none; border: 1px solid var(--linje); border-radius: 99px; padding: 0.7rem 1rem; color: var(--svart); cursor: pointer; }
+.tilstart:hover { border-color: var(--svart); }
+body.aapen .over, body.aapen .under, body.aapen .teller, body.aapen .rullhint, body.aapen .tilstart { opacity: 0; pointer-events: none; }
+body.aapen .kortring { transform: translateZ(-420px); opacity: 0.2; filter: blur(6px); }
+
+/* Bryteren mellom ringen og rutenettet */
+.visning { display: flex; gap: 0.3rem; width: max-content; margin: 0.9rem auto 0; pointer-events: auto; }
+.visning button { width: 2.6rem; height: 2.1rem; display: grid; place-items: center; background: none; border: 1px solid transparent; border-radius: 3px; color: var(--gra); cursor: pointer; transition: color 0.2s, border-color 0.2s, background 0.2s; }
+.visning button:hover { color: var(--svart); border-color: var(--svart); }
+.visning button[aria-pressed="true"] { background: var(--svart); border-color: var(--svart); color: var(--hvit); }
+.visning button:focus-visible, .rkort:focus-visible { outline: 2px solid var(--rod); outline-offset: 3px; }
+.visning svg { fill: none; stroke: currentColor; stroke-width: 1.3; }
+
+/* Rutenettet: alle prosjektene på én gang, to i bredden */
+/* Toningen nederst ligger på rullefeltet (.rull) og står stille mens innholdet ruller. Den kan ikke ligge på den ytre
+   boksen, for da virker ikke uskarpheten i båndet.
+   Øverst er det ingen toning (den visket ut halve bilder): kortene ruller inn under et frostet bånd bak tittelen (.baand). */
+.rutenett { --rt: calc(clamp(5.4rem, 13vh, 8.5rem) + 8.6rem); position: absolute; inset: 0;
+  opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0s 0.5s, filter 0.6s; }
+.rutenett .rull { -webkit-mask-image: linear-gradient(#000 calc(100% - 4.5rem), transparent); mask-image: linear-gradient(#000 calc(100% - 4.5rem), transparent); height: 100%; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; padding: var(--rt) var(--kant) 7rem; scrollbar-width: thin; scrollbar-color: var(--rod) transparent; }
+/* Frostet bånd bak tittelen og bryteren: kortene glir inn under det og blir uskarpe, med en tynn strek under.
+   Det ligger i rutenettet, så det kommer og går med rutenettvisningen. */
+.rutenett .baand { position: absolute; left: 0; right: 0; top: 0; height: calc(var(--rt) - 1.6rem); pointer-events: none;
+  background: rgba(255, 255, 255, 0.55); -webkit-backdrop-filter: blur(18px) saturate(1.15); backdrop-filter: blur(18px) saturate(1.15); border-bottom: 1px solid var(--linje); }
+.rutenett .rader { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(2.2rem, 4.5vw, 3.8rem) clamp(1.2rem, 2.4vw, 2.6rem); max-width: 1440px; margin: 0 auto; }
+.rkort { display: block; width: 100%; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer;
+  opacity: 0; transform: translateY(2.6rem); transition: opacity 0.5s, transform 0.6s; }
+.rkort .rbilde { position: relative; display: block; }
+.rkort .flate { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 4px; background: var(--svart); box-shadow: 0 30px 60px -32px rgba(17, 17, 17, 0.5); }
+.rkort img, .rkort video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; pointer-events: none; transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.15, 1); }
+.rkort video { opacity: 0; transition: opacity 0.4s; }
+.rkort.spiller video { opacity: 1; }
+.rkort:hover img { transform: scale(1.03); }
+.rkort:hover .sikte, .rkort:focus-visible .sikte { opacity: 1; }
+.rkort .navnrad { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-top: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--linje); transition: border-color 0.3s; }
+.rkort:hover .navnrad { border-color: var(--svart); }
+.rkort b { display: block; font: 800 clamp(1.15rem, 1.7vw, 1.6rem)/1 var(--f); font-variation-settings: "wdth" 112; text-transform: uppercase; letter-spacing: -0.005em; }
+.rkort small { display: block; margin-top: 0.4rem; font-size: 0.875rem; font-weight: 500; color: var(--gra); }
+.rkort .pil { font-style: normal; font-size: 1.3rem; line-height: 1; color: var(--rod); transition: transform 0.3s; }
+.rkort:hover .pil { transform: translate(3px, 3px); }
+.scene[data-visning="rutenett"] .rutenett { opacity: 1; visibility: visible; transition: opacity 0.5s 0.1s, filter 0.6s; }
+.scene[data-visning="rutenett"] .rkort { opacity: 1; transform: none; transition: opacity 0.6s calc(0.18s + var(--i) * 0.07s), transform 0.9s cubic-bezier(0.2, 0.75, 0.15, 1) calc(0.18s + var(--i) * 0.07s); }
+.scene[data-visning="rutenett"] .kortring { transform: translateZ(-520px); opacity: 0; filter: blur(8px); pointer-events: none; }
+.scene[data-visning="rutenett"] :is(.under, .teller, .rullhint) { opacity: 0; pointer-events: none; }
+.scene[data-visning="rutenett"] .tilstart { background: var(--hvit); z-index: 2; }
+.over { z-index: 2; }
+body.aapen .rutenett { opacity: 0.15; filter: blur(6px); }
+
+/* Prosjektvisningen */
+.case { position: fixed; inset: 0; z-index: 45; overflow-y: auto; overscroll-behavior: contain; display: grid; grid-template-columns: minmax(0, 1fr) var(--panel);
+  grid-template-rows: auto 1fr; visibility: hidden; --panel: clamp(22rem, 34vw, 36rem); --luft: clamp(0.8rem, 1.6vw, 1.6rem); scrollbar-color: var(--rod) transparent; }
+body.aapen .case, .case.lukker { visibility: visible; }
+.case::before { content: ""; position: fixed; inset: 0; background: rgba(255, 255, 255, 0.72); opacity: 0; transition: opacity 0.6s; pointer-events: none; }
+body.aapen .case::before { opacity: 1; }
+.case::after { content: ""; position: fixed; z-index: 3; left: 0; right: var(--panel); top: 0; height: 5rem; pointer-events: none; opacity: 0; transition: opacity 0.6s;
+  background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.7) 55%, rgba(255, 255, 255, 0)); }
+body.aapen .case::after { opacity: 1; }
+.forste, .resten { grid-column: 1; position: relative; padding: 0 var(--luft); }
+.forste { grid-row: 1; padding-top: 5rem; }
+.resten { grid-row: 2; display: grid; gap: var(--luft); padding-top: var(--luft); padding-bottom: 5rem; align-content: start; }
+.slot { margin: 0; position: relative; opacity: 0; transform: translateY(2rem); transition: opacity 0.7s, transform 0.9s cubic-bezier(0.2, 0.75, 0.15, 1); }
+body.aapen .slot.synlig { opacity: 1; transform: none; }
+.forste .slot { opacity: 1; transform: none; }
+.slot .ramme { position: relative; overflow: hidden; border-radius: 6px; background: var(--svart); box-shadow: 0 30px 70px -30px rgba(17, 17, 17, 0.45); }
+.slot.film .ramme { aspect-ratio: 16 / 10; }
+.slot.film video, .slot.film img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.slot.film .ramme.venter { visibility: hidden; }
+.slot figcaption { margin-top: 0.6rem; font-size: 0.8125rem; color: var(--gra); font-weight: 500; }
+.slot.bilde img { display: block; width: 100%; height: auto; }
+.slot.telefon .ramme { display: grid; place-items: center; padding: clamp(2rem, 5vw, 4.5rem) 1rem; background: var(--rod); }
+.mobil { width: min(19rem, 62vw); aspect-ratio: 9 / 19.5; border-radius: 2.4rem; padding: 0.6rem; background: var(--svart); box-shadow: 0 40px 70px -24px rgba(0, 0, 0, 0.55); }
+.mobil div { width: 100%; height: 100%; border-radius: 1.9rem; overflow: hidden; position: relative; background: #fff; }
+.mobil img { position: absolute; left: 0; top: 0; width: 100%; height: auto; animation: rull var(--tid, 30s) cubic-bezier(0.45, 0, 0.55, 1) 1s infinite alternate; }
+@keyframes rull { to { transform: translateY(var(--slutt, 0px)); } }
+.slot.apper .ramme { display: grid; grid-template-columns: repeat(3, 1fr); background: #efe3cc; }
+.slot.apper img { width: 100%; height: auto; display: block; }
+.panel { grid-column: 2; grid-row: 1 / span 2; position: sticky; top: 0; height: 100svh; overflow-y: auto; background: var(--hvit); color: var(--svart);
+  padding: 5rem clamp(1.5rem, 2.6vw, 2.6rem) 2.4rem; display: flex; flex-direction: column; gap: 1.2rem; border-left: 1px solid var(--linje);
+  transform: translateX(100%); transition: transform 0.85s cubic-bezier(0.7, 0, 0.2, 1); box-shadow: -30px 0 80px rgba(17, 17, 17, 0.12); }
+body.aapen .panel { transform: none; transition-timing-function: cubic-bezier(0.2, 0.7, 0.15, 1); }
+.panel .rad { display: flex; justify-content: space-between; align-items: center; }
+.panel .tilbake { font: 600 0.9375rem/1 var(--f); color: var(--svart); background: none; border: 0; padding: 0.4rem 0; cursor: pointer; display: inline-flex; gap: 0.55rem; align-items: center; }
+.panel .tilbake:hover { color: var(--rod-tekst); }
+.panel .tilbake span { transition: transform 0.25s; } .panel .tilbake:hover span { transform: translateX(-0.25rem); }
+.panel h2 { font: 900 clamp(2.6rem, 4vw, 4.4rem)/0.88 var(--f); font-variation-settings: "wdth" 115; text-transform: uppercase; letter-spacing: -0.02em; color: var(--rod); }
+.panel .ingress2 { font: 700 clamp(1.3rem, 1.7vw, 1.7rem)/1.15 var(--f); }
+.panel .tekst { display: grid; gap: 0.8rem; }
+.panel p { color: var(--gra); }
+.panel dl { display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1.4rem; padding-top: 1.1rem; border-top: 1px solid var(--linje); font-size: 0.9375rem; }
+.panel dt { color: var(--gra); } .panel dd { margin: 0; font-weight: 500; }
+.panel h3 { font: 800 0.75rem/1 var(--f); letter-spacing: 0.14em; text-transform: uppercase; color: var(--rod-tekst); margin-top: 0.4rem; }
+.panel ul { list-style: none; padding: 0; border-top: 1px solid var(--linje); }
+.panel li { padding: 0.55rem 0; border-bottom: 1px solid var(--linje); font-weight: 500; }
+.panel .gaa { align-self: flex-start; margin-top: auto; font: 700 0.75rem/1 var(--f); letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; background: var(--rod); color: var(--hvit); border-radius: 99px; padding: 1rem 1.4rem; transition: background 0.2s; }
+.panel .gaa:hover { background: var(--svart); }
+.panel > * { opacity: 0; transform: translateX(1.5rem); transition: opacity 0.4s, transform 0.5s; }
+body.aapen .panel > * { opacity: 1; transform: none; transition: opacity 0.6s 0.35s, transform 0.8s 0.35s cubic-bezier(0.2, 0.7, 0.15, 1); }
+.fly { position: fixed; z-index: 48; overflow: hidden; background: var(--svart); pointer-events: none; }
+.fly video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+
+@media (max-width: 860px) {
+  .topp nav a:not(:last-child) { display: none; }
+  /* 12vw gjør at HERMANSEN får plass mellom kantene på en 390 bred telefon */
+  .tittel { font-size: clamp(2.4rem, 12vw, 5rem); top: 7.4rem; }
+  .stempel { top: 4.6rem; } .stempel .striper.rod { display: none; } .stempel .boks { white-space: nowrap; }
+  /* Kolonnen løses opp på mobil, så linjen og ingressen kan stå hver for seg over og under bildet */
+  .kolonne { display: contents; }
+  .kolonne > * { position: absolute; }
+  .rang { left: var(--kant); top: calc(7.4rem + clamp(2.4rem, 12vw, 5rem) * 1.8); }
+  .hjorne { display: none; }
+  .koord { display: none; }
+  /* Om meg på mobil: bildet blir mindre og går opp, teksten står under og kan rulles */
+  .verden { --sx: 50%; --sxOm: 50%; --omY: -38svh; --omS: 0.54; }
+  .omside { left: 0; right: 0; top: 33svh; max-width: none; justify-content: flex-start; gap: 1.2rem; padding: 1.6rem var(--kant) 5rem;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.94) 1.6rem); transform: translateY(calc((1 - var(--om, 0)) * 30svh)); }
+  .omside h2 { font-size: clamp(2rem, 9vw, 3rem); }
+  .omside .tekst { font-size: 0.975rem; line-height: 1.55; }
+  .omside .bunn { margin-top: 1rem; }
+  /* Bildet løftes opp så stolen står fri over teksten. Beina og skoen går inn i den hvite overgangen nederst. */
+  /* 20rem er der teksten over slutter, så hodet aldri går inn i «Web og iOS» på lave telefoner */
+  .portrett { height: min(58svh, 125vw, calc(95svh - 20rem)); bottom: 5svh; }
+  .ring span { --fs: 7vw; }
+  .ingress { left: 0; right: 0; bottom: 0; max-width: none; gap: 0.85rem; font-size: 0.9rem; line-height: 1.45;
+    padding: 3.2rem var(--kant) calc(1.1rem + env(safe-area-inset-bottom));
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.94) 3rem); }
+  /* Rullehintet blir bare en pil til høyre for knappen; teksten «Se arbeidet» får ikke plass ved siden av den */
+  .hint { left: auto; right: var(--kant); bottom: calc(1.1rem + env(safe-area-inset-bottom)); transform: none; height: 2.7rem; align-content: center; font-size: 0; }
+  .hint::after { content: "↓"; width: auto; height: auto; background: none; font-size: 1.4rem; line-height: 1; animation: pil 1.8s ease-in-out infinite; }
+  @keyframes pil { 50% { transform: translateY(0.25rem); } }
+  .ingress .cta { padding: 0.95rem 1.05rem; letter-spacing: 0.1em; }
+  .kort, .fangst { --b: 80vw; }
+  .under { top: calc(44% + 80vw * 0.3125 + 1.6rem); }
+  .kortring { top: 44%; }
+  .over { top: 5rem; }
+  .rutenett { --rt: 13.6rem; }
+  .rutenett .rader { grid-template-columns: 1fr; }
+  .rullhint { display: none; }
+  .case { display: block; }
+  .case::after { right: 0; }
+  .panel { position: relative; height: auto; overflow: visible; transform: translateY(2rem); opacity: 0; transition: transform 0.7s, opacity 0.5s; box-shadow: none; margin: var(--luft); border: 1px solid var(--linje); border-radius: 8px; }
+  body.aapen .panel { transform: none; opacity: 1; transition-delay: 0.3s; }
+  .panel .gaa { margin-top: 0.6rem; }
+  .resten { padding-top: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kortring, .panel, .panel > *, .slot, .case::before, .tittel b { transition: none !important; }
+  .mobil img, .hint::after { animation: none; }
+}
+</style>
+</head>
+<body>
+<div class="korn" aria-hidden="true"></div>
+
+<header class="topp">
+  <button class="navn" type="button" aria-label="Christian Hermansen, til start">Christian Hermansen<i>.</i></button>
+  <nav aria-label="Hovedmeny"><a href="#" class="tilarbeid">Arbeid</a><a href="#om" class="tilom">Om meg</a><a href="#kontakt" class="tilkontakt">Kontakt</a></nav>
+</header>
+
+<main>
+  <section class="helt" aria-label="Start">
+    <div class="bilde" aria-hidden="true">
+      <!-- Glasset: hvite glassbiter som trykkes inn rundt pekeren, med rødt under (glass.js) -->
+      <div class="glass"></div>
+      <h1 class="tittel" aria-label="Christian Hermansen"><span class="ord" aria-hidden="true">Christian</span><span class="ord" aria-hidden="true">Hermansen</span></h1>
+      <div class="tredje">
+        <div class="verden">
+          <!-- Heltebildet (valgt 24.11): Christian i den røde stolen, klippet ut lokalt. Høyden på boksen styrer størrelsen på ordringen. -->
+          <div class="portrett"><img class="skygge" src="/media/portrett-stol-skygge.webp" alt="" width="780" height="270"><img src="/media/portrett-stol.webp" alt="" width="1280" height="1648" fetchpriority="high"></div>
+          <div class="ring"></div>
         </div>
-      </section>
-
-      <div class="sone sone-hoyre">
-        <section class="ramme" aria-labelledby="prosjekter-tittel">
-          <p class="kicker inn">Fra arbeidsbenken</p>
-          <h2 id="prosjekter-tittel" class="inn">Utvalgte prosjekter</h2>
-          <div
-            class="prosjekt-rutenett"
-            data-prosjekter
-            data-kun-utvalgte
-          ></div>
-          <noscript
-            ><p class="dus">
-              Prosjektene lastes med JavaScript. Du finner dem også på
-              <a href="/prosjekter.html">prosjektsiden</a>.
-            </p></noscript
-          >
-          <p style="margin-top: 2rem">
-            <a class="pil-lenke" href="/prosjekter.html">Alle prosjekter →</a>
-          </p>
-        </section>
       </div>
-
-      <div class="baand-sving" aria-hidden="true">
-        <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M 1396 0 L 1396 80 A 108 108 0 0 1 1288 188 L 152 188 A 52 52 0 0 0 100 240 L 100 320"
-            fill="none"
-            stroke="#a8432a"
-            stroke-width="16"
-          />
-          <path
-            d="M 1368 0 L 1368 80 A 80 80 0 0 1 1288 160 L 152 160 A 80 80 0 0 0 72 240 L 72 320"
-            fill="none"
-            stroke="#d9923c"
-            stroke-width="16"
-          />
-          <path
-            d="M 1340 0 L 1340 80 A 52 52 0 0 1 1288 132 L 152 132 A 108 108 0 0 0 44 240 L 44 320"
-            fill="none"
-            stroke="#24494e"
-            stroke-width="16"
-          />
-        </svg>
+    </div>
+    <div class="mappe">
+      <p class="stempel"><span class="striper"></span><span class="boks">Nettsider // Apper // Verktøy</span><span class="striper rod"></span></p>
+      <div class="kolonne">
+        <p class="rang"><span class="boks rod">Fullstack-utvikler</span><strong>Design og kode, fra første skisse til ferdig løsning.</strong><span>Web og iOS · Frontend og backend</span></p>
+        <div class="ingress"><p>Jeg designer og bygger nettsider, apper og digitale verktøy for <em>bedrifter, arrangører og organisasjoner.</em> Du har én kontakt fra første skisse til lansering.</p><a class="cta" href="mailto:epost@christianhermansen.no">Start et prosjekt <span aria-hidden="true">→</span></a></div>
       </div>
-
-      <div class="sone sone-venstre">
-        <section class="ramme">
-          <div class="om-splitt">
-            <div>
-              <h2 class="inn">Kort om meg</h2>
-              <p class="inn">
-                Jeg har rundt 40 år med data i fingrene, helt siden Commodore
-                64, men gikk veien om byggeplass, butikkgulv, klasserom og
-                ledergruppe før jeg landet i koden. Da kroppen sa stopp etter
-                årene som tømrer, tok jeg med meg håndverkertankegangen videre:
-                mål to ganger, kutt én gang, og ikke lever noe du ikke ville
-                hatt i eget hus.
-              </p>
-              <p class="inn">
-                Nå tar jeg fullstack-utdanning og bygger ting jeg selv trenger.
-                Fokusappen min finnes fordi hodet mitt trengte den.
-                Festivalappen finnes fordi festivalen jeg bidrar til trengte
-                den. <a href="/om.html">Mer om meg her.</a>
-              </p>
-            </div>
-            <figure class="om-illustrasjon inn">
-              <img
-                src="/assets/img/verksted.webp"
-                alt="Illustrasjon laget av et ekte bilde: Christian lodder ved arbeidsbenken på loftet"
-                loading="lazy"
-                width="1200"
-                height="800"
-              />
-            </figure>
-          </div>
-        </section>
+      <p class="hjorne"><span class="boks">CH // Fullstack</span><span class="striper"></span></p>
+      <div class="koord">
+        <svg viewBox="0 0 120 28" preserveAspectRatio="none"><g fill="#111">
+          <rect x="0" width="2" height="28"/><rect x="4" width="1" height="28"/><rect x="7" width="3" height="28"/><rect x="12" width="1" height="28"/><rect x="15" width="2" height="28"/><rect x="19" width="4" height="28"/><rect x="25" width="1" height="28"/><rect x="28" width="2" height="28"/><rect x="32" width="1" height="28"/><rect x="35" width="3" height="28"/><rect x="40" width="2" height="28"/><rect x="44" width="1" height="28"/><rect x="47" width="4" height="28"/><rect x="53" width="1" height="28"/><rect x="56" width="2" height="28"/><rect x="60" width="3" height="28"/><rect x="65" width="1" height="28"/><rect x="68" width="2" height="28"/><rect x="72" width="1" height="28"/><rect x="75" width="4" height="28"/><rect x="81" width="2" height="28"/><rect x="85" width="1" height="28"/><rect x="88" width="3" height="28"/><rect x="93" width="1" height="28"/><rect x="96" width="2" height="28"/><rect x="100" width="4" height="28"/><rect x="106" width="1" height="28"/><rect x="109" width="2" height="28"/><rect x="113" width="1" height="28"/><rect x="116" width="4" height="28"/></g></svg>
+        <span>epost@christianhermansen.no</span>
       </div>
-
-      <div class="baand-sving" aria-hidden="true">
-        <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M 100 0 L 100 40 A 52 52 0 0 0 152 92 L 1288 92 A 108 108 0 0 1 1396 200 L 1396 320"
-            fill="none"
-            stroke="#a8432a"
-            stroke-width="16"
-          />
-          <path
-            d="M 72 0 L 72 40 A 80 80 0 0 0 152 120 L 1288 120 A 80 80 0 0 1 1368 200 L 1368 320"
-            fill="none"
-            stroke="#d9923c"
-            stroke-width="16"
-          />
-          <path
-            d="M 44 0 L 44 40 A 108 108 0 0 0 152 148 L 1288 148 A 52 52 0 0 1 1340 200 L 1340 320"
-            fill="none"
-            stroke="#24494e"
-            stroke-width="16"
-          />
-        </svg>
+    </div>
+    <p class="hint etikett" aria-hidden="true">Se arbeidet</p>
+    <div class="omside" id="om" role="region" aria-labelledby="om-tittel" inert>
+      <button class="tilbake" type="button">← Tilbake</button>
+      <h2 id="om-tittel">Fra idé til <span>fungerende løsning</span></h2>
+      <div class="tekst">
+        <p>Jeg er en fullstack-utvikler som liker å gjøre ideer om til funksjonelle og meningsfulle digitale løsninger. Før jeg skriver en eneste linje med kode, ønsker jeg å forstå problemet, menneskene jeg utvikler for, og hva løsningen faktisk skal oppnå.</p>
+        <p>Derfra kombinerer jeg design, logikk og teknologi for å skape nettsider og applikasjoner som ikke bare ser bra ut, men som også fungerer optimalt.</p>
+        <p>Jeg mener at de beste løsningene ikke nødvendigvis er de mest kompliserte, men de som gjør det kompliserte enkelt.</p>
       </div>
+      <p class="pris">Prisen settes etter hva prosjektet skal gjøre, enten det er en liten forening eller en bedrift. Spør gjerne, det koster ingenting.</p>
+      <div class="kontakt" id="kontakt"><a class="cta" href="mailto:epost@christianhermansen.no">Start et prosjekt <span aria-hidden="true">→</span></a><a class="epost" href="mailto:epost@christianhermansen.no">epost@christianhermansen.no</a></div>
+      <p class="bunn">© 2026 Christian Hermansen · <a href="/personvern.html">Personvern</a></p>
+    </div>
+  </section>
+  <div class="slor" aria-hidden="true"></div>
 
-      <div class="sone sone-hoyre">
-        <section id="kontakt" class="ramme kontakt">
-          <p class="kicker inn">Si hei</p>
-          <h2 class="inn">Kontakt</h2>
-          <p class="inn">
-            Jeg tar oppdrag på forespørsel, nettsider og mindre apper. Ingen
-            prisliste, intet skjema. Send en e-post, så snakker vi om hva du
-            trenger.
-          </p>
-          <p class="inn">
-            <a class="epost" href="mailto:epost@christianhermansen.no"
-              >epost@christianhermansen.no</a
-            >
-          </p>
-        </section>
+  <section class="scene" aria-label="Utvalgt arbeid" data-visning="ring">
+    <div class="over"><h2>Utvalgt <i>arbeid</i></h2>
+      <div class="visning" role="group" aria-label="Visning">
+        <button type="button" data-v="ring" aria-pressed="true" aria-label="Vis som ring" title="Ring"><svg width="24" height="13" viewBox="0 0 24 13" aria-hidden="true"><rect x="0.65" y="3.15" width="4.5" height="6.7"/><rect x="7.15" y="0.65" width="9.7" height="11.7"/><rect x="18.85" y="3.15" width="4.5" height="6.7"/></svg></button>
+        <button type="button" data-v="rutenett" aria-pressed="false" aria-label="Vis som rutenett" title="Rutenett"><svg width="20" height="14" viewBox="0 0 20 14" aria-hidden="true"><rect x="0.65" y="0.65" width="8" height="5.4"/><rect x="11.35" y="0.65" width="8" height="5.4"/><rect x="0.65" y="7.95" width="8" height="5.4"/><rect x="11.35" y="7.95" width="8" height="5.4"/></svg></button>
       </div>
-    </main>
+    </div>
+    <div class="rutenett" inert><div class="rull"><div class="rader"></div></div><div class="baand" aria-hidden="true"></div></div>
+    <div class="kortring"></div>
+    <div class="under" aria-live="polite"><h3></h3><p></p><p class="hint2">Klikk for å gå inn</p></div>
+    <p class="teller etikett" aria-hidden="true"></p>
+    <button class="tilstart" type="button">↑ Til start</button>
+    <p class="rullhint etikett" aria-hidden="true">Rull eller dra</p>
+  </section>
 
-    <footer>
-      <div class="ramme footer-indre">
-        <a href="/" class="footer-logo"
-          ><img
-            src="/assets/img/ch-logo-stablet-krem.svg"
-            alt="Christian Hermansen"
-            width="190"
-            height="119"
-            loading="lazy"
-        /></a>
-        <span
-          >© <span data-aar>2026</span> Christian Hermansen. Bygd for hånd i
-          Bergen, uten maler og uten sporing.</span
-        >
-        <ul>
-          <li>
-            <a
-              href="https://github.com/Chermans1"
-              target="_blank"
-              rel="noopener"
-              >GitHub</a
-            >
-          </li>
-          <li><a href="/personvern.html">Personvern</a></li>
-        </ul>
-      </div>
-    </footer>
+  <section class="case" aria-labelledby="c-tittel" aria-hidden="true">
+    <div class="forste"><figure class="slot film"><div class="ramme venter"></div></figure></div>
+    <aside class="panel">
+      <div class="rad"><button class="tilbake" type="button"><span aria-hidden="true">←</span> Alle prosjekter</button><span class="etikett teller-c"></span></div>
+      <h2 id="c-tittel"></h2>
+      <p class="ingress2"></p>
+      <div class="tekst"></div>
+      <dl></dl>
+      <h3>Omfang</h3>
+      <ul class="omfang"></ul>
+      <a class="gaa" target="_blank" rel="noopener"></a>
+    </aside>
+    <div class="resten"></div>
+  </section>
+</main>
 
-    <script src="/js/main.js"></script>
-    <script defer src="/_vercel/insights/script.js"></script>
-  </body>
+<script type="module">
+import { PROSJEKTER, GALLERI } from "/js/arbeid.js";
+const film = (id) => `/media/arbeid/${id}.mp4`, plakat = (id) => `/media/arbeid/${id}.webp`;
+const sti = (s) => s;
+
+const rot = document.documentElement;
+const rolig = matchMedia("(prefers-reduced-motion: reduce)").matches, mus = matchMedia("(hover: hover) and (pointer: fine)").matches;
+const klem = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+let mx = 0, my = 0, vmx = 0, vmy = 0;
+if (mus) addEventListener("pointermove", (e) => { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; }, { passive: true });
+
+// ---------- Del 1: ringen av ord rundt portrettet ----------
+const ordring = document.querySelector(".ring"), portrett = document.querySelector(".portrett");
+const FRASE = "Nettsider · Apper · Digitale verktøy · ";
+let bokstaver = [], vinkel = 0;
+function byggRing() {
+  const h = portrett.offsetHeight, smal = innerWidth < 860;
+  const R = h * (smal ? 0.42 : 0.4), fs = Math.max(18, h * (smal ? 0.075 : 0.068));
+  rot.style.setProperty("--rr", R.toFixed(0) + "px");
+  ordring.style.setProperty("--fs", fs.toFixed(1) + "px");
+  // Ringen går rundt nedre del av stolen (63 % ned i bildet), så ordene foran står mot hvitt og ikke mot det røde setet.
+  // Regnes ut fra hvor bildet står, så den følger med når bildet flyttes på mobil.
+  const verdenH = portrett.offsetParent ? portrett.offsetParent.offsetHeight : innerHeight;
+  ordring.style.setProperty("--ry", ((portrett.offsetTop + h * 0.63) / verdenH * 100).toFixed(2) + "%");
+  // Hele frasen et helt antall ganger, så ordene aldri kuttes der ringen møter seg selv
+  const plass = Math.floor((2 * Math.PI * R) / (fs * 0.74));
+  const tekst = FRASE.repeat(Math.max(1, Math.round(plass / FRASE.length))), n = tekst.length;
+  ordring.innerHTML = [...tekst].map((t, i) => `<span style="--a:${((360 / n) * i).toFixed(3)}deg">${t}</span>`).join("");
+  bokstaver = [...ordring.children].map((el, i) => ({ el, a: (2 * Math.PI / n) * i }));
+  ordring.style.setProperty("--rr", R.toFixed(0) + "px");
+  ordring.querySelectorAll("span").forEach((s) => s.style.setProperty("--rr", R.toFixed(0) + "px"));
+}
+
+// Bokstavene i navnet vider seg ut der pekeren er
+const tittelBokst = [];
+document.querySelectorAll(".tittel .ord").forEach((ord) => {
+  ord.innerHTML = [...ord.textContent].map((t) => `<b>${t}</b>`).join("");
+  tittelBokst.push(...ord.querySelectorAll("b"));
+});
+let tittelRuter = [];
+const maalTittel = () => { tittelRuter = tittelBokst.map((b) => { const r = b.getBoundingClientRect(); return { b, x: r.left + r.width / 2, y: r.top + r.height / 2 }; }); };
+let px = -9999, py = -9999;
+if (mus) addEventListener("pointermove", (e) => { px = e.clientX; py = e.clientY; }, { passive: true });
+
+// ---------- Overgangen: del 2 kommer opp i bildet mens bildet blir uskarpt ----------
+let p = 0, tp = 0, retning = 1, laastTil = 0;
+const del2 = () => tp === 1 && p > 0.98;
+let overgangTid = 0;
+const smekkOvergang = () => { clearTimeout(overgangTid); overgangTid = setTimeout(() => { tp = retning > 0 ? (tp > 0.12 ? 1 : 0) : (tp < 0.88 ? 0 : 1); if (tp === 1) laastTil = performance.now() + 700; }, 140); };
+const tilDel = (n) => { tp = n; retning = n ? 1 : -1; if (n) laastTil = performance.now() + 900; };
+
+// ---------- Del 2: ringen med prosjektene (fra O3) ----------
+const scene = document.querySelector(".scene"), kortring = scene.querySelector(".kortring");
+const under = scene.querySelector(".under"), teller = scene.querySelector(".teller");
+const kase = document.querySelector(".case"), panel = kase.querySelector(".panel"), resten = kase.querySelector(".resten"), forsteRamme = kase.querySelector(".forste .ramme");
+const N = PROSJEKTER.length;
+const iRing = (x) => ((x % N) + N) % N;
+const naerSti = (fra, til) => { let d = iRing(til - fra); if (d > N / 2) d -= N; return d; };
+let dro = false;
+const kort = PROSJEKTER.map((pr, i) => {
+  const k = document.createElement("button");
+  k.className = "kort"; k.type = "button"; k.dataset.i = i; k.tabIndex = -1;
+  k.setAttribute("aria-label", `${pr.navn}, ${pr.type.toLowerCase()}. Åpne prosjektet`);
+  k.innerHTML = `<span class="flate"><img src="${plakat(pr.id)}" alt="" draggable="false"><video muted playsinline loop preload="none" src="${film(pr.id)}"></video></span>`;
+  k.addEventListener("click", (e) => { if (dro) { e.preventDefault(); return; } velg(i); });
+  kortring.appendChild(k);
+  return k;
+});
+// Hjørnene som holder på prosjektet foran (se .fangst i CSS)
+const fangst = document.createElement("div");
+fangst.className = "fangst"; fangst.setAttribute("aria-hidden", "true");
+fangst.innerHTML = "<i></i><i></i><i></i><i></i>";
+kortring.appendChild(fangst);
+let aap = 0, aapFart = 0;
+// Rutenettet: de samme prosjektene, to i bredden. Filmen spiller når pekeren ligger over.
+const rutenett = scene.querySelector(".rutenett"), rader = rutenett.querySelector(".rader");
+const ruter = PROSJEKTER.map((pr, i) => {
+  const k = document.createElement("button");
+  k.className = "rkort"; k.type = "button"; k.style.setProperty("--i", i);
+  k.setAttribute("aria-label", `${pr.navn}, ${pr.type.toLowerCase()}. Åpne prosjektet`);
+  k.innerHTML = `<span class="rbilde"><span class="flate"><img src="${plakat(pr.id)}" alt="" draggable="false" loading="lazy"><video muted playsinline loop preload="none" src="${film(pr.id)}"></video></span><span class="sikte" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span><span class="navnrad"><span><b>${pr.navn}</b><small>${pr.type} · ${pr.status}</small></span><i class="pil" aria-hidden="true">↘</i></span>`;
+  k.addEventListener("click", () => { if (aapen < 0 && !travel && del2()) aapne(i, true); });
+  if (mus) {
+    k.addEventListener("pointerenter", () => { if (aapen >= 0 || travel) return; const v = k.querySelector(".flate video"); if (!v) return; if (v.preload === "none") v.preload = "auto"; k.classList.add("spiller"); v.play().catch(() => {}); });
+    k.addEventListener("pointerleave", () => { const v = k.querySelector(".flate video"); k.classList.remove("spiller"); v?.pause(); });
+  }
+  rader.appendChild(k);
+  return k;
+});
+let visning = "ring";
+try { if (localStorage.getItem("o4-visning") === "rutenett") visning = "rutenett"; } catch {}
+const brytere = [...scene.querySelectorAll(".visning button")];
+function settVisning(v, lagre = true) {
+  visning = v;
+  scene.dataset.visning = v;
+  brytere.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.v === v)));
+  rutenett.inert = v !== "rutenett"; kortring.inert = v === "rutenett";
+  if (v === "rutenett") { settSpiller(-1); kort.forEach((kk) => kk.tabIndex = -1); }
+  else { ruter.forEach((r) => { r.classList.remove("spiller"); r.querySelector("video")?.pause(); }); if (del2() && kort[aktiv]) kort[aktiv].tabIndex = 0; }
+  if (lagre) try { localStorage.setItem("o4-visning", v); } catch {}
+}
+brytere.forEach((b) => b.addEventListener("click", () => settVisning(b.dataset.v)));
+// Kortet prosjektet åpnes fra og lukkes tilbake til, i den visningen som er valgt
+const kilde = (i) => visning === "rutenett" ? ruter[i] : kort[i];
+const fokusArbeid = () => (visning === "rutenett" ? ruter[0] : kort[aktiv])?.focus({ preventScroll: true });
+
+let R = 1000, steg = 0.5, bredde = 800;
+function maalKort() {
+  bredde = kort[0].offsetWidth;
+  R = Math.max(innerWidth * (innerWidth < 860 ? 1.2 : 1.05), 700);
+  steg = Math.atan((bredde * 1.13) / R);
+  scene.style.setProperty("--persp", (R * 1.12).toFixed(0) + "px");
+  kort.forEach((k) => k.style.setProperty("--r", R.toFixed(0) + "px"));
+  fangst.style.setProperty("--r", R.toFixed(0) + "px");
+}
+let maalPos = 0, vist = 0, aktiv = -1, spiller = -1, aapen = -1, travel = false;
+function settAktiv(i) {
+  if (i === aktiv) return;
+  aktiv = i;
+  under.classList.add("bytter");
+  clearTimeout(settAktiv.t);
+  settAktiv.t = setTimeout(() => { const q = PROSJEKTER[aktiv]; under.querySelector("h3").textContent = q.navn; under.querySelector("p").textContent = `${q.type} · ${q.status}`; under.classList.remove("bytter"); }, 140);
+  teller.textContent = `${String(i + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
+  if (del2() && visning === "ring") kort.forEach((kk, j) => kk.tabIndex = j === i ? 0 : -1);
+}
+function settSpiller(i) {
+  if (i === spiller) return;
+  const forrige = kort[spiller];
+  if (forrige) { forrige.classList.remove("spiller"); forrige.querySelector("video")?.pause(); }
+  spiller = i;
+  if (i < 0) return;
+  const v = kort[i].querySelector("video");
+  kort[i].classList.add("spiller");
+  if (v) { if (v.preload === "none") v.preload = "auto"; v.play().catch(() => {}); }
+}
+function plasserKort(dt) {
+  vist += (maalPos - vist) * (1 - Math.exp(-dt * 9));
+  if (Math.abs(maalPos - vist) < 0.0005) vist = maalPos;
+  scene.style.setProperty("--px", (50 + vmx * 14).toFixed(2) + "%");
+  scene.style.setProperty("--py", (46 + vmy * 10).toFixed(2) + "%");
+  const pos = vist + vmx * 0.18;
+  kort.forEach((k, j) => {
+    const d = naerSti(pos, j), v = -d * steg, synlig = Math.abs(v) < 1.4;
+    k.style.visibility = synlig ? "" : "hidden";
+    if (!synlig) return;
+    k.style.setProperty("--v", (v * 57.2958).toFixed(3) + "deg");
+    k.style.setProperty("--mork", klem(Math.abs(d) * 0.38 - 0.05, 0, 0.62).toFixed(3));
+  });
+  // Fangsten står der kortet foran står når ringen er i ro (musen vrir den litt), og åpner seg jo lenger ringen er fra et kort.
+  // Den åpner seg fort når kortet går, og er helt åpen halvveis mellom to kort.
+  fangst.style.setProperty("--v", (vmx * 0.18 * steg * 57.2958).toFixed(3) + "deg");
+  const f = klem(Math.abs(vist - Math.round(vist)) / 0.3), maal = f * f * (3 - 2 * f) * bredde * 0.07;
+  if (rolig) aap = maal;
+  else {
+    // fjær: den lukker seg litt for langt og klemmer kortet før den legger seg
+    aapFart += (maal - aap) * 260 * dt; aapFart *= Math.exp(-dt * 15); aap += aapFart * dt;
+    aap = Math.max(aap, -7);
+  }
+  fangst.style.setProperty("--aap", aap.toFixed(2) + "px");
+  const naer = iRing(Math.round(vist));
+  settAktiv(naer);
+  if (aapen < 0) settSpiller(visning === "ring" && p > 0.6 && Math.abs(vist - Math.round(vist)) < 0.12 ? naer : -1);
+}
+
+// ---------- Tegning ----------
+let sist = performance.now();
+function tegn(naa) {
+  const dt = Math.min(0.05, (naa - sist) / 1000); sist = naa;
+  vmx += (mx - vmx) * (1 - Math.exp(-dt * 4)); vmy += (my - vmy) * (1 - Math.exp(-dt * 4));
+  p += (tp - p) * (1 - Math.exp(-dt * 5)); if (Math.abs(tp - p) < 0.001) p = tp;
+  rot.style.setProperty("--p", p.toFixed(4));
+  if (omV !== omMaal) { omV += (omMaal - omV) * (1 - Math.exp(-dt * 4.5)); if (Math.abs(omMaal - omV) < 0.002 || rolig) omV = omMaal; rot.style.setProperty("--om", omV.toFixed(4)); }
+  rot.style.setProperty("--mx", vmx.toFixed(4)); rot.style.setProperty("--my", vmy.toFixed(4));
+  scene.style.setProperty("--vis2", p > 0.02 ? "visible" : "hidden");
+  scene.style.pointerEvents = p > 0.9 ? "" : "none";
+  // ringen av ord: dreier rolig, musen bestemmer fart, retning og helning
+  if (p < 0.999 || !rolig) {
+    vinkel += dt * (0.22 + vmx * 1.4);
+    ordring.style.transform = `rotateX(${(-13 + vmy * 14).toFixed(2)}deg) rotateZ(-7deg) rotateY(${(vinkel * 57.2958).toFixed(2)}deg)`;
+    for (const b of bokstaver) { const foran = Math.cos(b.a + vinkel) > 0; if (b.foran !== foran) { b.foran = foran; b.el.classList.toggle("bak", !foran); } }
+  }
+  // navnet: bokstavene nær pekeren blir bredere
+  if (mus && p < 0.5) for (const t of tittelRuter) {
+    const d = Math.hypot(t.x - px, t.y - py), k = klem(1 - d / 260);
+    const w = (100 + k * 25).toFixed(0);
+    if (t.w !== w) { t.w = w; t.b.style.setProperty("--w", w); }
+  }
+  if (aapen < 0 && !travel) plasserKort(dt);
+  requestAnimationFrame(tegn);
+}
+
+// ---------- Om meg ----------
+// Bildet glir til venstre og teksten inn fra høyre. Glasset sprekker bak stolen mens den flytter seg (glassSprekk i glass.js).
+const omside = document.querySelector(".omside");
+let omApen = false, omMaal = 0, omV = 0, omFra = null;
+const stolMidt = () => { const b = portrett.getBoundingClientRect(); return [b.left + b.width / 2, b.top + b.height * 0.55, b.height]; };
+function sprekkBakStol(tilOm) {
+  const [x, y, h] = stolMidt(), smal = innerWidth < 860;
+  const x1 = smal ? x : innerWidth * (tilOm ? 0.27 : 0.67);
+  window.glassSprekk?.(x, y, x1, y, h * 0.5, 1100);
+}
+function aapneOm(kontakt = false) {
+  if (aapen >= 0) lukk();
+  const fraArbeid = tp !== 0;
+  if (fraArbeid) tilDel(0);
+  if (!omApen) {
+    omFra = document.activeElement; omApen = true; omMaal = 1;
+    document.body.classList.add("om"); omside.inert = false;
+    setTimeout(() => sprekkBakStol(true), fraArbeid ? 450 : 0);
+  }
+  history.replaceState(history.state, "", kontakt ? "#kontakt" : "#om");
+  setTimeout(() => omside.querySelector(kontakt ? ".cta" : ".tilbake").focus({ preventScroll: true, focusVisible: tastatur }), rolig ? 0 : 600);
+}
+function lukkOm(stille = false) {
+  if (!omApen) return;
+  omApen = false; omMaal = 0;
+  document.body.classList.remove("om"); omside.inert = true;
+  omside.classList.add("ut"); setTimeout(() => omside.classList.remove("ut"), 900);
+  if (!stille) sprekkBakStol(false);
+  history.replaceState(history.state, "", location.pathname + location.search);
+  if (!stille && omFra && document.contains(omFra)) omFra.focus({ preventScroll: true, focusVisible: tastatur });
+}
+omside.querySelector(".tilbake").addEventListener("click", () => lukkOm());
+document.querySelector(".tilom").addEventListener("click", (e) => { e.preventDefault(); aapneOm(false); });
+document.querySelector(".tilkontakt").addEventListener("click", (e) => { e.preventDefault(); aapneOm(true); });
+
+// ---------- Styring ----------
+let hvileTid = 0, hakkLaas = 0;
+const smekk = () => { clearTimeout(hvileTid); hvileTid = setTimeout(() => { maalPos = Math.round(maalPos); }, 150); };
+addEventListener("wheel", (e) => {
+  if (aapen >= 0 || travel || omApen) return;
+  const naa = performance.now();
+  if (del2() && visning === "rutenett") {          // rutenettet ruller som en vanlig side
+    if (naa < laastTil) { e.preventDefault(); return; }
+    if (rutenett.contains(e.target)) return;
+    e.preventDefault(); rutenett.firstElementChild.scrollBy({ top: e.deltaMode === 1 ? e.deltaY * 40 : e.deltaY }); return;
+  }
+  e.preventDefault();
+  let d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+  if (e.deltaMode === 1) d *= 40;
+  if (!del2()) {                                   // del 1: rulling driver overgangen
+    if (tp === 1 && p <= 0.98) return;             // på vei inn i del 2, la overgangen gjøre seg ferdig
+    retning = Math.sign(d) || retning;
+    tp = klem(tp + d / 650); smekkOvergang(); return;
+  }
+  if (naa < laastTil) return;                      // etterslep fra styreflaten etter overgangen
+  if (Math.abs(d) >= 60 && Number.isInteger(e.deltaY)) {
+    if (naa < hakkLaas) return;
+    hakkLaas = naa + 320;
+    maalPos = Math.round(maalPos) + Math.sign(d);
+  } else { maalPos += d / 650; smekk(); }
+}, { passive: false });
+
+let dra = null;
+addEventListener("pointerdown", (e) => {
+  if (aapen >= 0 || travel || e.button !== 0) return;
+  if (omApen || e.target.closest("a, .topp, .tilstart, .case, .visning, .omside")) return;
+  if (del2() && visning === "rutenett") return;
+  dra = { x: e.clientX, y: e.clientY, fra: maalPos, tp0: tp, id: e.pointerId, del2: del2() }; dro = false;
+});
+addEventListener("pointermove", (e) => {
+  if (!dra || e.pointerId !== dra.id) return;
+  const dx = e.clientX - dra.x, dy = e.clientY - dra.y;
+  if (!dra.del2) { if (e.pointerType !== "mouse" && Math.abs(dy) > 8) { dro = true; tp = klem(dra.tp0 - dy / (innerHeight * 0.5)); retning = dy < 0 ? 1 : -1; } return; }
+  const d = Math.abs(dx) > Math.abs(dy) ? dx : dy;
+  if (Math.abs(d) > 8) dro = true;
+  if (dro) maalPos = dra.fra - d / (bredde * 1.1);
+});
+addEventListener("pointerup", () => {
+  if (!dra) return;
+  if (!dra.del2) { if (dro) { tp = retning > 0 ? (tp > 0.12 ? 1 : 0) : (tp < 0.88 ? 0 : 1); } }
+  else maalPos = Math.round(maalPos);
+  dra = null; setTimeout(() => { dro = false; }, 0);
+});
+addEventListener("pointercancel", () => { dra = null; dro = false; maalPos = Math.round(maalPos); });
+addEventListener("keydown", (e) => {
+  if (omApen) { if (e.key === "Escape") lukkOm(); return; }
+  if (aapen >= 0) { if (e.key === "Escape") lukk(); return; }
+  if (travel) return;
+  if (!del2()) { if (["ArrowDown", "PageDown", " ", "Enter"].includes(e.key) && !e.target.closest("a, button")) { e.preventDefault(); tilDel(1); setTimeout(fokusArbeid, 900); } return; }
+  if (visning === "rutenett") { if (e.key === "Escape") tilDel(0); return; }   // piltaster og Tab virker som vanlig
+  if (e.key === "Escape" || e.key === "Home") { tilDel(0); return; }
+  if (e.key === "ArrowRight" || e.key === "ArrowDown") { e.preventDefault(); maalPos = Math.round(maalPos) + 1; kort[iRing(Math.round(maalPos))].focus({ preventScroll: true }); }
+  if (e.key === "ArrowLeft" || e.key === "ArrowUp") { e.preventDefault(); maalPos = Math.round(maalPos) - 1; kort[iRing(Math.round(maalPos))].focus({ preventScroll: true }); }
+});
+document.querySelector(".topp .navn").addEventListener("click", () => { if (omApen) lukkOm(); if (aapen >= 0) lukk(); tilDel(0); });
+document.querySelector(".tilarbeid").addEventListener("click", (e) => { e.preventDefault(); if (omApen) lukkOm(true); if (aapen >= 0) lukk(); tilDel(1); });
+scene.querySelector(".tilstart").addEventListener("click", () => tilDel(0));
+
+// ---------- Prosjektvisningen (fra O3) ----------
+function velg(i) {
+  if (aapen >= 0 || travel || !del2()) return;
+  if (i !== iRing(Math.round(vist))) { maalPos = Math.round(vist) + naerSti(Math.round(vist), i); return; }
+  aapne(i, true);
+}
+// Lange navn (BRANSJEKART) skal stå i hele ord: skriften krympes til det lengste ordet får plass i panelet
+function passTittel() {
+  const h = panel.querySelector("h2");
+  h.style.fontSize = "";
+  let str = parseFloat(getComputedStyle(h).fontSize);
+  while (h.scrollWidth > h.clientWidth + 1 && str > 20) { str *= 0.94; h.style.fontSize = str.toFixed(1) + "px"; }
+}
+function fyll(i) {
+  const pr = PROSJEKTER[i];
+  panel.querySelector(".teller-c").textContent = `${String(i + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
+  panel.querySelector("h2").textContent = pr.navn;
+  passTittel();
+  panel.querySelector(".ingress2").textContent = pr.ingress;
+  panel.querySelector(".tekst").innerHTML = pr.tekst.map((t) => `<p>${t}</p>`).join("");
+  panel.querySelector("dl").innerHTML = `<dt>Type</dt><dd>${pr.type}</dd><dt>Status</dt><dd>${pr.status}</dd>${pr.aar ? `<dt>År</dt><dd>${pr.aar}</dd>` : ""}<dt>Nettsted</dt><dd><a href="${pr.lenke}" target="_blank" rel="noopener">${pr.lenketekst} ↗</a></dd>`;
+  panel.querySelector(".omfang").innerHTML = pr.omfang.map((o) => `<li>${o}</li>`).join("");
+  const gaa = panel.querySelector(".gaa"); gaa.href = pr.lenke; gaa.textContent = "Åpne siden ↗";
+  resten.innerHTML = (GALLERI[pr.id] || []).slice(1).map((g) => {
+    const tekst = g.tekst ? `<figcaption>${g.tekst}</figcaption>` : "";
+    if (g.t === "telefon") return `<figure class="slot telefon"><div class="ramme"><div class="mobil"><div><img src="${sti(g.src)}" alt="${g.tekst || ""}" loading="lazy"></div></div></div>${tekst}</figure>`;
+    if (g.t === "apper") return `<figure class="slot apper"><div class="ramme">${g.src.map((s) => `<img src="${sti(s)}" alt="" loading="lazy">`).join("")}</div>${tekst}</figure>`;
+    return `<figure class="slot bilde"><div class="ramme"><img src="${sti(g.src)}" alt="${g.tekst || ""}" loading="lazy"></div>${tekst}</figure>`;
+  }).join("");
+  resten.querySelectorAll(".mobil img").forEach((img) => img.addEventListener("load", () => {
+    const lengde = Math.max(0, img.offsetHeight - img.parentElement.clientHeight);
+    img.style.setProperty("--slutt", -lengde + "px"); img.style.setProperty("--tid", Math.max(8, lengde / 70).toFixed(1) + "s");
+  }, { once: true }));
+  const io = new IntersectionObserver((r) => r.forEach((x) => { if (x.isIntersecting) { x.target.classList.add("synlig"); io.unobserve(x.target); } }), { root: kase, rootMargin: "0px 0px -6% 0px" });
+  resten.querySelectorAll(".slot").forEach((s) => io.observe(s));
+}
+const glid = (el, fra, til, ms) => el.animate([
+  { left: fra.left + "px", top: fra.top + "px", width: fra.width + "px", height: fra.height + "px", borderRadius: fra.r },
+  { left: til.left + "px", top: til.top + "px", width: til.width + "px", height: til.height + "px", borderRadius: til.r },
+], { duration: rolig ? 1 : ms, easing: "cubic-bezier(0.7, 0, 0.2, 1)", fill: "forwards" }).finished;
+const rute = (el, r) => { const b = el.getBoundingClientRect(); return { left: b.left, top: b.top, width: b.width, height: b.height, r }; };
+let tastatur = false;
+addEventListener("keydown", () => { tastatur = true; }, true);
+addEventListener("pointerdown", () => { tastatur = false; }, true);
+async function aapne(i, flytt, historikk = true) {
+  if (travel || aapen >= 0) return;
+  travel = true; aapen = i;
+  const pr = PROSJEKTER[i];
+  maalPos = vist = Math.round(vist) + naerSti(Math.round(vist), i); plasserKort(1);
+  fyll(i);
+  if (historikk) history.pushState({ p: pr.id }, "", `?p=${pr.id}#${pr.id}`);
+  kase.scrollTop = 0;
+  kase.setAttribute("aria-hidden", "false"); scene.setAttribute("aria-hidden", "true");
+  document.title = `${pr.navn} - Christian Hermansen`;
+  const k = kilde(i), v = k.querySelector("video");
+  k.classList.remove("spiller");
+  if (v.preload === "none") v.preload = "auto";
+  v.play().catch(() => {});
+  if (flytt && !rolig) {
+    const fra = rute(k.querySelector(".flate"), "4px");
+    document.body.classList.add("aapen");
+    const til = rute(forsteRamme, "6px");
+    const fly = document.createElement("div"); fly.className = "fly";
+    fly.appendChild(v); v.style.opacity = 1;
+    document.body.appendChild(fly);
+    await glid(fly, fra, til, 900);
+    forsteRamme.appendChild(v); fly.remove();
+  } else { document.body.classList.add("aapen"); forsteRamme.appendChild(v); v.style.opacity = 1; }
+  forsteRamme.classList.remove("venter");
+  passTittel(); // på nytt når panelet har fått rullefeltet sitt
+  panel.querySelector(".tilbake").focus({ preventScroll: true, focusVisible: tastatur });
+  travel = false;
+}
+async function lukk(historikk = true) {
+  if (travel || aapen < 0) return;
+  travel = true;
+  const i = aapen, k = kilde(i), v = forsteRamme.querySelector("video");
+  if (historikk) history.pushState({}, "", `./#${PROSJEKTER[i].id}`);
+  document.title = "Christian Hermansen - Fullstack-utvikler i Bergen";
+  const fra = kase.scrollTop < 40 ? rute(forsteRamme, "6px") : null;
+  kase.classList.add("lukker");
+  // Ringen hopper rett tilbake på plass (den toner bare inn), så bildet flyr til der kortet faktisk står.
+  // Før fløy det til kortet mens ringen ennå sto langt bak, ble for lite og poppet så inn i rekken.
+  kortring.style.transition = "opacity 0.6s, filter 0.6s";
+  document.body.classList.remove("aapen");
+  setTimeout(() => { kortring.style.transition = ""; }, 700);
+  if (fra && v && !rolig) {
+    const fly = document.createElement("div"); fly.className = "fly";
+    forsteRamme.classList.add("venter");
+    fly.appendChild(v); document.body.appendChild(fly);
+    await glid(fly, fra, rute(k.querySelector(".flate"), "4px"), 800);
+    k.querySelector(".flate").appendChild(v); fly.remove();
+  } else { if (v) k.querySelector(".flate").appendChild(v); forsteRamme.classList.add("venter"); await new Promise((r) => setTimeout(r, rolig ? 0 : 700)); }
+  if (v) { v.style.opacity = ""; if (visning === "rutenett") v.pause(); }
+  kase.classList.remove("lukker");
+  kase.setAttribute("aria-hidden", "true"); scene.removeAttribute("aria-hidden");
+  aapen = -1; travel = false; spiller = -1; settSpiller(visning === "ring" ? i : -1);
+  k.focus({ preventScroll: true, focusVisible: tastatur });
+}
+panel.querySelector(".tilbake").addEventListener("click", () => lukk());
+addEventListener("popstate", () => {
+  const id = new URLSearchParams(location.search).get("p"), i = PROSJEKTER.findIndex((q) => q.id === id);
+  if (i >= 0 && aapen < 0) { tp = p = 1; aapne(i, true, false); }
+  else if (i < 0 && aapen >= 0) lukk(false);
+});
+
+// ---------- Start ----------
+function maalAlt() { byggRing(); maalKort(); maalTittel(); if (aapen >= 0) passTittel(); }
+addEventListener("resize", maalAlt);
+document.fonts?.ready.then(maalTittel);
+maalAlt();
+const iAdressen = new URLSearchParams(location.search).get("p");
+const hash = location.hash.slice(1);
+const start = Math.max(0, PROSJEKTER.findIndex((q) => q.id === (iAdressen || hash)));
+maalPos = vist = start;
+settVisning(visning, false);
+if (iAdressen || hash === "arbeid" || PROSJEKTER.some((q) => q.id === hash)) { tp = p = 1; rot.style.setProperty("--p", 1); laastTil = performance.now() + 400; }
+plasserKort(1);
+if (iAdressen) aapne(start, false, false);
+else if (hash === "om" || hash === "kontakt") { omV = 1; rot.style.setProperty("--om", 1); aapneOm(hash === "kontakt"); }
+requestAnimationFrame(tegn);
+</script>
+</body>
 </html>

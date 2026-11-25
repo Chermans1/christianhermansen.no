@@ -1,0 +1,7 @@
+{
+  "redirects": [
+    { "source": "/om.html", "destination": "/#om", "permanent": true },
+    { "source": "/prosjekter.html", "destination": "/#arbeid", "permanent": true },
+    { "source": "/prosjekt.html", "destination": "/#arbeid", "permanent": true }
+  ]
+}
