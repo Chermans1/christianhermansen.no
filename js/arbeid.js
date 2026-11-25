@@ -13,13 +13,15 @@ export const PROSJEKTER = [
     lenke: "https://zempel.no/", lenketekst: "zempel.no",
   },
   {
-    id: "adhdoyane", navn: "ADHD Norge Øyane", type: "Nettside", status: "Live", aar: "",
-    ingress: "Et lokallag samlet på ett sted.",
+    // Nettside og app. Teksten om appen er hentet fra README i adhd-oyane-app (25.11.2026).
+    id: "adhdoyane", navn: "ADHD Norge Øyane", type: "Nettside og app", status: "Live", aar: "",
+    ingress: "Et lokallag samlet på ett sted, og kvitteringene ut av e-posten.",
     tekst: [
-      "Lokallaget i Øygarden og Askøy har aktiviteter med påmelding, nyheter og prosjekter samlet på ett sted.",
-      "Aktivitetene har påmelding rett på siden, så medlemmene slipper å lete etter skjemaer eller sende e-post.",
+      "Lokallaget i Øygarden og Askøy har aktiviteter med påmelding, nyheter og prosjekter samlet på ett sted. Medlemmene melder seg på rett på siden, uten skjemaer eller e-post.",
+      "Jeg er frivillig økonomiansvarlig i lokallaget, og utlegg betydde å lagre bildet, skrive en e-post og legge ved. Appen gjør det til ett steg: de frivillige tar bilde av kvitteringen, velger prosjekt og sender. Kassereren godkjenner og betaler ut fra samme sted, og alle ser hvor mye som er igjen på hvert prosjekt.",
+      "Innloggingen skjer med kode på e-post, uten passord. Hvem som kan se og gjøre hva, håndheves i databasen, ikke bare i appen.",
     ],
-    omfang: ["Nettside", "Påmelding til aktiviteter", "Nyheter", "Prosjektsider"],
+    omfang: ["Nettside med påmelding", "Nyheter og prosjektsider", "Webapp for kvitteringer og utlegg", "Roller og tilgang i databasen"],
     lenke: "https://adhdoyane.no/", lenketekst: "adhdoyane.no",
   },
   {
