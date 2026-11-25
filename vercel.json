@@ -1,7 +1,29 @@
 {
   "redirects": [
-    { "source": "/om.html", "destination": "/#om", "permanent": true },
-    { "source": "/prosjekter.html", "destination": "/#arbeid", "permanent": true },
-    { "source": "/prosjekt.html", "destination": "/#arbeid", "permanent": true }
+    {
+      "source": "/om.html",
+      "destination": "/#om",
+      "permanent": true
+    },
+    {
+      "source": "/prosjekter.html",
+      "destination": "/#arbeid",
+      "permanent": true
+    },
+    {
+      "source": "/prosjekt.html",
+      "destination": "/#arbeid",
+      "permanent": true
+    },
+    {
+      "source": "/apps/oyane",
+      "destination": "https://app.adhdoyane.no",
+      "permanent": true
+    },
+    {
+      "source": "/apps/oyane/:sti*",
+      "destination": "https://app.adhdoyane.no",
+      "permanent": true
+    }
   ]
 }
