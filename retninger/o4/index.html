@@ -116,12 +116,15 @@ body.om .omside, .omside.ut { visibility: visible; }
 .omside h2 span { display: block; color: var(--rod); }
 .omside .tekst { display: grid; gap: 1rem; max-width: 34rem; font-size: 1.0625rem; line-height: 1.6; font-weight: 500; }
 .omside .tekst p + p { color: var(--gra); }
+/* Ingen prisliste, bare en setning som gjør det lett å spørre */
+.omside .pris { max-width: 34rem; padding-left: 0.9rem; border-left: 1px solid var(--rod); font-size: 0.9375rem; line-height: 1.5; color: var(--svart); }
 .omside .kontakt { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.4rem; margin-top: 0.4rem; }
 .omside .kontakt a.epost { font-weight: 600; text-decoration: underline; text-decoration-color: var(--linje); }
 .omside .kontakt a.epost:hover { text-decoration-color: currentColor; color: var(--rod-tekst); }
 .omside .bunn { margin-top: 0.6rem; font-size: 0.8125rem; color: var(--gra); }
 /* Lave skjermer: litt tettere, så alt får plass uten rulling */
-@media (max-height: 780px) and (min-width: 861px) { .omside { gap: 1.1rem; padding-top: 5rem; } .omside .tekst { font-size: 1rem; line-height: 1.5; gap: 0.8rem; } }
+@media (max-height: 780px) and (min-width: 861px) { .omside { gap: 0.9rem; padding-top: 4.6rem; } .omside h2 { font-size: clamp(2rem, min(4.2vw, 7.4vh), 4.4rem); }
+  .omside .tekst { font-size: 0.975rem; line-height: 1.5; gap: 0.7rem; } .omside .pris { font-size: 0.875rem; } }
 .omside .bunn a { color: var(--svart); }
 
 /* Hvitt slør over det uskarpe bildet, så ringen i del 2 står klart */
@@ -361,6 +364,7 @@ body.aapen .panel > * { opacity: 1; transform: none; transition: opacity 0.6s 0.
         <p>Derfra kombinerer jeg design, logikk og teknologi for å skape nettsider og applikasjoner som ikke bare ser bra ut, men som også fungerer optimalt.</p>
         <p>Jeg mener at de beste løsningene ikke nødvendigvis er de mest kompliserte, men de som gjør det kompliserte enkelt.</p>
       </div>
+      <p class="pris">Prisen settes etter hva prosjektet skal gjøre, enten det er en liten forening eller en bedrift. Spør gjerne, det koster ingenting.</p>
       <div class="kontakt" id="kontakt"><a class="cta" href="mailto:epost@christianhermansen.no">Start et prosjekt <span aria-hidden="true">→</span></a><a class="epost" href="mailto:epost@christianhermansen.no">epost@christianhermansen.no</a></div>
       <p class="bunn">© 2026 Christian Hermansen · <a href="/personvern.html">Personvern</a></p>
     </div>
