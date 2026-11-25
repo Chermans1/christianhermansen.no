@@ -1,0 +1,65 @@
+/* Enkle sider i O4-stilen (personvern, 404): hvitt, svart og rødt, Archivo, ingen pynt.
+   Samme toppen og de samme fargene som forsiden, men vanlig rulling og vanlig tekst. */
+@font-face { font-family: "Archivo"; font-style: normal; font-weight: 100 900; font-stretch: 62% 125%; font-display: swap;
+  src: url("/fonts/archivo-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Archivo"; font-style: normal; font-weight: 100 900; font-stretch: 62% 125%; font-display: swap;
+  src: url("/fonts/archivo-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+:root {
+  --hvit: #ffffff; --rod: #e3242b; --rod-tekst: #c01a20; --svart: #111111; --gra: #5a5a5a; --linje: rgba(17, 17, 17, 0.14);
+  --f: "Archivo", system-ui, sans-serif; --kant: clamp(1.25rem, 3.2vw, 3rem);
+}
+* { box-sizing: border-box; margin: 0; }
+html { background: var(--hvit); color: var(--svart); scrollbar-color: var(--rod) transparent; }
+body { font: 400 1rem/1.6 var(--f); font-variation-settings: "wdth" 100; -webkit-font-smoothing: antialiased; min-height: 100svh; display: flex; flex-direction: column; }
+a { color: inherit; text-underline-offset: 0.2em; text-decoration-color: var(--rod); text-decoration-thickness: 1px; }
+a:hover { color: var(--rod-tekst); }
+::selection { background: var(--rod); color: var(--hvit); }
+:focus-visible { outline: 2px solid var(--rod); outline-offset: 3px; }
+
+/* Korn over alt, som på forsiden */
+.korn { position: fixed; inset: 0; z-index: 60; pointer-events: none; opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='k'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23k)'/%3E%3C/svg%3E"); }
+
+.topp { position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; padding: 1.3rem var(--kant);
+  background: linear-gradient(var(--hvit) 60%, rgba(255, 255, 255, 0)); }
+.topp .navn { font: 800 1.05rem/1 var(--f); font-variation-settings: "wdth" 112; letter-spacing: -0.01em; text-transform: uppercase; text-decoration: none; padding: 0.3rem 0; }
+.topp .navn i { font-style: normal; color: var(--rod); }
+.topp .navn:hover { color: var(--svart); }
+.topp nav { display: flex; gap: clamp(1rem, 2.4vw, 2rem); font-size: 0.9375rem; font-weight: 500; }
+.topp nav a { text-decoration: none; }
+
+main { flex: 1; width: 100%; max-width: 48rem; margin: 0 auto; padding: clamp(3rem, 10vh, 6rem) var(--kant) clamp(4rem, 12vh, 7rem); }
+h1 { font: 900 clamp(2.2rem, 10.5vw, 6rem)/0.88 var(--f); font-variation-settings: "wdth" 112; text-transform: uppercase; letter-spacing: -0.01em; text-wrap: balance; }
+h1 span { color: var(--rod); }
+.ingress { margin-top: 1.4rem; font-size: clamp(1.2rem, 1.8vw, 1.45rem); line-height: 1.4; font-weight: 600; max-width: 34ch; }
+
+/* Lesetekst: rolig mål, tydelige mellomtitler, lister med rød prikk */
+.prosa { margin-top: clamp(2.5rem, 6vh, 3.5rem); border-top: 1.5px solid var(--svart); }
+.prosa h2 { margin-top: 2.6rem; font: 800 1.15rem/1.2 var(--f); font-variation-settings: "wdth" 108; text-transform: uppercase; letter-spacing: 0.01em; }
+.prosa p, .prosa ul { margin-top: 0.8rem; max-width: 66ch; color: #2b2b2b; }
+.prosa ul { list-style: none; padding: 0; display: grid; gap: 0.9rem; }
+.prosa li { position: relative; padding-left: 1.2rem; }
+.prosa li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 0.42rem; height: 0.42rem; border-radius: 50%; background: var(--rod); }
+.prosa strong { color: var(--svart); font-weight: 700; }
+.oppdatert { margin-top: 2.6rem !important; font-size: 0.875rem; color: var(--gra) !important; }
+
+/* 404 */
+.tall { font: 900 clamp(7rem, 26vw, 16rem)/0.8 var(--f); font-variation-settings: "wdth" 125; color: var(--rod); letter-spacing: -0.03em; margin-bottom: 1.6rem; }
+.dus { margin-top: 1.2rem; max-width: 52ch; font-size: 1.0625rem; color: var(--gra); }
+.cta { display: inline-flex; gap: 0.6rem; align-items: center; margin-top: 2rem; font: 800 0.8125rem/1 var(--f); font-variation-settings: "wdth" 110; letter-spacing: 0.12em; text-transform: uppercase;
+  text-decoration: none; background: var(--rod); color: var(--hvit); padding: 1rem 1.3rem; transition: background 0.2s; }
+.cta:hover { background: var(--svart); color: var(--hvit); }
+.cta span { transition: transform 0.25s; } .cta:hover span { transform: translateX(0.25rem); }
+
+.bunn { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.8rem 2rem; padding: 1.6rem var(--kant) calc(1.8rem + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--linje); font-size: 0.8125rem; color: var(--gra); }
+.bunn nav { display: flex; gap: 1.4rem; }
+.bunn a { color: var(--svart); }
+
+@media (max-width: 860px) {
+  .topp nav a:not(:last-child) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .cta, .cta span { transition: none; } }

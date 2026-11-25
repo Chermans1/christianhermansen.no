@@ -837,5 +837,7 @@ if (iAdressen) aapne(start, false, false);
 else if (hash === "om" || hash === "kontakt") { omV = 1; rot.style.setProperty("--om", 1); aapneOm(hash === "kontakt"); }
 requestAnimationFrame(tegn);
 </script>
+<!-- Anonym besøksstatistikk uten cookies, som på den gamle siden (se personvern.html) -->
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
