@@ -74,7 +74,8 @@ export const plakat = (id) => `/media/arbeid/${id}.webp`;
 const R4 = "/media/arbeid/";
 export const GALLERI = {
   zempel: [{ t: "film" }, { t: "telefon", src: "/media/arbeid/zempel-mobil.webp", tekst: "Zempel på telefon" }, { t: "bilde", src: R4 + "zempel-topp.webp", tekst: "Første skjerm på zempel.no" }],
-  adhdoyane: [{ t: "film" }, { t: "telefon", src: "/media/arbeid/adhdoyane-mobil.webp", tekst: "Hele forsiden på telefon" }, { t: "bilde", src: R4 + "adhdoyane-topp.webp", tekst: "Første skjerm på adhdoyane.no" }],
+  adhdoyane: [{ t: "film" }, { t: "telefon", src: "/media/arbeid/adhdoyane-mobil.webp", tekst: "Hele forsiden på telefon" },
+    { t: "apper", bg: "#eef2f7", src: ["/media/arbeid/adhdoyane-app-prosjekter.webp", "/media/arbeid/adhdoyane-app-send.webp", "/media/arbeid/adhdoyane-app-kasserer.webp"], tekst: "Appen: prosjektene med det som er igjen, å sende en kvittering, og køen kassereren godkjenner fra. Bildene er tatt med oppdiktede data." }, { t: "bilde", src: R4 + "adhdoyane-topp.webp", tekst: "Første skjerm på adhdoyane.no" }],
   fanatastisk: [{ t: "film" }, { t: "apper", src: ["/assets/img/fanatastisk-app-hjem.webp", "/assets/img/fanatastisk-app-program.webp", "/assets/img/fanatastisk-app-kart.webp"], tekst: "Appen: forsiden, programmet og kartet" }, { t: "bilde", src: R4 + "fanatastisk-topp.webp", tekst: "Første skjerm på fanatastisk.no akkurat nå, med nedtelling til neste festival" }],
   bransjekart: [{ t: "film" }, { t: "telefon", src: "/media/arbeid/bransjekart-mobil.webp", tekst: "Listen og kartet på telefon" }, { t: "bilde", src: "/assets/img/bransjekart.webp", tekst: "Kartet med filter" }],
   "nordlys-journal": [{ t: "film" }, { t: "telefon", src: "/media/arbeid/nordlys-journal-mobil.webp", tekst: "Hele siden på telefon" }, { t: "bilde", src: R4 + "nordlys-journal-topp.webp", tekst: "Første skjerm" }],

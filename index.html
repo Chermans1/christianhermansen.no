@@ -740,7 +740,7 @@ function fyll(i) {
   resten.innerHTML = (GALLERI[pr.id] || []).slice(1).map((g) => {
     const tekst = g.tekst ? `<figcaption>${g.tekst}</figcaption>` : "";
     if (g.t === "telefon") return `<figure class="slot telefon"><div class="ramme"><div class="mobil"><div><img src="${sti(g.src)}" alt="${g.tekst || ""}" loading="lazy"></div></div></div>${tekst}</figure>`;
-    if (g.t === "apper") return `<figure class="slot apper"><div class="ramme">${g.src.map((s) => `<img src="${sti(s)}" alt="" loading="lazy">`).join("")}</div>${tekst}</figure>`;
+    if (g.t === "apper") return `<figure class="slot apper"><div class="ramme"${g.bg ? ` style="background:${g.bg}"` : ""}>${g.src.map((s) => `<img src="${sti(s)}" alt="" loading="lazy">`).join("")}</div>${tekst}</figure>`;
     return `<figure class="slot bilde"><div class="ramme"><img src="${sti(g.src)}" alt="${g.tekst || ""}" loading="lazy"></div>${tekst}</figure>`;
   }).join("");
   resten.querySelectorAll(".mobil img").forEach((img) => img.addEventListener("load", () => {
