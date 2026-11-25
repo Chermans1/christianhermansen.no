@@ -1,4 +1,4 @@
-// Prosjektene i O3. Tekstene er hentet fra data/projects.json på dagens side, fra README-ene på GitHub
+// Prosjektene i O3. Tekstene er hentet fra data/projects.json på dagens side, fra README-ene til prosjektene
 // og fra utkastene i runde 4. Ingen tall eller sitater er diktet opp.
 // film: rullefilm laget av 02_Design/opptak/lag-rull.sh (den ekte siden som ruller sakte nedover)
 export const PROSJEKTER = [
@@ -43,24 +43,24 @@ export const PROSJEKTER = [
     lenke: "https://bransjekart.christianhermansen.no", lenketekst: "bransjekart.christianhermansen.no",
   },
   {
-    id: "nordlys-journal", navn: "Nordlys", type: "Nettside", status: "Skolearbeid fra Kodehode", aar: "2026",
+    id: "nordlys-journal", navn: "Nordlys", type: "Nettside", status: "Demo av en reiseside", aar: "2026",
     ingress: "En reisedagbok for norske reisemål.",
     tekst: [
       "En responsiv reisedagbok bygget med Vite og vanlig JavaScript. Du filtrerer reisemål etter kyst, fjell og by, lagrer favoritter og planlegger turer med dato og nedtelling.",
       "Bildene er laget med KI.",
     ],
     omfang: ["Vite og JavaScript", "Filter og favoritter", "Turplanlegger med nedtelling"],
-    lenke: "https://chermans1.github.io/nordlys-journal/", lenketekst: "chermans1.github.io/nordlys-journal",
+    lenke: "https://chermans1.github.io/nordlys-journal/", lenketekst: "Se demoen",
   },
   {
-    id: "retro-vault", navn: "Retro Vault", type: "Digitalt verktøy", status: "Skolearbeid fra Kodehode", aar: "2026",
+    id: "retro-vault", navn: "Retro Vault", type: "Digitalt verktøy", status: "Demo av et samlingsarkiv", aar: "2026",
     ingress: "Et mediearkiv med 11 908 oppføringer.",
     tekst: [
       "Et arkiv for musikk, film og spill med filter, søk, sortering, favoritter og statistikk, lagret i nettleseren.",
       "Den fulle samlingen har 11 908 oppføringer. Den offentlige versjonen viser et utvalg på 300.",
     ],
     omfang: ["JavaScript", "Lagring i nettleseren", "Filter, søk og statistikk"],
-    lenke: "https://chermans1.github.io/retro-vault/", lenketekst: "chermans1.github.io/retro-vault",
+    lenke: "https://chermans1.github.io/retro-vault/", lenketekst: "Se demoen",
   },
 ];
 
